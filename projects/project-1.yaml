@@ -1,0 +1,30 @@
+project: project-1
+path: /Users/wanglong/AL-WorkSpace/test/project-1
+skills:
+  - id: vendor/mattpocock/engineering-ask-matt
+  - id: vendor/mattpocock/engineering-code-review
+  - id: vendor/mattpocock/engineering-codebase-design
+  - id: vendor/mattpocock/engineering-diagnosing-bugs
+  - id: vendor/mattpocock/engineering-domain-modeling
+  - id: vendor/mattpocock/engineering-grill-with-docs
+  - id: vendor/mattpocock/engineering-implement
+  - id: vendor/mattpocock/engineering-improve-codebase-architecture
+  - id: vendor/mattpocock/engineering-prototype
+  - id: vendor/mattpocock/engineering-research
+  - id: vendor/mattpocock/engineering-resolving-merge-conflicts
+  - id: vendor/mattpocock/engineering-setup-matt-pocock-skills
+  - id: vendor/mattpocock/engineering-tdd
+  - id: vendor/mattpocock/engineering-to-issues
+  - id: vendor/mattpocock/engineering-to-prd
+  - id: vendor/mattpocock/engineering-triage
+  - id: vendor/mattpocock/misc-git-guardrails-claude-code
+  - id: vendor/mattpocock/misc-migrate-to-shoehorn
+  - id: vendor/mattpocock/misc-scaffold-exercises
+  - id: vendor/mattpocock/misc-setup-pre-commit
+  - id: vendor/mattpocock/personal-edit-article
+  - id: vendor/mattpocock/personal-obsidian-vault
+  - id: vendor/mattpocock/productivity-grill-me
+  - id: vendor/mattpocock/productivity-grilling
+  - id: vendor/mattpocock/productivity-handoff
+  - id: vendor/mattpocock/productivity-teach
+  - id: vendor/mattpocock/productivity-writing-great-skills
