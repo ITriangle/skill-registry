@@ -1,0 +1,97 @@
+source: yugasun
+repo: git@github.com:yugasun/aiops.git
+ref: 420456b7b803175af6f3026440c509f3bfa2562a
+license: Apache-2.0
+skills:
+  - id: vendor/yugasun/aiops
+    upstream_path: skills/aiops
+    status: candidate
+    imported_at: 2026-07-03T00:00:00Z
+  - id: vendor/yugasun/aiops-implement
+    upstream_path: skills/aiops-implement
+    status: candidate
+    imported_at: 2026-07-03T00:00:00Z
+  - id: vendor/yugasun/aiops-setup
+    upstream_path: skills/aiops-setup
+    status: candidate
+    imported_at: 2026-07-03T00:00:00Z
+  - id: vendor/yugasun/architect-design
+    upstream_path: skills/architect-design
+    status: candidate
+    imported_at: 2026-07-03T00:00:00Z
+  - id: vendor/yugasun/code-graph
+    upstream_path: skills/code-graph
+    status: candidate
+    imported_at: 2026-07-03T00:00:00Z
+  - id: vendor/yugasun/diagnosing-bugs
+    upstream_path: skills/diagnosing-bugs
+    status: candidate
+    imported_at: 2026-07-03T00:00:00Z
+  - id: vendor/yugasun/domain-modeling
+    upstream_path: skills/domain-modeling
+    status: candidate
+    imported_at: 2026-07-03T00:00:00Z
+  - id: vendor/yugasun/explore
+    upstream_path: skills/explore
+    status: candidate
+    imported_at: 2026-07-03T00:00:00Z
+  - id: vendor/yugasun/file-refactor
+    upstream_path: skills/file-refactor
+    status: candidate
+    imported_at: 2026-07-03T00:00:00Z
+  - id: vendor/yugasun/gitops
+    upstream_path: skills/gitops
+    status: candidate
+    imported_at: 2026-07-03T00:00:00Z
+  - id: vendor/yugasun/grill-with-docs
+    upstream_path: skills/grill-with-docs
+    status: candidate
+    imported_at: 2026-07-03T00:00:00Z
+  - id: vendor/yugasun/grilling
+    upstream_path: skills/grilling
+    status: candidate
+    imported_at: 2026-07-03T00:00:00Z
+  - id: vendor/yugasun/handoff
+    upstream_path: skills/handoff
+    status: candidate
+    imported_at: 2026-07-03T00:00:00Z
+  - id: vendor/yugasun/improve-codebase-architecture
+    upstream_path: skills/improve-codebase-architecture
+    status: candidate
+    imported_at: 2026-07-03T00:00:00Z
+  - id: vendor/yugasun/lean
+    upstream_path: skills/lean
+    status: candidate
+    imported_at: 2026-07-03T00:00:00Z
+  - id: vendor/yugasun/prototype
+    upstream_path: skills/prototype
+    status: candidate
+    imported_at: 2026-07-03T00:00:00Z
+  - id: vendor/yugasun/prune
+    upstream_path: skills/prune
+    status: candidate
+    imported_at: 2026-07-03T00:00:00Z
+  - id: vendor/yugasun/review
+    upstream_path: skills/review
+    status: candidate
+    imported_at: 2026-07-03T00:00:00Z
+  - id: vendor/yugasun/tdd
+    upstream_path: skills/tdd
+    status: candidate
+    imported_at: 2026-07-03T00:00:00Z
+  - id: vendor/yugasun/to-issues
+    upstream_path: skills/to-issues
+    status: candidate
+    imported_at: 2026-07-03T00:00:00Z
+  - id: vendor/yugasun/to-prd
+    upstream_path: skills/to-prd
+    status: candidate
+    imported_at: 2026-07-03T00:00:00Z
+  - id: vendor/yugasun/triage
+    upstream_path: skills/triage
+    status: candidate
+    imported_at: 2026-07-03T00:00:00Z
+  - id: vendor/yugasun/ui-mockup
+    upstream_path: skills/ui-mockup
+    status: candidate
+    imported_at: 2026-07-03T00:00:00Z
