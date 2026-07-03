@@ -1,0 +1,6 @@
+project: hermes-agent
+path: /Users/wanglong/AL-WorkSpace/git.github.com/hermes-agent
+skills:
+  - id: vendor/mattpocock/productivity-grill-me
+  - id: vendor/mattpocock/productivity-grilling
+  - id: vendor/mattpocock/engineering-grill-with-docs
