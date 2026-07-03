@@ -1,0 +1,495 @@
+#!/usr/bin/env python3
+"""Manage a central Codex skill registry with project-level symlinks."""
+
+from __future__ import annotations
+
+import argparse
+import datetime as dt
+import os
+import re
+import shutil
+import subprocess
+import sys
+import tempfile
+from types import SimpleNamespace
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[1]
+PROJECTS_DIR = ROOT / "projects"
+SOURCES_DIR = ROOT / "sources"
+SKILLS_DIR = ROOT / "skills"
+ANALYSIS_DIR = ROOT / "analysis"
+VALID_STATUSES = {"analysis-only", "candidate", "approved", "deprecated"}
+
+
+class SkillctlError(Exception):
+    pass
+
+
+def die(message: str, code: int = 1) -> None:
+    print(f"error: {message}", file=sys.stderr)
+    raise SystemExit(code)
+
+
+def read_text(path: Path) -> str:
+    try:
+        return path.read_text(encoding="utf-8")
+    except FileNotFoundError as exc:
+        raise SkillctlError(f"missing file: {path}") from exc
+
+
+def parse_simple_yaml(path: Path) -> dict:
+    """Parse the small YAML subset used by registry manifests."""
+    data: dict[str, object] = {}
+    current_key: str | None = None
+    current_item: dict[str, str] | None = None
+
+    for raw_line in read_text(path).splitlines():
+        line = raw_line.rstrip()
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+
+        if not line.startswith(" "):
+            if ":" not in stripped:
+                raise SkillctlError(f"invalid line in {path}: {raw_line}")
+            key, value = stripped.split(":", 1)
+            key = key.strip()
+            value = value.strip()
+            if value:
+                data[key] = strip_quotes(value)
+                current_key = None
+            else:
+                data[key] = []
+                current_key = key
+            current_item = None
+            continue
+
+        if current_key is None:
+            raise SkillctlError(f"indented line without list key in {path}: {raw_line}")
+
+        if stripped.startswith("- "):
+            item_text = stripped[2:].strip()
+            if not isinstance(data[current_key], list):
+                raise SkillctlError(f"{current_key} is not a list in {path}")
+            if ":" in item_text:
+                item_key, item_value = item_text.split(":", 1)
+                current_item = {item_key.strip(): strip_quotes(item_value.strip())}
+                data[current_key].append(current_item)
+            else:
+                current_item = {"value": strip_quotes(item_text)}
+                data[current_key].append(current_item)
+            continue
+
+        if current_item is None or ":" not in stripped:
+            raise SkillctlError(f"unsupported nested YAML in {path}: {raw_line}")
+        item_key, item_value = stripped.split(":", 1)
+        current_item[item_key.strip()] = strip_quotes(item_value.strip())
+
+    return data
+
+
+def strip_quotes(value: str) -> str:
+    if len(value) >= 2 and value[0] == value[-1] and value[0] in {"'", '"'}:
+        return value[1:-1]
+    return value
+
+
+def dump_project_manifest(project: str, path: str, skills: list[str]) -> str:
+    lines = [f"project: {project}", f"path: {path}", "skills:"]
+    for skill_id in skills:
+        lines.append(f"  - id: {skill_id}")
+    return "\n".join(lines) + "\n"
+
+
+def project_manifest(project: str) -> Path:
+    return PROJECTS_DIR / f"{project}.yaml"
+
+
+def load_project(project: str) -> dict:
+    manifest = project_manifest(project)
+    data = parse_simple_yaml(manifest)
+    if "path" not in data:
+        raise SkillctlError(f"project manifest missing path: {manifest}")
+    data.setdefault("skills", [])
+    return data
+
+
+def project_skill_ids(data: dict) -> list[str]:
+    result: list[str] = []
+    for item in data.get("skills", []):
+        if isinstance(item, dict) and "id" in item:
+            result.append(str(item["id"]))
+        elif isinstance(item, dict) and "value" in item:
+            result.append(str(item["value"]))
+        else:
+            raise SkillctlError(f"invalid skill entry: {item}")
+    return result
+
+
+def skill_path(skill_id: str) -> Path:
+    clean_id = skill_id.strip("/")
+    if clean_id.startswith("skills/"):
+        rel = clean_id
+    else:
+        rel = f"skills/{clean_id}"
+    path = (ROOT / rel).resolve()
+    try:
+        path.relative_to(ROOT.resolve())
+    except ValueError as exc:
+        raise SkillctlError(f"skill id escapes registry root: {skill_id}") from exc
+    return path
+
+
+def validate_skill_dir(path: Path) -> dict[str, str]:
+    skill_md = path / "SKILL.md"
+    text = read_text(skill_md)
+    meta = parse_front_matter(text)
+    missing = [key for key in ("name", "description") if not meta.get(key)]
+    if missing:
+        raise SkillctlError(f"{skill_md} missing metadata: {', '.join(missing)}")
+    return meta
+
+
+def parse_front_matter(text: str) -> dict[str, str]:
+    if not text.startswith("---\n"):
+        raise SkillctlError("SKILL.md must start with YAML front matter")
+    end = text.find("\n---", 4)
+    if end == -1:
+        raise SkillctlError("SKILL.md front matter is not closed")
+    meta: dict[str, str] = {}
+    for raw_line in text[4:end].splitlines():
+        stripped = raw_line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+        if ":" not in stripped:
+            continue
+        key, value = stripped.split(":", 1)
+        meta[key.strip()] = strip_quotes(value.strip())
+    return meta
+
+
+def all_source_metadata() -> list[dict]:
+    result = []
+    for path in sorted(SOURCES_DIR.glob("*.yaml")):
+        data = parse_simple_yaml(path)
+        data["_path"] = str(path)
+        result.append(data)
+    return result
+
+
+def skill_status(skill_id: str) -> str:
+    for source in all_source_metadata():
+        for item in source.get("skills", []):
+            if isinstance(item, dict) and item.get("id") == skill_id:
+                return str(item.get("status", "candidate"))
+    return "candidate"
+
+
+def managed_link_target(path: Path) -> bool:
+    if not path.is_symlink():
+        return False
+    try:
+        path.resolve().relative_to(ROOT.resolve())
+        return True
+    except ValueError:
+        return False
+
+
+def command_list(_: argparse.Namespace) -> None:
+    for skill_md in sorted(SKILLS_DIR.glob("vendor/*/*/SKILL.md")):
+        skill_dir = skill_md.parent
+        skill_id = str(skill_dir.relative_to(SKILLS_DIR))
+        skill_id = f"vendor/{skill_id.split('vendor/', 1)[-1]}" if "vendor/" in skill_id else skill_id
+        meta = validate_skill_dir(skill_dir)
+        print(f"{skill_id}\t{skill_status(skill_id)}\t{meta['name']}")
+
+
+def command_audit(args: argparse.Namespace) -> None:
+    data = load_project(args.project)
+    project_root = Path(str(data["path"])).expanduser().resolve()
+    ids = project_skill_ids(data)
+    seen_names: dict[str, str] = {}
+    problems: list[str] = []
+
+    for skill_id in ids:
+        spath = skill_path(skill_id)
+        if not spath.exists():
+            problems.append(f"missing skill: {skill_id} -> {spath}")
+            continue
+        try:
+            meta = validate_skill_dir(spath)
+        except SkillctlError as exc:
+            problems.append(str(exc))
+            continue
+        status = skill_status(skill_id)
+        if status not in VALID_STATUSES:
+            problems.append(f"invalid status for {skill_id}: {status}")
+        if status != "approved" and not args.allow_candidate:
+            problems.append(f"skill is not approved: {skill_id} ({status})")
+        name = meta["name"]
+        if name in seen_names:
+            problems.append(f"duplicate skill name '{name}': {seen_names[name]} and {skill_id}")
+        seen_names[name] = skill_id
+
+    active_dir = project_root / ".agents" / "skills"
+    if active_dir.exists():
+        desired_names = {skill_path(skill_id).name for skill_id in ids}
+        for entry in active_dir.iterdir():
+            if managed_link_target(entry) and entry.name not in desired_names:
+                print(f"stale managed link: {entry}")
+            elif entry.is_symlink() and not entry.exists():
+                problems.append(f"broken symlink: {entry}")
+
+    if problems:
+        for problem in problems:
+            print(f"problem: {problem}", file=sys.stderr)
+        raise SystemExit(1)
+    print(f"ok: {args.project} ({len(ids)} skills)")
+
+
+def command_sync(args: argparse.Namespace) -> None:
+    data = load_project(args.project)
+    project_root = Path(str(data["path"])).expanduser().resolve()
+    ids = project_skill_ids(data)
+    active_dir = project_root / ".agents" / "skills"
+
+    command_audit(SimpleNamespace(project=args.project, allow_candidate=args.allow_candidate))
+
+    desired: dict[str, Path] = {}
+    for skill_id in ids:
+        spath = skill_path(skill_id)
+        desired[spath.name] = spath
+
+    if args.dry_run:
+        print(f"would ensure directory: {active_dir}")
+    else:
+        active_dir.mkdir(parents=True, exist_ok=True)
+
+    for name, target in desired.items():
+        link = active_dir / name
+        if link.exists() or link.is_symlink():
+            if link.is_symlink() and link.resolve() == target.resolve():
+                continue
+            if managed_link_target(link):
+                if args.dry_run:
+                    print(f"would replace managed link: {link}")
+                else:
+                    link.unlink()
+            else:
+                raise SkillctlError(f"refusing to replace unmanaged path: {link}")
+        if args.dry_run:
+            print(f"would link: {link} -> {target}")
+        else:
+            link.symlink_to(target, target_is_directory=True)
+            print(f"linked: {link} -> {target}")
+
+    if active_dir.exists():
+        for entry in active_dir.iterdir():
+            if managed_link_target(entry) and entry.name not in desired:
+                if args.dry_run:
+                    print(f"would remove stale link: {entry}")
+                else:
+                    entry.unlink()
+                    print(f"removed stale link: {entry}")
+
+
+def command_enable(args: argparse.Namespace) -> None:
+    manifest = project_manifest(args.project)
+    data = load_project(args.project)
+    ids = project_skill_ids(data)
+    if args.skill_id not in ids:
+        ids.append(args.skill_id)
+    manifest.write_text(
+        dump_project_manifest(args.project, str(data["path"]), ids),
+        encoding="utf-8",
+    )
+    print(f"enabled in manifest: {args.skill_id}")
+
+
+def command_disable(args: argparse.Namespace) -> None:
+    manifest = project_manifest(args.project)
+    data = load_project(args.project)
+    ids = [skill_id for skill_id in project_skill_ids(data) if skill_id != args.skill_id]
+    manifest.write_text(
+        dump_project_manifest(args.project, str(data["path"]), ids),
+        encoding="utf-8",
+    )
+    print(f"disabled in manifest: {args.skill_id}")
+
+
+def command_import(args: argparse.Namespace) -> None:
+    dest = skill_path(args.skill_id)
+    if dest.exists() and not args.force:
+        raise SkillctlError(f"destination exists: {dest}")
+    with tempfile.TemporaryDirectory(prefix="skillctl-") as tmp:
+        tmp_path = Path(tmp)
+        clone_dir = tmp_path / "repo"
+        run(["git", "clone", args.repo, str(clone_dir)])
+        run(["git", "-C", str(clone_dir), "checkout", args.ref])
+        upstream_skill = clone_dir / args.skill_path
+        if not upstream_skill.exists():
+            raise SkillctlError(f"upstream skill path not found: {args.skill_path}")
+        validate_skill_dir(upstream_skill)
+        if dest.exists():
+            shutil.rmtree(dest)
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copytree(upstream_skill, dest, symlinks=True)
+    validate_skill_dir(dest)
+    update_source_metadata(args)
+    print(f"imported: {args.skill_id}")
+
+
+def run(command: list[str]) -> None:
+    subprocess.run(command, check=True)
+
+
+def update_source_metadata(args: argparse.Namespace) -> None:
+    SOURCES_DIR.mkdir(parents=True, exist_ok=True)
+    path = SOURCES_DIR / f"{args.source}.yaml"
+    now = dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+    if path.exists():
+        text = read_text(path).rstrip() + "\n"
+        if f"id: {args.skill_id}" in text:
+            return
+        text += (
+            f"  - id: {args.skill_id}\n"
+            f"    upstream_path: {args.skill_path}\n"
+            "    status: candidate\n"
+            f"    imported_at: {now}\n"
+        )
+    else:
+        text = (
+            f"source: {args.source}\n"
+            f"repo: {args.repo}\n"
+            f"ref: {args.ref}\n"
+            "skills:\n"
+            f"  - id: {args.skill_id}\n"
+            f"    upstream_path: {args.skill_path}\n"
+            "    status: candidate\n"
+            f"    imported_at: {now}\n"
+        )
+    path.write_text(text, encoding="utf-8")
+
+
+def command_analyze(args: argparse.Namespace) -> None:
+    spath = skill_path(args.skill_id)
+    meta = validate_skill_dir(spath)
+    text = read_text(spath / "SKILL.md")
+    source, skill_name = source_and_name(args.skill_id)
+    out_dir = ANALYSIS_DIR / source
+    out_dir.mkdir(parents=True, exist_ok=True)
+    report = out_dir / f"{skill_name}.md"
+
+    scripts = sorted(str(p.relative_to(spath)) for p in spath.glob("scripts/**/*") if p.is_file())
+    refs = sorted(str(p.relative_to(spath)) for p in spath.glob("references/**/*") if p.is_file())
+    mentions = detect_mentions(text)
+
+    body = [
+        f"# {args.skill_id}",
+        "",
+        f"- Skill name: `{meta['name']}`",
+        f"- Current status: `{skill_status(args.skill_id)}`",
+        f"- Description: {meta['description']}",
+        "",
+        "## Trigger Review",
+        "",
+        "- Review whether the description is narrow enough for implicit invocation.",
+        "- Confirm explicit trigger words are front-loaded.",
+        "",
+        "## Dependencies And Risk",
+        "",
+        f"- Scripts: {', '.join(scripts) if scripts else 'none detected'}",
+        f"- References: {', '.join(refs) if refs else 'none detected'}",
+        f"- Mentions: {', '.join(mentions) if mentions else 'none detected'}",
+        "",
+        "## Recommendation",
+        "",
+        "- Suggested status: `candidate`",
+        "- Approve only after checking license, script behavior, and trigger overlap.",
+        "",
+    ]
+    report.write_text("\n".join(body), encoding="utf-8")
+    print(f"analysis written: {report}")
+
+
+def detect_mentions(text: str) -> list[str]:
+    patterns = {
+        "network": r"\b(curl|wget|http|https|api|download|upload)\b",
+        "filesystem": r"\b(rm|delete|move|copy|write|chmod|chown)\b",
+        "mcp": r"\bMCP\b|\bmcp__",
+        "shell": r"\b(shell|bash|zsh|command|script)\b",
+        "secrets": r"\b(token|secret|password|api key|credential)\b",
+    }
+    hits = []
+    for label, pattern in patterns.items():
+        if re.search(pattern, text, re.IGNORECASE):
+            hits.append(label)
+    return hits
+
+
+def source_and_name(skill_id: str) -> tuple[str, str]:
+    parts = skill_id.strip("/").split("/")
+    if len(parts) >= 3 and parts[0] == "vendor":
+        return parts[1], parts[-1]
+    return "local", parts[-1]
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(prog="skillctl")
+    sub = parser.add_subparsers(dest="command", required=True)
+
+    list_p = sub.add_parser("list", help="List vendored skills")
+    list_p.set_defaults(func=command_list)
+
+    audit_p = sub.add_parser("audit", help="Audit a project manifest")
+    audit_p.add_argument("project")
+    audit_p.add_argument("--allow-candidate", action="store_true")
+    audit_p.set_defaults(func=command_audit)
+
+    sync_p = sub.add_parser("sync", help="Sync project symlinks")
+    sync_p.add_argument("project")
+    sync_p.add_argument("--dry-run", action="store_true")
+    sync_p.add_argument("--allow-candidate", action="store_true")
+    sync_p.set_defaults(func=command_sync)
+
+    enable_p = sub.add_parser("enable", help="Add a skill to a project manifest")
+    enable_p.add_argument("project")
+    enable_p.add_argument("skill_id")
+    enable_p.set_defaults(func=command_enable)
+
+    disable_p = sub.add_parser("disable", help="Remove a skill from a project manifest")
+    disable_p.add_argument("project")
+    disable_p.add_argument("skill_id")
+    disable_p.set_defaults(func=command_disable)
+
+    import_p = sub.add_parser("import", help="Import a skill from a pinned Git ref")
+    import_p.add_argument("--source", required=True)
+    import_p.add_argument("--repo", required=True)
+    import_p.add_argument("--ref", required=True)
+    import_p.add_argument("--skill-path", required=True)
+    import_p.add_argument("--id", dest="skill_id", required=True)
+    import_p.add_argument("--force", action="store_true")
+    import_p.set_defaults(func=command_import)
+
+    analyze_p = sub.add_parser("analyze", help="Generate a skill analysis report")
+    analyze_p.add_argument("skill_id")
+    analyze_p.set_defaults(func=command_analyze)
+
+    return parser
+
+
+def main() -> None:
+    parser = build_parser()
+    args = parser.parse_args()
+    try:
+        args.func(args)
+    except SkillctlError as exc:
+        die(str(exc))
+    except subprocess.CalledProcessError as exc:
+        die(f"command failed with exit code {exc.returncode}: {' '.join(exc.cmd)}")
+
+
+if __name__ == "__main__":
+    main()

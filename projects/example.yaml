@@ -1,0 +1,5 @@
+project: example
+path: /absolute/path/to/project
+skills:
+  - id: vendor/example/example-skill
+

@@ -1,0 +1,9 @@
+source: example
+repo: local-example
+ref: scaffold
+skills:
+  - id: vendor/example/example-skill
+    upstream_path: skills/vendor/example/example-skill
+    status: approved
+    imported_at: 2026-07-03T00:00:00Z
+
