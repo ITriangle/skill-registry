@@ -3,254 +3,356 @@ groups:
     default_id: vendor/yugasun/aiops
     variants: vendor/yugasun/aiops
     sources: yugasun
+    difference: single registered variant
+    recommendation: single source; no merge decision needed
     note: Single registered variant.
   - name: aiops-implement
     default_id: vendor/yugasun/aiops-implement
     variants: vendor/yugasun/aiops-implement
     sources: yugasun
+    difference: single registered variant
+    recommendation: single source; no merge decision needed
     note: Single registered variant.
   - name: aiops-setup
     default_id: vendor/yugasun/aiops-setup
     variants: vendor/yugasun/aiops-setup
     sources: yugasun
+    difference: single registered variant
+    recommendation: single source; no merge decision needed
     note: Single registered variant.
   - name: architect-design
     default_id: vendor/yugasun/architect-design
     variants: vendor/yugasun/architect-design
     sources: yugasun
+    difference: single registered variant
+    recommendation: single source; no merge decision needed
     note: Single registered variant.
   - name: ask-matt
     default_id: vendor/mattpocock/engineering-ask-matt
     variants: vendor/mattpocock/engineering-ask-matt
     sources: mattpocock
+    difference: single registered variant
+    recommendation: single source; no merge decision needed
     note: Single registered variant.
   - name: claude-handoff
     default_id: vendor/mattpocock/in-progress-claude-handoff
     variants: vendor/mattpocock/in-progress-claude-handoff
     sources: mattpocock
+    difference: single registered variant
+    recommendation: single source; no merge decision needed
     note: Single registered variant.
   - name: code-graph
     default_id: vendor/yugasun/code-graph
     variants: vendor/yugasun/code-graph
     sources: yugasun
+    difference: single registered variant
+    recommendation: single source; no merge decision needed
     note: Single registered variant.
   - name: code-review
     default_id: vendor/mattpocock/engineering-code-review
     variants: vendor/mattpocock/engineering-code-review
     sources: mattpocock
+    difference: single registered variant
+    recommendation: single source; no merge decision needed
     note: Single registered variant.
   - name: codebase-design
     default_id: vendor/mattpocock/engineering-codebase-design
     variants: vendor/mattpocock/engineering-codebase-design
     sources: mattpocock
+    difference: single registered variant
+    recommendation: single source; no merge decision needed
     note: Single registered variant.
   - name: design-an-interface
     default_id: vendor/mattpocock/deprecated-design-an-interface
     variants: vendor/mattpocock/deprecated-design-an-interface
     sources: mattpocock
+    difference: single registered variant
+    recommendation: single source; no merge decision needed
     note: Single registered variant.
   - name: diagnosing-bugs
     default_id: vendor/mattpocock/engineering-diagnosing-bugs
     variants: vendor/mattpocock/engineering-diagnosing-bugs,vendor/yugasun/diagnosing-bugs
     sources: mattpocock,yugasun
+    difference: sources: mattpocock,yugasun; profiles: mattpocock=19w/0ref/1script,yugasun=18w/0ref/1script
+    recommendation: recommend vendor/mattpocock/engineering-diagnosing-bugs as default among non-approved variants; review before promotion to approved
     note: Merged duplicate skill name; default is used unless --source is specified.
   - name: domain-modeling
     default_id: vendor/mattpocock/engineering-domain-modeling
     variants: vendor/mattpocock/engineering-domain-modeling,vendor/yugasun/domain-modeling
     sources: mattpocock,yugasun
+    difference: sources: mattpocock,yugasun; profiles: mattpocock=35w/2ref/0script,yugasun=21w/2ref/0script
+    recommendation: recommend vendor/mattpocock/engineering-domain-modeling as default among non-approved variants; review before promotion to approved
     note: Merged duplicate skill name; default is used unless --source is specified.
   - name: edit-article
     default_id: vendor/mattpocock/personal-edit-article
     variants: vendor/mattpocock/personal-edit-article
     sources: mattpocock
+    difference: single registered variant
+    recommendation: single source; no merge decision needed
     note: Single registered variant.
   - name: example-skill
     default_id: vendor/example/example-skill
     variants: vendor/example/example-skill
     sources: example
+    difference: single registered variant
+    recommendation: single source; no merge decision needed
     note: Single registered variant.
   - name: explore
     default_id: vendor/yugasun/explore
     variants: vendor/yugasun/explore
     sources: yugasun
+    difference: single registered variant
+    recommendation: single source; no merge decision needed
     note: Single registered variant.
   - name: file-refactor
     default_id: vendor/yugasun/file-refactor
     variants: vendor/yugasun/file-refactor
     sources: yugasun
+    difference: single registered variant
+    recommendation: single source; no merge decision needed
     note: Single registered variant.
   - name: git-guardrails-claude-code
     default_id: vendor/mattpocock/misc-git-guardrails-claude-code
     variants: vendor/mattpocock/misc-git-guardrails-claude-code
     sources: mattpocock
+    difference: single registered variant
+    recommendation: single source; no merge decision needed
     note: Single registered variant.
   - name: gitops
     default_id: vendor/yugasun/gitops
     variants: vendor/yugasun/gitops
     sources: yugasun
+    difference: single registered variant
+    recommendation: single source; no merge decision needed
     note: Single registered variant.
   - name: grill-me
     default_id: vendor/mattpocock/productivity-grill-me
     variants: vendor/mattpocock/productivity-grill-me
     sources: mattpocock
+    difference: single registered variant
+    recommendation: single source; no merge decision needed
     note: Single registered variant.
   - name: grill-with-docs
     default_id: vendor/mattpocock/engineering-grill-with-docs
     variants: vendor/mattpocock/engineering-grill-with-docs,vendor/yugasun/grill-with-docs
     sources: mattpocock,yugasun
+    difference: sources: mattpocock,yugasun; profiles: mattpocock=19w/0ref/0script,yugasun=14w/0ref/0script
+    recommendation: recommend vendor/mattpocock/engineering-grill-with-docs as default among non-approved variants; review before promotion to approved
     note: Merged duplicate skill name; default is used unless --source is specified.
   - name: grilling
     default_id: vendor/mattpocock/productivity-grilling
     variants: vendor/mattpocock/productivity-grilling,vendor/yugasun/grilling
     sources: mattpocock,yugasun
+    difference: sources: mattpocock,yugasun; profiles: mattpocock=26w/0ref/0script,yugasun=22w/0ref/0script
+    recommendation: recommend vendor/mattpocock/productivity-grilling as default among non-approved variants; review before promotion to approved
     note: Merged duplicate skill name; default is used unless --source is specified.
   - name: handoff
     default_id: vendor/mattpocock/productivity-handoff
     variants: vendor/mattpocock/productivity-handoff,vendor/yugasun/handoff
     sources: mattpocock,yugasun
+    difference: sources: mattpocock,yugasun; descriptions are identical
+    recommendation: recommend vendor/mattpocock/productivity-handoff as default among non-approved variants; review before promotion to approved
     note: Merged duplicate skill name; default is used unless --source is specified.
   - name: implement
     default_id: vendor/mattpocock/engineering-implement
     variants: vendor/mattpocock/engineering-implement
     sources: mattpocock
+    difference: single registered variant
+    recommendation: single source; no merge decision needed
     note: Single registered variant.
   - name: improve-codebase-architecture
     default_id: vendor/mattpocock/engineering-improve-codebase-architecture
     variants: vendor/mattpocock/engineering-improve-codebase-architecture,vendor/yugasun/improve-codebase-architecture
     sources: mattpocock,yugasun
+    difference: sources: mattpocock,yugasun; profiles: mattpocock=20w/1ref/0script,yugasun=1w/2ref/0script
+    recommendation: recommend vendor/mattpocock/engineering-improve-codebase-architecture as default among non-approved variants; review before promotion to approved
     note: Merged duplicate skill name; default is used unless --source is specified.
   - name: lean
     default_id: vendor/yugasun/lean
     variants: vendor/yugasun/lean
     sources: yugasun
+    difference: single registered variant
+    recommendation: single source; no merge decision needed
     note: Single registered variant.
   - name: loop-me
     default_id: vendor/mattpocock/in-progress-loop-me
     variants: vendor/mattpocock/in-progress-loop-me
     sources: mattpocock
+    difference: single registered variant
+    recommendation: single source; no merge decision needed
     note: Single registered variant.
   - name: migrate-to-shoehorn
     default_id: vendor/mattpocock/misc-migrate-to-shoehorn
     variants: vendor/mattpocock/misc-migrate-to-shoehorn
     sources: mattpocock
+    difference: single registered variant
+    recommendation: single source; no merge decision needed
     note: Single registered variant.
   - name: obsidian-vault
     default_id: vendor/mattpocock/personal-obsidian-vault
     variants: vendor/mattpocock/personal-obsidian-vault
     sources: mattpocock
+    difference: single registered variant
+    recommendation: single source; no merge decision needed
     note: Single registered variant.
   - name: prototype
     default_id: vendor/mattpocock/engineering-prototype
     variants: vendor/mattpocock/engineering-prototype,vendor/yugasun/prototype
     sources: mattpocock,yugasun
+    difference: sources: mattpocock,yugasun; profiles: mattpocock=32w/2ref/0script,yugasun=17w/0ref/0script
+    recommendation: recommend vendor/mattpocock/engineering-prototype as default among non-approved variants; review before promotion to approved
     note: Merged duplicate skill name; default is used unless --source is specified.
   - name: prune
     default_id: vendor/yugasun/prune
     variants: vendor/yugasun/prune
     sources: yugasun
+    difference: single registered variant
+    recommendation: single source; no merge decision needed
     note: Single registered variant.
   - name: qa
     default_id: vendor/mattpocock/deprecated-qa
     variants: vendor/mattpocock/deprecated-qa
     sources: mattpocock
+    difference: single registered variant
+    recommendation: single source; no merge decision needed
     note: Single registered variant.
   - name: request-refactor-plan
     default_id: vendor/mattpocock/deprecated-request-refactor-plan
     variants: vendor/mattpocock/deprecated-request-refactor-plan
     sources: mattpocock
+    difference: single registered variant
+    recommendation: single source; no merge decision needed
     note: Single registered variant.
   - name: research
     default_id: vendor/mattpocock/engineering-research
     variants: vendor/mattpocock/engineering-research
     sources: mattpocock
+    difference: single registered variant
+    recommendation: single source; no merge decision needed
     note: Single registered variant.
   - name: resolving-merge-conflicts
     default_id: vendor/mattpocock/engineering-resolving-merge-conflicts
     variants: vendor/mattpocock/engineering-resolving-merge-conflicts
     sources: mattpocock
+    difference: single registered variant
+    recommendation: single source; no merge decision needed
     note: Single registered variant.
   - name: review
     default_id: vendor/yugasun/review
     variants: vendor/yugasun/review
     sources: yugasun
+    difference: single registered variant
+    recommendation: single source; no merge decision needed
     note: Single registered variant.
   - name: scaffold-exercises
     default_id: vendor/mattpocock/misc-scaffold-exercises
     variants: vendor/mattpocock/misc-scaffold-exercises
     sources: mattpocock
+    difference: single registered variant
+    recommendation: single source; no merge decision needed
     note: Single registered variant.
   - name: setup-matt-pocock-skills
     default_id: vendor/mattpocock/engineering-setup-matt-pocock-skills
     variants: vendor/mattpocock/engineering-setup-matt-pocock-skills
     sources: mattpocock
+    difference: single registered variant
+    recommendation: single source; no merge decision needed
     note: Single registered variant.
   - name: setup-pre-commit
     default_id: vendor/mattpocock/misc-setup-pre-commit
     variants: vendor/mattpocock/misc-setup-pre-commit
     sources: mattpocock
+    difference: single registered variant
+    recommendation: single source; no merge decision needed
     note: Single registered variant.
   - name: tdd
     default_id: vendor/mattpocock/engineering-tdd
     variants: vendor/mattpocock/engineering-tdd,vendor/yugasun/tdd
     sources: mattpocock,yugasun
+    difference: sources: mattpocock,yugasun; profiles: mattpocock=20w/2ref/0script,yugasun=9w/3ref/0script
+    recommendation: recommend vendor/mattpocock/engineering-tdd as default among non-approved variants; review before promotion to approved
     note: Merged duplicate skill name; default is used unless --source is specified.
   - name: teach
     default_id: vendor/mattpocock/productivity-teach
     variants: vendor/mattpocock/productivity-teach
     sources: mattpocock
+    difference: single registered variant
+    recommendation: single source; no merge decision needed
     note: Single registered variant.
   - name: to-issues
     default_id: vendor/mattpocock/engineering-to-issues
     variants: vendor/mattpocock/engineering-to-issues,vendor/yugasun/to-issues
     sources: mattpocock,yugasun
+    difference: sources: mattpocock,yugasun; profiles: mattpocock=18w/0ref/0script,yugasun=13w/0ref/0script
+    recommendation: recommend vendor/mattpocock/engineering-to-issues as default among non-approved variants; review before promotion to approved
     note: Merged duplicate skill name; default is used unless --source is specified.
   - name: to-prd
     default_id: vendor/mattpocock/engineering-to-prd
     variants: vendor/mattpocock/engineering-to-prd,vendor/yugasun/to-prd
     sources: mattpocock,yugasun
+    difference: sources: mattpocock,yugasun; profiles: mattpocock=25w/0ref/0script,yugasun=21w/0ref/0script
+    recommendation: recommend vendor/mattpocock/engineering-to-prd as default among non-approved variants; review before promotion to approved
     note: Merged duplicate skill name; default is used unless --source is specified.
   - name: triage
     default_id: vendor/mattpocock/engineering-triage
     variants: vendor/mattpocock/engineering-triage,vendor/yugasun/triage
     sources: mattpocock,yugasun
+    difference: sources: mattpocock,yugasun; profiles: mattpocock=22w/2ref/0script,yugasun=17w/2ref/0script
+    recommendation: recommend vendor/mattpocock/engineering-triage as default among non-approved variants; review before promotion to approved
     note: Merged duplicate skill name; default is used unless --source is specified.
   - name: ubiquitous-language
     default_id: vendor/mattpocock/deprecated-ubiquitous-language
     variants: vendor/mattpocock/deprecated-ubiquitous-language
     sources: mattpocock
+    difference: single registered variant
+    recommendation: single source; no merge decision needed
     note: Single registered variant.
   - name: ui-mockup
     default_id: vendor/yugasun/ui-mockup
     variants: vendor/yugasun/ui-mockup
     sources: yugasun
+    difference: single registered variant
+    recommendation: single source; no merge decision needed
     note: Single registered variant.
   - name: wayfinder
     default_id: vendor/mattpocock/in-progress-wayfinder
     variants: vendor/mattpocock/in-progress-wayfinder
     sources: mattpocock
+    difference: single registered variant
+    recommendation: single source; no merge decision needed
     note: Single registered variant.
   - name: wizard
     default_id: vendor/mattpocock/in-progress-wizard
     variants: vendor/mattpocock/in-progress-wizard
     sources: mattpocock
+    difference: single registered variant
+    recommendation: single source; no merge decision needed
     note: Single registered variant.
   - name: writing-beats
     default_id: vendor/mattpocock/in-progress-writing-beats
     variants: vendor/mattpocock/in-progress-writing-beats
     sources: mattpocock
+    difference: single registered variant
+    recommendation: single source; no merge decision needed
     note: Single registered variant.
   - name: writing-fragments
     default_id: vendor/mattpocock/in-progress-writing-fragments
     variants: vendor/mattpocock/in-progress-writing-fragments
     sources: mattpocock
+    difference: single registered variant
+    recommendation: single source; no merge decision needed
     note: Single registered variant.
   - name: writing-great-skills
     default_id: vendor/mattpocock/productivity-writing-great-skills
     variants: vendor/mattpocock/productivity-writing-great-skills
     sources: mattpocock
+    difference: single registered variant
+    recommendation: single source; no merge decision needed
     note: Single registered variant.
   - name: writing-shape
     default_id: vendor/mattpocock/in-progress-writing-shape
     variants: vendor/mattpocock/in-progress-writing-shape
     sources: mattpocock
+    difference: single registered variant
+    recommendation: single source; no merge decision needed
     note: Single registered variant.

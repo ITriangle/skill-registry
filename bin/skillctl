@@ -210,9 +210,30 @@ def skill_records() -> list[dict[str, str]]:
                 "description": meta["description"],
                 "source": source_from_id(skill_id),
                 "status": skill_status(skill_id),
+                "scripts": str(count_files(skill_dir / "scripts")),
+                "references": str(count_reference_files(skill_dir)),
+                "description_words": str(len(meta["description"].split())),
             }
         )
     return sorted(records, key=lambda r: (r["name"], r["source"], r["id"]))
+
+
+def count_files(path: Path) -> int:
+    if not path.exists():
+        return 0
+    return sum(1 for child in path.rglob("*") if child.is_file())
+
+
+def count_reference_files(skill_dir: Path) -> int:
+    count = 0
+    for child in skill_dir.iterdir():
+        if child.name in {"SKILL.md", "LICENSE.txt", "scripts"}:
+            continue
+        if child.is_file():
+            count += 1
+        elif child.is_dir():
+            count += count_files(child)
+    return count
 
 
 def load_skill_groups() -> dict[str, dict[str, str]]:
@@ -232,9 +253,53 @@ def choose_default(records: list[dict[str, str]], existing_default: str | None =
         return str(existing_default)
     ranked = sorted(
         records,
-        key=lambda r: (STATUS_RANK.get(r["status"], 99), r["source"], r["id"]),
+        key=lambda r: (
+            STATUS_RANK.get(r["status"], 99),
+            -int(r.get("description_words", "0")),
+            -int(r.get("references", "0")),
+            -int(r.get("scripts", "0")),
+            r["source"],
+            r["id"],
+        ),
     )
     return ranked[0]["id"]
+
+
+def group_analysis(name: str, records: list[dict[str, str]], default_id: str) -> tuple[str, str]:
+    if len(records) == 1:
+        return "single registered variant", "single source; no merge decision needed"
+
+    default_record = next(record for record in records if record["id"] == default_id)
+    pieces = []
+    status_set = sorted({record["status"] for record in records})
+    if len(status_set) > 1:
+        pieces.append("status differs: " + ",".join(status_set))
+    source_set = sorted({record["source"] for record in records})
+    pieces.append("sources: " + ",".join(source_set))
+
+    descriptions = {record["description"] for record in records}
+    if len(descriptions) == 1:
+        pieces.append("descriptions are identical")
+    else:
+        short = sorted(
+            f"{record['source']}={record['description_words']}w/{record['references']}ref/{record['scripts']}script"
+            for record in records
+        )
+        pieces.append("profiles: " + ",".join(short))
+
+    reason = (
+        f"recommend {default_id} as default for '{name}' because it is the selected merged default; "
+        f"use --source to choose another source explicitly"
+    )
+    if default_record["status"] == "approved":
+        reason = f"recommend {default_id} because it is approved; use --source to override"
+    elif all(record["status"] != "approved" for record in records):
+        reason = (
+            f"recommend {default_id} as default among non-approved variants; "
+            "review before promotion to approved"
+        )
+
+    return "; ".join(pieces), reason
 
 
 def write_skill_groups() -> None:
@@ -249,6 +314,7 @@ def write_skill_groups() -> None:
         default_id = choose_default(records, existing.get(name, {}).get("default_id"))
         variants = ",".join(record["id"] for record in records)
         sources = ",".join(sorted({record["source"] for record in records}))
+        difference, recommendation = group_analysis(name, records, default_id)
         note = (
             "Merged duplicate skill name; default is used unless --source is specified."
             if len(records) > 1
@@ -260,6 +326,8 @@ def write_skill_groups() -> None:
                 f"    default_id: {default_id}",
                 f"    variants: {variants}",
                 f"    sources: {sources}",
+                f"    difference: {difference}",
+                f"    recommendation: {recommendation}",
                 f"    note: {note}",
             ]
         )
@@ -300,10 +368,19 @@ def print_alternatives(skill_name: str) -> None:
     if not records:
         raise SkillctlError(f"unknown skill name: {skill_name}")
     default_id = resolve_skill_ref(skill_name)
+    difference, recommendation = group_analysis(skill_name, records, default_id)
     print(f"{skill_name}: default={default_id}")
+    print(f"difference: {difference}")
+    print(f"recommendation: {recommendation}")
     for record in records:
         marker = " default" if record["id"] == default_id else ""
         print(f"- {record['id']} [{record['status']}, source={record['source']}]{marker}")
+        print(
+            "  profile: "
+            f"{record['description_words']} description words, "
+            f"{record['references']} reference files, "
+            f"{record['scripts']} scripts"
+        )
         print(f"  description: {record['description']}")
 
 

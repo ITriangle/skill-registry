@@ -71,6 +71,14 @@ When two sources provide a skill with the same `name`, the registry merges them
 in `skill-groups.yaml`. Each group has one `default_id`; installing by skill
 name uses that default so only one variant becomes active in the project.
 
+Registration and refresh must analyze the variants before they are used by a
+project. `skill-groups.yaml` records:
+
+- `variants`: every registered implementation of the same skill name.
+- `difference`: source/status/profile differences, including references and scripts.
+- `recommendation`: the default choice and when to override it.
+- `default_id`: the variant installed when a project asks for the skill by name.
+
 Show the available variants and their differences:
 
 ```bash
@@ -100,6 +108,15 @@ After importing or manually vendoring skills, refresh the merge index:
 ```bash
 bin/skillctl refresh-groups
 ```
+
+When adding a same-name skill to a project, prefer the skill name first so the
+merged default is used:
+
+```bash
+bin/skillctl enable project-1 grilling
+```
+
+Use `--source` only when the project intentionally wants a non-default source.
 
 ## Safety model
 
