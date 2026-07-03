@@ -5,3 +5,8 @@ skills:
   - id: vendor/mattpocock/productivity-grilling
   - id: vendor/mattpocock/engineering-grill-with-docs
   - id: vendor/mattpocock/engineering-domain-modeling
+  - id: vendor/mattpocock/engineering-tdd
+  - id: vendor/mattpocock/engineering-to-issues
+  - id: vendor/mattpocock/engineering-setup-matt-pocock-skills
+  - id: vendor/mattpocock/engineering-to-prd
+  - id: vendor/mattpocock/engineering-triage
