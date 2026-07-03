@@ -42,6 +42,11 @@ symlinks under that project's `.agents/skills` directory.
    bin/skillctl enable noeticai example-skill
    ```
 
+   `enable` also installs explicit skill dependencies referenced from
+   backticked slash commands in `SKILL.md`, such as `` `/domain-modeling` ``.
+   Dependencies are resolved from the same source when available, then from the
+   merged default in `skill-groups.yaml`.
+
 5. Synchronize symlinks into the target project:
 
    ```bash
@@ -124,5 +129,6 @@ Use `--source` only when the project intentionally wants a non-default source.
   make it visible to Codex.
 - Only project symlinks under `.agents/skills` activate skills.
 - `sync` only manages symlinks that point back into this registry.
+- `audit` reports project manifests that omit explicit skill dependencies.
 - By default, `sync` refuses skills that are not marked `approved` in source
   metadata. Use `--allow-candidate` only for explicit experiments.

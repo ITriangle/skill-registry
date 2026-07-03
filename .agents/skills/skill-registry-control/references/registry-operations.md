@@ -57,6 +57,12 @@ bin/skillctl enable <project> <skill-name>
 bin/skillctl sync <project> --allow-candidate
 ```
 
+`enable` expands explicit skill dependencies found in `SKILL.md`, such as
+`` `/grilling` `` or `` `/domain-modeling` ``, and writes those dependency IDs
+to the same project manifest. It prefers a dependency from the same source as
+the parent skill when that source provides exactly one matching skill name; if
+not, it falls back to the merged default in `skill-groups.yaml`.
+
 Use source override only when requested:
 
 ```bash
@@ -78,6 +84,10 @@ find <project>/.agents/skills -maxdepth 1 -type l -print | sort
 bin/skillctl audit <project> --allow-candidate
 ```
 
+If `audit` reports `missing dependency`, rerun `bin/skillctl enable <project>
+<skill-name>` for the parent skill so the manifest is repaired through normal
+resolution rules.
+
 ## Final Response Checklist
 
 Report:
@@ -88,4 +98,3 @@ Report:
 - Which project manifest changed.
 - How many symlinks were created or removed.
 - The commit hash for registry changes.
-

@@ -32,6 +32,7 @@ Read [references/registry-operations.md](references/registry-operations.md) when
    - Registering or importing a skill must not activate it in any project.
    - Project activation must be represented in `projects/<project>.yaml`.
    - `sync` should create or remove only registry-managed symlinks.
+   - Use `bin/skillctl enable` for activation so explicit `/skill-name` dependencies are added to the same project manifest.
 4. For same-name skills, compare variants before enabling:
    - Run `bin/skillctl alternatives <skill-name>`.
    - Use the merged default unless the user names a source or exact ID.
@@ -47,7 +48,7 @@ Read [references/registry-operations.md](references/registry-operations.md) when
 
 - Do not install all skills from a source unless the user explicitly asks for all.
 - When the user asks for a broad term like `grilling`, resolve by skill name through `skill-groups.yaml`; do not link every matching source.
+- When a skill body explicitly invokes another skill, for example `` `/grilling` `` or `` `/domain-modeling` ``, install those dependencies together with the parent skill.
 - When multiple sources share the same skill name, explain the difference and recommendation in the final answer.
 - Keep `analysis-only` and `deprecated` skills out of project activation unless explicitly requested.
 - Use `--allow-candidate` only because current registry entries are intentionally still candidates; do not silently promote them to `approved`.
-
