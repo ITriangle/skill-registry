@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skill Registry Control"
+  short_description: "管理 registry skills 注册与项目启用"
+  default_prompt: "Use $skill-registry-control to register, compare, and activate skills through the central registry."
