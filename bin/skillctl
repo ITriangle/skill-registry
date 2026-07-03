@@ -23,6 +23,212 @@ ANALYSIS_DIR = ROOT / "analysis"
 GROUPS_FILE = ROOT / "skill-groups.yaml"
 VALID_STATUSES = {"analysis-only", "candidate", "approved", "deprecated"}
 STATUS_RANK = {"approved": 0, "candidate": 1, "analysis-only": 2, "deprecated": 3}
+USAGE_GUIDANCE = {
+    "aiops": (
+        "当用户要把一次工程任务交给 aiops 流程编排，自动识别阶段、展示步骤、追踪 flow.state.yaml 并分派子 skill 时使用。",
+        "当需求只是单点代码修改、普通问答，或用户已经明确指定某个更窄的 skill 时不要用。",
+    ),
+    "aiops-implement": (
+        "当用户要按 lean、tdd、prune、review 的交付阶段推进实现，并需要阶段门禁和提交前确认时使用。",
+        "当任务还处在探索、需求澄清、一次性小修，或用户不需要 aiops 交付流程时不要用。",
+    ),
+    "aiops-setup": (
+        "当目标项目首次接入 aiops bundle，需要配置 issue tracker、triage 标签、领域文档结构或 aiops.yaml 时使用。",
+        "当项目已经配置完成，或用户只是要运行某个 aiops 阶段而不是做初始化时不要用。",
+    ),
+    "architect-design": (
+        "当用户要做架构设计、模块边界、技术方案权衡或沉淀设计词汇时使用。",
+        "当用户只需要直接实现、调 bug、写测试，且不需要架构层面的方案比较时不要用。",
+    ),
+    "ask-matt": (
+        "当用户不确定该使用哪个 Matt Pocock skill 或工程流程，需要先做 skill 路由判断时使用。",
+        "当用户已经明确点名具体 skill，或任务显然不属于该 skill 集合时不要用。",
+    ),
+    "claude-handoff": (
+        "当当前对话需要交给新的后台 agent 立即接手并继续工作时使用。",
+        "当只是要总结、归档、发给人类阅读，或不需要启动另一个 agent 时不要用。",
+    ),
+    "code-graph": (
+        "当用户需要为代码库建立或查询结构化代码图，分析依赖、符号、调用关系或架构路径时使用。",
+        "当问题能通过普通搜索阅读解决，或不需要构建代码图索引时不要用。",
+    ),
+    "code-review": (
+        "当用户要审查某个分支、PR、工作区改动或从指定提交以来的变更时使用。",
+        "当用户要你直接实现功能、修复 bug，或只想解释现有代码而非评审变更时不要用。",
+    ),
+    "codebase-design": (
+        "当用户要设计或改进模块接口、寻找 deep module 机会、提升可测性或 AI 可导航性时使用。",
+        "当需求只是局部实现、格式整理，或不涉及模块边界和接口设计时不要用。",
+    ),
+    "design-an-interface": (
+        "当用户要为模块 API 或接口形态生成多个差异明显的设计方案并比较时使用。",
+        "当只需要实现已定方案，或该 deprecated skill 不应进入项目激活时不要用。",
+    ),
+    "diagnosing-bugs": (
+        "当用户报告 hard bug、性能回退、失败、异常、慢请求，或明确要 diagnose/debug 时使用。",
+        "当用户已经给出明确修复方案只需照做，或问题不是可复现的故障诊断时不要用。",
+    ),
+    "domain-modeling": (
+        "当用户要澄清领域术语、建立 ubiquitous language、记录 ADR 或维护项目领域模型时使用。",
+        "当只是阅读 CONTEXT.md、做纯实现，或不改变领域概念和决策时不要用。",
+    ),
+    "edit-article": (
+        "当用户要编辑、重构、润色或提升文章草稿的清晰度和表达时使用。",
+        "当内容不是文章类长文，或用户要做事实研究、代码实现、产品规格而非编辑时不要用。",
+    ),
+    "example-skill": (
+        "当需要验证本地 skill registry 的导入、解析、启用或同步链路是否工作时使用。",
+        "当处理真实产品、工程或写作任务时不要用。",
+    ),
+    "explore": (
+        "当用户要自由讨论想法、比较选项、梳理权衡，且不希望提交文件产物时使用。",
+        "当用户已经要求实现、写文件、提交改动或运行严格流程时不要用。",
+    ),
+    "file-refactor": (
+        "当用户要对单个文件或少量文件做受控重构，保持行为稳定并减少局部复杂度时使用。",
+        "当需要跨系统架构重设、产品设计、或大范围迁移计划时不要用。",
+    ),
+    "git-guardrails-claude-code": (
+        "当用户要为 Claude Code 配置 hooks，阻止危险 git 命令如 push、reset --hard、clean 或 branch -D 时使用。",
+        "当用户只是要普通 git 操作、分支管理，或不在 Claude Code hooks 场景中时不要用。",
+    ),
+    "gitops": (
+        "当用户要处理 git 工作流、分支、提交、变更整理、发布前检查或协作操作时使用。",
+        "当任务不涉及版本控制，或用户只要代码解释和实现而无需 git 流程时不要用。",
+    ),
+    "grill-me": (
+        "当用户要通过高强度追问来打磨计划、方案或设计时使用。",
+        "当用户已经要求执行，或不想被访谈式追问时不要用。",
+    ),
+    "grill-with-docs": (
+        "当用户要通过追问打磨计划，同时把落定的决策写入 ADR、glossary 或 CONTEXT.md 等文档时使用。",
+        "当只需要口头 brainstorm、不应改文档，或用户要直接执行实现时不要用。",
+    ),
+    "grilling": (
+        "当用户要在构建前压力测试计划或设计，或使用 grill 相关触发语请求追问时使用。",
+        "当需求已经清楚且需要动手执行，或用户不希望进入访谈流程时不要用。",
+    ),
+    "handoff": (
+        "当用户要把当前对话压缩成交接文档，方便另一个 agent 或未来会话接手时使用。",
+        "当用户要立即继续当前实现，或需要创建后台 agent 而不只是交接文档时不要用。",
+    ),
+    "implement": (
+        "当用户已有 PRD、issue 或明确工作项，需要按规格实现代码改动时使用。",
+        "当需求尚未澄清、需要先研究或只做代码评审时不要用。",
+    ),
+    "improve-codebase-architecture": (
+        "当用户要扫描代码库架构改进机会，并用报告或访谈选择下一步重构方向时使用。",
+        "当只需要修一个具体 bug、做小范围重构或已有明确实现任务时不要用。",
+    ),
+    "lean": (
+        "当用户要把工作拆成最小可验证增量，优先快速学习、降低浪费并持续收敛时使用。",
+        "当任务已经被明确拆好，或用户只要一次性执行不需要精益拆解时不要用。",
+    ),
+    "loop-me": (
+        "当用户要围绕本 workspace 中想构建的工作流进行规格追问和反复澄清时使用。",
+        "当用户要直接实现、普通问答，或主题不在当前 workspace 工作流规划内时不要用。",
+    ),
+    "migrate-to-shoehorn": (
+        "当用户要把测试里的 as 类型断言迁移到 @total-typescript/shoehorn，或需要构造 partial test data 时使用。",
+        "当项目不使用 TypeScript 测试或 shoehorn，或需求不是该专项迁移时不要用。",
+    ),
+    "obsidian-vault": (
+        "当用户要在 Obsidian vault 中搜索、创建、整理笔记，或维护 wikilinks 和索引笔记时使用。",
+        "当内容应写入代码库文档、issue tracker、普通文件，或不涉及 Obsidian 时不要用。",
+    ),
+    "prototype": (
+        "当用户要做一次性原型来验证状态模型、业务逻辑手感或 UI 方向时使用。",
+        "当目标是生产级实现、长期维护代码，或问题无需原型验证时不要用。",
+    ),
+    "prune": (
+        "当用户要收缩范围、删除多余复杂度、整理未完成计划或把方案削到可交付核心时使用。",
+        "当用户要新增功能、扩展范围，或尚未有可裁剪的方案和代码时不要用。",
+    ),
+    "qa": (
+        "当用户要以对话方式报告 bug、做 QA session，并把发现整理成 GitHub issues 时使用。",
+        "当只需要你直接修 bug、运行测试，或该 deprecated skill 不应进入项目激活时不要用。",
+    ),
+    "request-refactor-plan": (
+        "当用户要通过访谈生成详细重构计划，并把小步提交方案写成 GitHub issue 时使用。",
+        "当用户已经要直接重构，或该 deprecated skill 不应进入项目激活时不要用。",
+    ),
+    "research": (
+        "当用户要基于高可信一手资料研究技术问题、API 事实或背景信息，并把结论写成 Markdown 时使用。",
+        "当问题可从本地代码直接回答，或用户要立即实现而非调研报告时不要用。",
+    ),
+    "resolving-merge-conflicts": (
+        "当仓库正在 merge 或 rebase 且存在冲突，需要解决冲突并保持双方意图时使用。",
+        "当没有进行中的冲突，或用户只是要普通变更、评审、提交时不要用。",
+    ),
+    "review": (
+        "当用户要对当前代码、实现方案或交付结果做检查评审，发现风险、缺陷和遗漏时使用。",
+        "当用户要从零实现、做需求访谈或生成产品文档时不要用。",
+    ),
+    "scaffold-exercises": (
+        "当用户要创建课程练习目录、题目、解答、讲解结构并通过 lint 时使用。",
+        "当不是教学练习脚手架，或只是普通项目文件结构创建时不要用。",
+    ),
+    "setup-matt-pocock-skills": (
+        "当仓库首次使用 Matt Pocock engineering skills，需要配置 issue tracker、triage 标签和领域文档布局时使用。",
+        "当基础配置已完成，或用户不是在启用这组 engineering skills 时不要用。",
+    ),
+    "setup-pre-commit": (
+        "当用户要配置 Husky、lint-staged、Prettier、typecheck 或测试等 pre-commit hooks 时使用。",
+        "当项目不使用这些 JS 工具链，或用户要的是 CI、release、普通格式化而非提交前钩子时不要用。",
+    ),
+    "tdd": (
+        "当用户要 test-first 构建功能或修 bug，强调 red-green-refactor、集成测试或通过公共接口验证时使用。",
+        "当没有可测试行为、用户要求先快速探索，或只需要文档和配置修改时不要用。",
+    ),
+    "teach": (
+        "当用户要在当前 workspace 中学习一个概念或技能，需要教学、练习和学习记录时使用。",
+        "当用户要你代为完成工程任务，或只要简短答案而非教学过程时不要用。",
+    ),
+    "to-issues": (
+        "当用户要把计划、spec 或 PRD 拆成可独立领取的垂直切片 issue 时使用。",
+        "当还没有足够清晰的计划，或用户要直接实现而不是写 issue 时不要用。",
+    ),
+    "to-prd": (
+        "当用户要把当前对话综合成 PRD 并发布到 issue tracker，且不需要额外访谈时使用。",
+        "当需求仍需大量澄清、用户只要简单总结，或不应写入 issue tracker 时不要用。",
+    ),
+    "triage": (
+        "当用户要处理 issue 或外部 PR 的分诊流，完成分类、验证、追问并写 agent-ready brief 时使用。",
+        "当没有 issue/PR 分诊对象，或用户只是要实现某个已清晰任务时不要用。",
+    ),
+    "ubiquitous-language": (
+        "当用户要从当前对话抽取 DDD ubiquitous language 词汇表、标记歧义并写入 UBIQUITOUS_LANGUAGE.md 时使用。",
+        "当只需要普通术语解释，或该 deprecated skill 不应进入项目激活时不要用。",
+    ),
+    "ui-mockup": (
+        "当用户要快速产出 UI mockup、页面草图或交互外观方案来对齐视觉方向时使用。",
+        "当用户要生产级前端实现、后端逻辑或非 UI 任务时不要用。",
+    ),
+    "wayfinder": (
+        "当目标很大、超过单次 agent session，需要先建立调查票据地图并逐步厘清路径时使用。",
+        "当任务足够小可直接完成，或用户不想使用 issue tracker 管理探索过程时不要用。",
+    ),
+    "wizard": (
+        "当用户要生成交互式 bash wizard，引导人工完成第三方设置、迁移或状态转换并记录配置时使用。",
+        "当流程可完全自动化、不是 shell 向导，或不需要人工逐步确认时不要用。",
+    ),
+    "writing-beats": (
+        "当用户要把写作素材组织成有节奏的论述 beats，并保证关键术语先被建立时使用。",
+        "当还没有素材、需要先挖掘碎片，或用户要最终润色而非 beats 结构时不要用。",
+    ),
+    "writing-fragments": (
+        "当用户要从原始材料中挖掘写作碎片，暂时不建立完整结构时使用。",
+        "当已经进入文章成稿、段落润色或 beats 编排阶段时不要用。",
+    ),
+    "writing-great-skills": (
+        "当用户要编写或编辑 Codex skill，并需要 predictable skill 的写作原则和词汇参考时使用。",
+        "当任务不是 skill 作者工作，或只是在使用已有 skill 时不要用。",
+    ),
+    "writing-shape": (
+        "当用户要把已有素材塑造成文章，逐段组织、重写和成稿时使用。",
+        "当还处在素材发散、beats 规划，或不是文章写作任务时不要用。",
+    ),
+}
 
 
 class SkillctlError(Exception):
@@ -379,6 +585,17 @@ def group_analysis(name: str, records: list[dict[str, str]], default_id: str) ->
     return "; ".join(pieces), reason
 
 
+def group_usage_guidance(name: str, records: list[dict[str, str]], default_id: str) -> tuple[str, str]:
+    if name in USAGE_GUIDANCE:
+        return USAGE_GUIDANCE[name]
+
+    default_record = next(record for record in records if record["id"] == default_id)
+    return (
+        f"当用户需求匹配默认 skill 描述时使用：{default_record['description']}",
+        "当需求不匹配上述描述、只是普通对话，或已有更具体的 skill 覆盖时不要用。",
+    )
+
+
 def write_skill_groups() -> None:
     existing = load_skill_groups()
     by_name: dict[str, list[dict[str, str]]] = {}
@@ -395,6 +612,7 @@ def write_skill_groups() -> None:
         sources = ",".join(sorted({record["source"] for record in records}))
         dependencies = ",".join(dependency_names_for_records(records, names)) or "none"
         difference, recommendation = group_analysis(name, records, default_id)
+        use_when, avoid_when = group_usage_guidance(name, records, default_id)
         note = (
             "已合并重复 skill 名称；除非指定 --source，否则使用默认项。"
             if len(records) > 1
@@ -409,6 +627,8 @@ def write_skill_groups() -> None:
                 f"    dependencies: {dependencies}",
                 f"    difference: {difference}",
                 f"    recommendation: {recommendation}",
+                f"    use_when: {use_when}",
+                f"    avoid_when: {avoid_when}",
                 f"    note: {note}",
             ]
         )
