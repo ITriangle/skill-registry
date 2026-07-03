@@ -1,0 +1,21 @@
+# vendor/mattpocock/engineering-tdd
+
+- Skill name: `tdd`
+- Current status: `candidate`
+- Description: Test-driven development. Use when the user wants to build features or fix bugs test-first, mentions "red-green-refactor", or wants integration tests.
+
+## Trigger Review
+
+- Review whether the description is narrow enough for implicit invocation.
+- Confirm explicit trigger words are front-loaded.
+
+## Dependencies And Risk
+
+- Scripts: none detected
+- References: none detected
+- Mentions: filesystem
+
+## Recommendation
+
+- Suggested status: `candidate`
+- Approve only after checking license, script behavior, and trigger overlap.
