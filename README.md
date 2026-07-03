@@ -12,6 +12,7 @@ symlinks under that project's `.agents/skills` directory.
 - `sources/<source>.yaml` - upstream provenance and import metadata.
 - `projects/<project-slug>.yaml` - project activation manifests.
 - `analysis/<source>/<skill>.md` - skill review reports.
+- `skill-groups.yaml` - merged same-name skill index and default source.
 - `bin/skillctl` - import, analyze, audit, enable, disable, and sync command.
 
 ## Basic workflow
@@ -38,7 +39,7 @@ symlinks under that project's `.agents/skills` directory.
 4. Add it to a project:
 
    ```bash
-   bin/skillctl enable noeticai vendor/openai/example-skill
+   bin/skillctl enable noeticai example-skill
    ```
 
 5. Synchronize symlinks into the target project:
@@ -64,6 +65,42 @@ skills:
 <project>/.agents/skills/<skill-directory-name>
 ```
 
+## Same-name skills
+
+When two sources provide a skill with the same `name`, the registry merges them
+in `skill-groups.yaml`. Each group has one `default_id`; installing by skill
+name uses that default so only one variant becomes active in the project.
+
+Show the available variants and their differences:
+
+```bash
+bin/skillctl alternatives grilling
+```
+
+Install the default variant:
+
+```bash
+bin/skillctl enable project-1 grilling
+```
+
+Install a variant from a specific source:
+
+```bash
+bin/skillctl enable project-1 grilling --source yugasun
+```
+
+Exact IDs still work when you need a fully explicit manifest:
+
+```bash
+bin/skillctl enable project-1 vendor/yugasun/grilling
+```
+
+After importing or manually vendoring skills, refresh the merge index:
+
+```bash
+bin/skillctl refresh-groups
+```
+
 ## Safety model
 
 - The registry is outside `.agents/skills`, so storing a skill here does not
@@ -72,4 +109,3 @@ skills:
 - `sync` only manages symlinks that point back into this registry.
 - By default, `sync` refuses skills that are not marked `approved` in source
   metadata. Use `--allow-candidate` only for explicit experiments.
-

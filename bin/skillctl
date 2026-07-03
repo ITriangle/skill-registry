@@ -20,7 +20,9 @@ PROJECTS_DIR = ROOT / "projects"
 SOURCES_DIR = ROOT / "sources"
 SKILLS_DIR = ROOT / "skills"
 ANALYSIS_DIR = ROOT / "analysis"
+GROUPS_FILE = ROOT / "skill-groups.yaml"
 VALID_STATUSES = {"analysis-only", "candidate", "approved", "deprecated"}
+STATUS_RANK = {"approved": 0, "candidate": 1, "analysis-only": 2, "deprecated": 3}
 
 
 class SkillctlError(Exception):
@@ -187,6 +189,124 @@ def skill_status(skill_id: str) -> str:
     return "candidate"
 
 
+def source_from_id(skill_id: str) -> str:
+    parts = skill_id.strip("/").split("/")
+    if len(parts) >= 3 and parts[0] == "vendor":
+        return parts[1]
+    return "local"
+
+
+def skill_records() -> list[dict[str, str]]:
+    records = []
+    for skill_md in sorted(SKILLS_DIR.glob("vendor/*/*/SKILL.md")):
+        skill_dir = skill_md.parent
+        rel = str(skill_dir.relative_to(SKILLS_DIR))
+        skill_id = f"vendor/{rel.split('vendor/', 1)[-1]}" if "vendor/" in rel else rel
+        meta = validate_skill_dir(skill_dir)
+        records.append(
+            {
+                "id": skill_id,
+                "name": meta["name"],
+                "description": meta["description"],
+                "source": source_from_id(skill_id),
+                "status": skill_status(skill_id),
+            }
+        )
+    return sorted(records, key=lambda r: (r["name"], r["source"], r["id"]))
+
+
+def load_skill_groups() -> dict[str, dict[str, str]]:
+    if not GROUPS_FILE.exists():
+        return {}
+    data = parse_simple_yaml(GROUPS_FILE)
+    groups = {}
+    for item in data.get("groups", []):
+        if isinstance(item, dict) and "name" in item:
+            groups[str(item["name"])] = {str(k): str(v) for k, v in item.items()}
+    return groups
+
+
+def choose_default(records: list[dict[str, str]], existing_default: str | None = None) -> str:
+    ids = {record["id"] for record in records}
+    if existing_default in ids:
+        return str(existing_default)
+    ranked = sorted(
+        records,
+        key=lambda r: (STATUS_RANK.get(r["status"], 99), r["source"], r["id"]),
+    )
+    return ranked[0]["id"]
+
+
+def write_skill_groups() -> None:
+    existing = load_skill_groups()
+    by_name: dict[str, list[dict[str, str]]] = {}
+    for record in skill_records():
+        by_name.setdefault(record["name"], []).append(record)
+
+    lines = ["groups:"]
+    for name in sorted(by_name):
+        records = by_name[name]
+        default_id = choose_default(records, existing.get(name, {}).get("default_id"))
+        variants = ",".join(record["id"] for record in records)
+        sources = ",".join(sorted({record["source"] for record in records}))
+        note = (
+            "Merged duplicate skill name; default is used unless --source is specified."
+            if len(records) > 1
+            else "Single registered variant."
+        )
+        lines.extend(
+            [
+                f"  - name: {name}",
+                f"    default_id: {default_id}",
+                f"    variants: {variants}",
+                f"    sources: {sources}",
+                f"    note: {note}",
+            ]
+        )
+    GROUPS_FILE.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def records_for_name(name: str) -> list[dict[str, str]]:
+    return [record for record in skill_records() if record["name"] == name]
+
+
+def resolve_skill_ref(skill_ref: str, source: str | None = None) -> str:
+    if skill_ref.startswith("vendor/") or skill_ref.startswith("skills/"):
+        if source and source_from_id(skill_ref) != source:
+            raise SkillctlError(f"{skill_ref} is not from source '{source}'")
+        validate_skill_dir(skill_path(skill_ref))
+        return skill_ref
+
+    records = records_for_name(skill_ref)
+    if not records:
+        raise SkillctlError(f"unknown skill name: {skill_ref}")
+
+    if source:
+        matching = [record for record in records if record["source"] == source]
+        if not matching:
+            sources = ", ".join(sorted({record["source"] for record in records}))
+            raise SkillctlError(f"skill '{skill_ref}' has no source '{source}' (available: {sources})")
+        if len(matching) > 1:
+            raise SkillctlError(f"source '{source}' has multiple variants for '{skill_ref}'; use an exact id")
+        return matching[0]["id"]
+
+    groups = load_skill_groups()
+    default_id = groups.get(skill_ref, {}).get("default_id")
+    return choose_default(records, default_id)
+
+
+def print_alternatives(skill_name: str) -> None:
+    records = records_for_name(skill_name)
+    if not records:
+        raise SkillctlError(f"unknown skill name: {skill_name}")
+    default_id = resolve_skill_ref(skill_name)
+    print(f"{skill_name}: default={default_id}")
+    for record in records:
+        marker = " default" if record["id"] == default_id else ""
+        print(f"- {record['id']} [{record['status']}, source={record['source']}]{marker}")
+        print(f"  description: {record['description']}")
+
+
 def managed_link_target(path: Path) -> bool:
     if not path.is_symlink():
         return False
@@ -198,12 +318,8 @@ def managed_link_target(path: Path) -> bool:
 
 
 def command_list(_: argparse.Namespace) -> None:
-    for skill_md in sorted(SKILLS_DIR.glob("vendor/*/*/SKILL.md")):
-        skill_dir = skill_md.parent
-        skill_id = str(skill_dir.relative_to(SKILLS_DIR))
-        skill_id = f"vendor/{skill_id.split('vendor/', 1)[-1]}" if "vendor/" in skill_id else skill_id
-        meta = validate_skill_dir(skill_dir)
-        print(f"{skill_id}\t{skill_status(skill_id)}\t{meta['name']}")
+    for record in skill_records():
+        print(f"{record['id']}\t{record['status']}\t{record['name']}")
 
 
 def command_audit(args: argparse.Namespace) -> None:
@@ -299,24 +415,30 @@ def command_enable(args: argparse.Namespace) -> None:
     manifest = project_manifest(args.project)
     data = load_project(args.project)
     ids = project_skill_ids(data)
-    if args.skill_id not in ids:
-        ids.append(args.skill_id)
+    skill_id = resolve_skill_ref(args.skill, args.source)
+    if skill_id not in ids:
+        ids.append(skill_id)
     manifest.write_text(
         dump_project_manifest(args.project, str(data["path"]), ids),
         encoding="utf-8",
     )
-    print(f"enabled in manifest: {args.skill_id}")
+    print(f"enabled in manifest: {skill_id}")
+    records = records_for_name(validate_skill_dir(skill_path(skill_id))["name"])
+    if len(records) > 1:
+        print("alternatives:")
+        print_alternatives(records[0]["name"])
 
 
 def command_disable(args: argparse.Namespace) -> None:
     manifest = project_manifest(args.project)
     data = load_project(args.project)
-    ids = [skill_id for skill_id in project_skill_ids(data) if skill_id != args.skill_id]
+    skill_id = resolve_skill_ref(args.skill, args.source)
+    ids = [existing_id for existing_id in project_skill_ids(data) if existing_id != skill_id]
     manifest.write_text(
         dump_project_manifest(args.project, str(data["path"]), ids),
         encoding="utf-8",
     )
-    print(f"disabled in manifest: {args.skill_id}")
+    print(f"disabled in manifest: {skill_id}")
 
 
 def command_import(args: argparse.Namespace) -> None:
@@ -338,6 +460,7 @@ def command_import(args: argparse.Namespace) -> None:
         shutil.copytree(upstream_skill, dest, symlinks=True)
     validate_skill_dir(dest)
     update_source_metadata(args)
+    write_skill_groups()
     print(f"imported: {args.skill_id}")
 
 
@@ -414,6 +537,23 @@ def command_analyze(args: argparse.Namespace) -> None:
     print(f"analysis written: {report}")
 
 
+def command_refresh_groups(_: argparse.Namespace) -> None:
+    write_skill_groups()
+    print(f"groups written: {GROUPS_FILE}")
+
+
+def command_alternatives(args: argparse.Namespace) -> None:
+    if args.skill:
+        print_alternatives(args.skill)
+        return
+
+    by_name: dict[str, list[dict[str, str]]] = {}
+    for record in skill_records():
+        by_name.setdefault(record["name"], []).append(record)
+    for name in sorted(name for name, records in by_name.items() if len(records) > 1):
+        print_alternatives(name)
+
+
 def detect_mentions(text: str) -> list[str]:
     patterns = {
         "network": r"\b(curl|wget|http|https|api|download|upload)\b",
@@ -456,12 +596,14 @@ def build_parser() -> argparse.ArgumentParser:
 
     enable_p = sub.add_parser("enable", help="Add a skill to a project manifest")
     enable_p.add_argument("project")
-    enable_p.add_argument("skill_id")
+    enable_p.add_argument("skill")
+    enable_p.add_argument("--source", help="Resolve a skill name from a specific source")
     enable_p.set_defaults(func=command_enable)
 
     disable_p = sub.add_parser("disable", help="Remove a skill from a project manifest")
     disable_p.add_argument("project")
-    disable_p.add_argument("skill_id")
+    disable_p.add_argument("skill")
+    disable_p.add_argument("--source", help="Resolve a skill name from a specific source")
     disable_p.set_defaults(func=command_disable)
 
     import_p = sub.add_parser("import", help="Import a skill from a pinned Git ref")
@@ -476,6 +618,13 @@ def build_parser() -> argparse.ArgumentParser:
     analyze_p = sub.add_parser("analyze", help="Generate a skill analysis report")
     analyze_p.add_argument("skill_id")
     analyze_p.set_defaults(func=command_analyze)
+
+    refresh_p = sub.add_parser("refresh-groups", help="Rebuild merged skill-name defaults")
+    refresh_p.set_defaults(func=command_refresh_groups)
+
+    alternatives_p = sub.add_parser("alternatives", help="Show same-name skill variants")
+    alternatives_p.add_argument("skill", nargs="?")
+    alternatives_p.set_defaults(func=command_alternatives)
 
     return parser
 
