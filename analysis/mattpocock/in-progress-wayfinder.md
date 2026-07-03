@@ -1,21 +1,21 @@
 # vendor/mattpocock/in-progress-wayfinder
 
-- Skill name: `wayfinder`
-- Current status: `analysis-only`
-- Description: Plan a huge chunk of work — more than one agent session can hold — as a shared map of investigation tickets on your issue tracker, and resolve them one at a time until the way to the goal is clear.
+- Skill 名称：`wayfinder`
+- 当前状态：`analysis-only`
+- 描述：Plan a huge chunk of work — more than one agent session can hold — as a shared map of investigation tickets on your issue tracker, and resolve them one at a time until the way to the goal is clear.
 
-## Trigger Review
+## 触发条件审查
 
-- Review whether the description is narrow enough for implicit invocation.
-- Confirm explicit trigger words are front-loaded.
+- 审查描述是否足够聚焦，适合隐式调用。
+- 确认显式触发词是否前置。
 
-## Dependencies And Risk
+## 依赖与风险
 
-- Scripts: none detected
-- References: none detected
-- Mentions: filesystem, secrets
+- 脚本：未检测到
+- 参考资料：未检测到
+- 风险提及：文件系统, 密钥
 
-## Recommendation
+## 建议
 
-- Suggested status: `candidate`
-- Approve only after checking license, script behavior, and trigger overlap.
+- 建议状态：`candidate`
+- 仅在检查许可证、脚本行为和触发范围重叠后再批准。

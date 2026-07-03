@@ -1,21 +1,21 @@
 # vendor/mattpocock/engineering-setup-matt-pocock-skills
 
-- Skill name: `setup-matt-pocock-skills`
-- Current status: `candidate`
-- Description: Configure this repo for the engineering skills — set up its issue tracker, triage label vocabulary, and domain doc layout. Run once before first use of the other engineering skills.
+- Skill 名称：`setup-matt-pocock-skills`
+- 当前状态：`candidate`
+- 描述：Configure this repo for the engineering skills — set up its issue tracker, triage label vocabulary, and domain doc layout. Run once before first use of the other engineering skills.
 
-## Trigger Review
+## 触发条件审查
 
-- Review whether the description is narrow enough for implicit invocation.
-- Confirm explicit trigger words are front-loaded.
+- 审查描述是否足够聚焦，适合隐式调用。
+- 确认显式触发词是否前置。
 
-## Dependencies And Risk
+## 依赖与风险
 
-- Scripts: none detected
-- References: none detected
-- Mentions: network, filesystem, shell
+- 脚本：未检测到
+- 参考资料：未检测到
+- 风险提及：网络, 文件系统, shell
 
-## Recommendation
+## 建议
 
-- Suggested status: `candidate`
-- Approve only after checking license, script behavior, and trigger overlap.
+- 建议状态：`candidate`
+- 仅在检查许可证、脚本行为和触发范围重叠后再批准。

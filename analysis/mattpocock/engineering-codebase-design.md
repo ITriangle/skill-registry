@@ -1,21 +1,21 @@
 # vendor/mattpocock/engineering-codebase-design
 
-- Skill name: `codebase-design`
-- Current status: `candidate`
-- Description: Shared vocabulary for designing deep modules. Use when the user wants to design or improve a module's interface, find deepening opportunities, decide where a seam goes, make code more testable or AI-navigable, or when another skill needs the deep-module vocabulary.
+- Skill 名称：`codebase-design`
+- 当前状态：`candidate`
+- 描述：Shared vocabulary for designing deep modules. Use when the user wants to design or improve a module's interface, find deepening opportunities, decide where a seam goes, make code more testable or AI-navigable, or when another skill needs the deep-module vocabulary.
 
-## Trigger Review
+## 触发条件审查
 
-- Review whether the description is narrow enough for implicit invocation.
-- Confirm explicit trigger words are front-loaded.
+- 审查描述是否足够聚焦，适合隐式调用。
+- 确认显式触发词是否前置。
 
-## Dependencies And Risk
+## 依赖与风险
 
-- Scripts: none detected
-- References: none detected
-- Mentions: network
+- 脚本：未检测到
+- 参考资料：未检测到
+- 风险提及：网络
 
-## Recommendation
+## 建议
 
-- Suggested status: `candidate`
-- Approve only after checking license, script behavior, and trigger overlap.
+- 建议状态：`candidate`
+- 仅在检查许可证、脚本行为和触发范围重叠后再批准。

@@ -1,21 +1,21 @@
 # vendor/mattpocock/deprecated-ubiquitous-language
 
-- Skill name: `ubiquitous-language`
-- Current status: `analysis-only`
-- Description: Extract a DDD-style ubiquitous language glossary from the current conversation, flagging ambiguities and proposing canonical terms. Saves to UBIQUITOUS_LANGUAGE.md. Use when user wants to define domain terms, build a glossary, harden terminology, create a ubiquitous language, or mentions "domain model" or "DDD".
+- Skill 名称：`ubiquitous-language`
+- 当前状态：`analysis-only`
+- 描述：Extract a DDD-style ubiquitous language glossary from the current conversation, flagging ambiguities and proposing canonical terms. Saves to UBIQUITOUS_LANGUAGE.md. Use when user wants to define domain terms, build a glossary, harden terminology, create a ubiquitous language, or mentions "domain model" or "DDD".
 
-## Trigger Review
+## 触发条件审查
 
-- Review whether the description is narrow enough for implicit invocation.
-- Confirm explicit trigger words are front-loaded.
+- 审查描述是否足够聚焦，适合隐式调用。
+- 确认显式触发词是否前置。
 
-## Dependencies And Risk
+## 依赖与风险
 
-- Scripts: none detected
-- References: none detected
-- Mentions: filesystem, shell
+- 脚本：未检测到
+- 参考资料：未检测到
+- 风险提及：文件系统, shell
 
-## Recommendation
+## 建议
 
-- Suggested status: `candidate`
-- Approve only after checking license, script behavior, and trigger overlap.
+- 建议状态：`candidate`
+- 仅在检查许可证、脚本行为和触发范围重叠后再批准。

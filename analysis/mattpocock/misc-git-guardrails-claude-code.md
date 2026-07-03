@@ -1,21 +1,21 @@
 # vendor/mattpocock/misc-git-guardrails-claude-code
 
-- Skill name: `git-guardrails-claude-code`
-- Current status: `candidate`
-- Description: Set up Claude Code hooks to block dangerous git commands (push, reset --hard, clean, branch -D, etc.) before they execute. Use when user wants to prevent destructive git operations, add git safety hooks, or block git push/reset in Claude Code.
+- Skill 名称：`git-guardrails-claude-code`
+- 当前状态：`candidate`
+- 描述：Set up Claude Code hooks to block dangerous git commands (push, reset --hard, clean, branch -D, etc.) before they execute. Use when user wants to prevent destructive git operations, add git safety hooks, or block git push/reset in Claude Code.
 
-## Trigger Review
+## 触发条件审查
 
-- Review whether the description is narrow enough for implicit invocation.
-- Confirm explicit trigger words are front-loaded.
+- 审查描述是否足够聚焦，适合隐式调用。
+- 确认显式触发词是否前置。
 
-## Dependencies And Risk
+## 依赖与风险
 
-- Scripts: scripts/block-dangerous-git.sh
-- References: none detected
-- Mentions: filesystem, shell
+- 脚本：scripts/block-dangerous-git.sh
+- 参考资料：未检测到
+- 风险提及：文件系统, shell
 
-## Recommendation
+## 建议
 
-- Suggested status: `candidate`
-- Approve only after checking license, script behavior, and trigger overlap.
+- 建议状态：`candidate`
+- 仅在检查许可证、脚本行为和触发范围重叠后再批准。

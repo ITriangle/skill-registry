@@ -267,36 +267,36 @@ def choose_default(records: list[dict[str, str]], existing_default: str | None =
 
 def group_analysis(name: str, records: list[dict[str, str]], default_id: str) -> tuple[str, str]:
     if len(records) == 1:
-        return "single registered variant", "single source; no merge decision needed"
+        return "单一已注册变体", "单一来源；无需合并决策"
 
     default_record = next(record for record in records if record["id"] == default_id)
     pieces = []
     status_set = sorted({record["status"] for record in records})
     if len(status_set) > 1:
-        pieces.append("status differs: " + ",".join(status_set))
+        pieces.append("状态不同：" + ",".join(status_set))
     source_set = sorted({record["source"] for record in records})
-    pieces.append("sources: " + ",".join(source_set))
+    pieces.append("来源：" + ",".join(source_set))
 
     descriptions = {record["description"] for record in records}
     if len(descriptions) == 1:
-        pieces.append("descriptions are identical")
+        pieces.append("描述相同")
     else:
         short = sorted(
-            f"{record['source']}={record['description_words']}w/{record['references']}ref/{record['scripts']}script"
+            f"{record['source']}={record['description_words']}词/{record['references']}参考/{record['scripts']}脚本"
             for record in records
         )
-        pieces.append("profiles: " + ",".join(short))
+        pieces.append("概况：" + ",".join(short))
 
     reason = (
-        f"recommend {default_id} as default for '{name}' because it is the selected merged default; "
-        f"use --source to choose another source explicitly"
+        f"推荐 {default_id} 作为 '{name}' 的默认实现，因为它是已选择的合并默认项；"
+        f"如需明确选择其他来源，请使用 --source"
     )
     if default_record["status"] == "approved":
-        reason = f"recommend {default_id} because it is approved; use --source to override"
+        reason = f"推荐 {default_id}，因为它已批准；如需覆盖请选择 --source"
     elif all(record["status"] != "approved" for record in records):
         reason = (
-            f"recommend {default_id} as default among non-approved variants; "
-            "review before promotion to approved"
+            f"推荐 {default_id} 作为未批准变体中的默认项；"
+            "提升为 approved 前请先审查"
         )
 
     return "; ".join(pieces), reason
@@ -316,9 +316,9 @@ def write_skill_groups() -> None:
         sources = ",".join(sorted({record["source"] for record in records}))
         difference, recommendation = group_analysis(name, records, default_id)
         note = (
-            "Merged duplicate skill name; default is used unless --source is specified."
+            "已合并重复 skill 名称；除非指定 --source，否则使用默认项。"
             if len(records) > 1
-            else "Single registered variant."
+            else "单一已注册变体。"
         )
         lines.extend(
             [
@@ -369,19 +369,19 @@ def print_alternatives(skill_name: str) -> None:
         raise SkillctlError(f"unknown skill name: {skill_name}")
     default_id = resolve_skill_ref(skill_name)
     difference, recommendation = group_analysis(skill_name, records, default_id)
-    print(f"{skill_name}: default={default_id}")
-    print(f"difference: {difference}")
-    print(f"recommendation: {recommendation}")
+    print(f"{skill_name}: 默认={default_id}")
+    print(f"差异：{difference}")
+    print(f"建议：{recommendation}")
     for record in records:
-        marker = " default" if record["id"] == default_id else ""
+        marker = " 默认" if record["id"] == default_id else ""
         print(f"- {record['id']} [{record['status']}, source={record['source']}]{marker}")
         print(
-            "  profile: "
-            f"{record['description_words']} description words, "
-            f"{record['references']} reference files, "
-            f"{record['scripts']} scripts"
+            "  概况："
+            f"{record['description_words']} 个描述词，"
+            f"{record['references']} 个参考文件，"
+            f"{record['scripts']} 个脚本"
         )
-        print(f"  description: {record['description']}")
+        print(f"  描述：{record['description']}")
 
 
 def managed_link_target(path: Path) -> bool:
@@ -589,25 +589,25 @@ def command_analyze(args: argparse.Namespace) -> None:
     body = [
         f"# {args.skill_id}",
         "",
-        f"- Skill name: `{meta['name']}`",
-        f"- Current status: `{skill_status(args.skill_id)}`",
-        f"- Description: {meta['description']}",
+        f"- Skill 名称：`{meta['name']}`",
+        f"- 当前状态：`{skill_status(args.skill_id)}`",
+        f"- 描述：{meta['description']}",
         "",
-        "## Trigger Review",
+        "## 触发条件审查",
         "",
-        "- Review whether the description is narrow enough for implicit invocation.",
-        "- Confirm explicit trigger words are front-loaded.",
+        "- 审查描述是否足够聚焦，适合隐式调用。",
+        "- 确认显式触发词是否前置。",
         "",
-        "## Dependencies And Risk",
+        "## 依赖与风险",
         "",
-        f"- Scripts: {', '.join(scripts) if scripts else 'none detected'}",
-        f"- References: {', '.join(refs) if refs else 'none detected'}",
-        f"- Mentions: {', '.join(mentions) if mentions else 'none detected'}",
+        f"- 脚本：{', '.join(scripts) if scripts else '未检测到'}",
+        f"- 参考资料：{', '.join(refs) if refs else '未检测到'}",
+        f"- 风险提及：{', '.join(mentions) if mentions else '未检测到'}",
         "",
-        "## Recommendation",
+        "## 建议",
         "",
-        "- Suggested status: `candidate`",
-        "- Approve only after checking license, script behavior, and trigger overlap.",
+        "- 建议状态：`candidate`",
+        "- 仅在检查许可证、脚本行为和触发范围重叠后再批准。",
         "",
     ]
     report.write_text("\n".join(body), encoding="utf-8")
@@ -633,11 +633,11 @@ def command_alternatives(args: argparse.Namespace) -> None:
 
 def detect_mentions(text: str) -> list[str]:
     patterns = {
-        "network": r"\b(curl|wget|http|https|api|download|upload)\b",
-        "filesystem": r"\b(rm|delete|move|copy|write|chmod|chown)\b",
-        "mcp": r"\bMCP\b|\bmcp__",
+        "网络": r"\b(curl|wget|http|https|api|download|upload)\b",
+        "文件系统": r"\b(rm|delete|move|copy|write|chmod|chown)\b",
+        "MCP": r"\bMCP\b|\bmcp__",
         "shell": r"\b(shell|bash|zsh|command|script)\b",
-        "secrets": r"\b(token|secret|password|api key|credential)\b",
+        "密钥": r"\b(token|secret|password|api key|credential)\b",
     }
     hits = []
     for label, pattern in patterns.items():

@@ -1,21 +1,21 @@
 # vendor/mattpocock/misc-scaffold-exercises
 
-- Skill name: `scaffold-exercises`
-- Current status: `candidate`
-- Description: Create exercise directory structures with sections, problems, solutions, and explainers that pass linting. Use when user wants to scaffold exercises, create exercise stubs, or set up a new course section.
+- Skill 名称：`scaffold-exercises`
+- 当前状态：`candidate`
+- 描述：Create exercise directory structures with sections, problems, solutions, and explainers that pass linting. Use when user wants to scaffold exercises, create exercise stubs, or set up a new course section.
 
-## Trigger Review
+## 触发条件审查
 
-- Review whether the description is narrow enough for implicit invocation.
-- Confirm explicit trigger words are front-loaded.
+- 审查描述是否足够聚焦，适合隐式调用。
+- 确认显式触发词是否前置。
 
-## Dependencies And Risk
+## 依赖与风险
 
-- Scripts: none detected
-- References: none detected
-- Mentions: shell
+- 脚本：未检测到
+- 参考资料：未检测到
+- 风险提及：shell
 
-## Recommendation
+## 建议
 
-- Suggested status: `candidate`
-- Approve only after checking license, script behavior, and trigger overlap.
+- 建议状态：`candidate`
+- 仅在检查许可证、脚本行为和触发范围重叠后再批准。

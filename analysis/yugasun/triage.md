@@ -1,21 +1,21 @@
 # vendor/yugasun/triage
 
-- Skill name: `triage`
-- Current status: `candidate`
-- Description: Move issues and external PRs through triage roles — categorise, verify, grill if needed, write agent-ready briefs.
+- Skill 名称：`triage`
+- 当前状态：`candidate`
+- 描述：Move issues and external PRs through triage roles — categorise, verify, grill if needed, write agent-ready briefs.
 
-## Trigger Review
+## 触发条件审查
 
-- Review whether the description is narrow enough for implicit invocation.
-- Confirm explicit trigger words are front-loaded.
+- 审查描述是否足够聚焦，适合隐式调用。
+- 确认显式触发词是否前置。
 
-## Dependencies And Risk
+## 依赖与风险
 
-- Scripts: none detected
-- References: none detected
-- Mentions: filesystem
+- 脚本：未检测到
+- 参考资料：未检测到
+- 风险提及：文件系统
 
-## Recommendation
+## 建议
 
-- Suggested status: `candidate`
-- Approve only after checking license, script behavior, and trigger overlap.
+- 建议状态：`candidate`
+- 仅在检查许可证、脚本行为和触发范围重叠后再批准。
