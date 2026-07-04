@@ -218,6 +218,32 @@ def skill_records() -> list[dict[str, str]]:
     return sorted(records, key=lambda r: (r["name"], r["source"], r["id"]))
 
 
+def known_skill_names() -> set[str]:
+    return {record["name"] for record in skill_records()}
+
+
+def dependency_names_for_record(record: dict[str, str], names: set[str]) -> list[str]:
+    text = read_text(skill_path(record["id"]) / "SKILL.md")
+    found: set[str] = set()
+
+    for match in re.findall(r"(?<![\w/.-])/([A-Za-z0-9][A-Za-z0-9_-]*)\b", text):
+        if match in names and match != record["name"]:
+            found.add(match)
+
+    for match in re.findall(r"\$([A-Za-z0-9][A-Za-z0-9_-]*)\b", text):
+        if match in names and match != record["name"]:
+            found.add(match)
+
+    return sorted(found)
+
+
+def dependency_names_for_records(records: list[dict[str, str]], names: set[str]) -> list[str]:
+    found: set[str] = set()
+    for record in records:
+        found.update(dependency_names_for_record(record, names))
+    return sorted(found)
+
+
 def count_files(path: Path) -> int:
     if not path.exists():
         return 0
@@ -305,7 +331,9 @@ def group_analysis(name: str, records: list[dict[str, str]], default_id: str) ->
 def write_skill_groups() -> None:
     existing = load_skill_groups()
     by_name: dict[str, list[dict[str, str]]] = {}
-    for record in skill_records():
+    records = skill_records()
+    names = {record["name"] for record in records}
+    for record in records:
         by_name.setdefault(record["name"], []).append(record)
 
     lines = ["groups:"]
@@ -314,6 +342,7 @@ def write_skill_groups() -> None:
         default_id = choose_default(records, existing.get(name, {}).get("default_id"))
         variants = ",".join(record["id"] for record in records)
         sources = ",".join(sorted({record["source"] for record in records}))
+        dependencies = ",".join(dependency_names_for_records(records, names)) or "none"
         difference, recommendation = group_analysis(name, records, default_id)
         note = (
             "已合并重复 skill 名称；除非指定 --source，否则使用默认项。"
@@ -326,6 +355,7 @@ def write_skill_groups() -> None:
                 f"    default_id: {default_id}",
                 f"    variants: {variants}",
                 f"    sources: {sources}",
+                f"    dependencies: {dependencies}",
                 f"    difference: {difference}",
                 f"    recommendation: {recommendation}",
                 f"    note: {note}",
@@ -369,7 +399,9 @@ def print_alternatives(skill_name: str) -> None:
         raise SkillctlError(f"unknown skill name: {skill_name}")
     default_id = resolve_skill_ref(skill_name)
     difference, recommendation = group_analysis(skill_name, records, default_id)
+    dependencies = dependency_names_for_records(records, known_skill_names())
     print(f"{skill_name}: 默认={default_id}")
+    print(f"依赖：{','.join(dependencies) if dependencies else 'none'}")
     print(f"差异：{difference}")
     print(f"建议：{recommendation}")
     for record in records:
@@ -500,10 +532,13 @@ def command_enable(args: argparse.Namespace) -> None:
         encoding="utf-8",
     )
     print(f"enabled in manifest: {skill_id}")
-    records = records_for_name(validate_skill_dir(skill_path(skill_id))["name"])
+    skill_name = validate_skill_dir(skill_path(skill_id))["name"]
+    records = records_for_name(skill_name)
+    dependencies = dependency_names_for_records(records, known_skill_names())
+    print(f"dependencies: {','.join(dependencies) if dependencies else 'none'}")
     if len(records) > 1:
         print("alternatives:")
-        print_alternatives(records[0]["name"])
+        print_alternatives(skill_name)
 
 
 def command_disable(args: argparse.Namespace) -> None:

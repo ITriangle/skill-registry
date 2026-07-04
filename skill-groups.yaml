@@ -3,6 +3,7 @@ groups:
     default_id: vendor/yugasun/aiops
     variants: vendor/yugasun/aiops
     sources: yugasun
+    dependencies: aiops-implement,gitops,prototype
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     note: 单一已注册变体。
@@ -10,6 +11,7 @@ groups:
     default_id: vendor/yugasun/aiops-implement
     variants: vendor/yugasun/aiops-implement
     sources: yugasun
+    dependencies: code-graph,file-refactor,gitops,grill-with-docs,prototype,prune,review,tdd
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     note: 单一已注册变体。
@@ -17,6 +19,7 @@ groups:
     default_id: vendor/yugasun/aiops-setup
     variants: vendor/yugasun/aiops-setup
     sources: yugasun
+    dependencies: aiops
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     note: 单一已注册变体。
@@ -24,6 +27,7 @@ groups:
     default_id: vendor/yugasun/architect-design
     variants: vendor/yugasun/architect-design
     sources: yugasun
+    dependencies: aiops-setup,code-graph,domain-modeling
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     note: 单一已注册变体。
@@ -31,6 +35,7 @@ groups:
     default_id: vendor/mattpocock/engineering-ask-matt
     variants: vendor/mattpocock/engineering-ask-matt
     sources: mattpocock
+    dependencies: code-review,codebase-design,diagnosing-bugs,domain-modeling,grill-me,grill-with-docs,grilling,handoff,implement,improve-codebase-architecture,prototype,research,setup-matt-pocock-skills,tdd,teach,to-issues,to-prd,triage,writing-great-skills
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     note: 单一已注册变体。
@@ -38,6 +43,7 @@ groups:
     default_id: vendor/mattpocock/in-progress-claude-handoff
     variants: vendor/mattpocock/in-progress-claude-handoff
     sources: mattpocock
+    dependencies: none
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     note: 单一已注册变体。
@@ -45,6 +51,7 @@ groups:
     default_id: vendor/yugasun/code-graph
     variants: vendor/yugasun/code-graph
     sources: yugasun
+    dependencies: improve-codebase-architecture
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     note: 单一已注册变体。
@@ -52,6 +59,7 @@ groups:
     default_id: vendor/mattpocock/engineering-code-review
     variants: vendor/mattpocock/engineering-code-review
     sources: mattpocock
+    dependencies: setup-matt-pocock-skills
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     note: 单一已注册变体。
@@ -59,6 +67,7 @@ groups:
     default_id: vendor/mattpocock/engineering-codebase-design
     variants: vendor/mattpocock/engineering-codebase-design
     sources: mattpocock
+    dependencies: none
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     note: 单一已注册变体。
@@ -66,6 +75,7 @@ groups:
     default_id: vendor/mattpocock/deprecated-design-an-interface
     variants: vendor/mattpocock/deprecated-design-an-interface
     sources: mattpocock
+    dependencies: none
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     note: 单一已注册变体。
@@ -73,6 +83,7 @@ groups:
     default_id: vendor/mattpocock/engineering-diagnosing-bugs
     variants: vendor/mattpocock/engineering-diagnosing-bugs,vendor/yugasun/diagnosing-bugs
     sources: mattpocock,yugasun
+    dependencies: aiops,code-graph,improve-codebase-architecture
     difference: 来源：mattpocock,yugasun; 概况：mattpocock=19词/0参考/1脚本,yugasun=18词/0参考/1脚本
     recommendation: 推荐 vendor/mattpocock/engineering-diagnosing-bugs 作为未批准变体中的默认项；提升为 approved 前请先审查
     note: 已合并重复 skill 名称；除非指定 --source，否则使用默认项。
@@ -80,6 +91,7 @@ groups:
     default_id: vendor/mattpocock/engineering-domain-modeling
     variants: vendor/mattpocock/engineering-domain-modeling,vendor/yugasun/domain-modeling
     sources: mattpocock,yugasun
+    dependencies: code-graph
     difference: 来源：mattpocock,yugasun; 概况：mattpocock=35词/2参考/0脚本,yugasun=21词/2参考/0脚本
     recommendation: 推荐 vendor/mattpocock/engineering-domain-modeling 作为未批准变体中的默认项；提升为 approved 前请先审查
     note: 已合并重复 skill 名称；除非指定 --source，否则使用默认项。
@@ -87,6 +99,7 @@ groups:
     default_id: vendor/mattpocock/personal-edit-article
     variants: vendor/mattpocock/personal-edit-article
     sources: mattpocock
+    dependencies: none
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     note: 单一已注册变体。
@@ -94,6 +107,7 @@ groups:
     default_id: vendor/example/example-skill
     variants: vendor/example/example-skill
     sources: example
+    dependencies: none
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     note: 单一已注册变体。
@@ -101,6 +115,7 @@ groups:
     default_id: vendor/yugasun/explore
     variants: vendor/yugasun/explore
     sources: yugasun
+    dependencies: none
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     note: 单一已注册变体。
@@ -108,6 +123,7 @@ groups:
     default_id: vendor/yugasun/file-refactor
     variants: vendor/yugasun/file-refactor
     sources: yugasun
+    dependencies: none
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     note: 单一已注册变体。
@@ -115,6 +131,7 @@ groups:
     default_id: vendor/mattpocock/misc-git-guardrails-claude-code
     variants: vendor/mattpocock/misc-git-guardrails-claude-code
     sources: mattpocock
+    dependencies: none
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     note: 单一已注册变体。
@@ -122,6 +139,7 @@ groups:
     default_id: vendor/yugasun/gitops
     variants: vendor/yugasun/gitops
     sources: yugasun
+    dependencies: none
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     note: 单一已注册变体。
@@ -129,6 +147,7 @@ groups:
     default_id: vendor/mattpocock/productivity-grill-me
     variants: vendor/mattpocock/productivity-grill-me
     sources: mattpocock
+    dependencies: grilling
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     note: 单一已注册变体。
@@ -136,6 +155,7 @@ groups:
     default_id: vendor/mattpocock/engineering-grill-with-docs
     variants: vendor/mattpocock/engineering-grill-with-docs,vendor/yugasun/grill-with-docs
     sources: mattpocock,yugasun
+    dependencies: domain-modeling,grilling
     difference: 来源：mattpocock,yugasun; 概况：mattpocock=19词/0参考/0脚本,yugasun=14词/0参考/0脚本
     recommendation: 推荐 vendor/mattpocock/engineering-grill-with-docs 作为未批准变体中的默认项；提升为 approved 前请先审查
     note: 已合并重复 skill 名称；除非指定 --source，否则使用默认项。
@@ -143,6 +163,7 @@ groups:
     default_id: vendor/mattpocock/productivity-grilling
     variants: vendor/mattpocock/productivity-grilling,vendor/yugasun/grilling
     sources: mattpocock,yugasun
+    dependencies: none
     difference: 来源：mattpocock,yugasun; 概况：mattpocock=26词/0参考/0脚本,yugasun=22词/0参考/0脚本
     recommendation: 推荐 vendor/mattpocock/productivity-grilling 作为未批准变体中的默认项；提升为 approved 前请先审查
     note: 已合并重复 skill 名称；除非指定 --source，否则使用默认项。
@@ -150,6 +171,7 @@ groups:
     default_id: vendor/mattpocock/productivity-handoff
     variants: vendor/mattpocock/productivity-handoff,vendor/yugasun/handoff
     sources: mattpocock,yugasun
+    dependencies: aiops
     difference: 来源：mattpocock,yugasun; 描述相同
     recommendation: 推荐 vendor/mattpocock/productivity-handoff 作为未批准变体中的默认项；提升为 approved 前请先审查
     note: 已合并重复 skill 名称；除非指定 --source，否则使用默认项。
@@ -157,6 +179,7 @@ groups:
     default_id: vendor/mattpocock/engineering-implement
     variants: vendor/mattpocock/engineering-implement
     sources: mattpocock
+    dependencies: code-review,tdd
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     note: 单一已注册变体。
@@ -164,6 +187,7 @@ groups:
     default_id: vendor/mattpocock/engineering-improve-codebase-architecture
     variants: vendor/mattpocock/engineering-improve-codebase-architecture,vendor/yugasun/improve-codebase-architecture
     sources: mattpocock,yugasun
+    dependencies: code-graph,codebase-design,domain-modeling,grilling
     difference: 来源：mattpocock,yugasun; 概况：mattpocock=20词/1参考/0脚本,yugasun=1词/2参考/0脚本
     recommendation: 推荐 vendor/mattpocock/engineering-improve-codebase-architecture 作为未批准变体中的默认项；提升为 approved 前请先审查
     note: 已合并重复 skill 名称；除非指定 --source，否则使用默认项。
@@ -171,6 +195,7 @@ groups:
     default_id: vendor/yugasun/lean
     variants: vendor/yugasun/lean
     sources: yugasun
+    dependencies: none
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     note: 单一已注册变体。
@@ -178,6 +203,7 @@ groups:
     default_id: vendor/mattpocock/in-progress-loop-me
     variants: vendor/mattpocock/in-progress-loop-me
     sources: mattpocock
+    dependencies: grilling
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     note: 单一已注册变体。
@@ -185,6 +211,7 @@ groups:
     default_id: vendor/mattpocock/misc-migrate-to-shoehorn
     variants: vendor/mattpocock/misc-migrate-to-shoehorn
     sources: mattpocock
+    dependencies: none
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     note: 单一已注册变体。
@@ -192,6 +219,7 @@ groups:
     default_id: vendor/mattpocock/personal-obsidian-vault
     variants: vendor/mattpocock/personal-obsidian-vault
     sources: mattpocock
+    dependencies: none
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     note: 单一已注册变体。
@@ -199,6 +227,7 @@ groups:
     default_id: vendor/mattpocock/engineering-prototype
     variants: vendor/mattpocock/engineering-prototype,vendor/yugasun/prototype
     sources: mattpocock,yugasun
+    dependencies: aiops-implement
     difference: 来源：mattpocock,yugasun; 概况：mattpocock=32词/2参考/0脚本,yugasun=17词/0参考/0脚本
     recommendation: 推荐 vendor/mattpocock/engineering-prototype 作为未批准变体中的默认项；提升为 approved 前请先审查
     note: 已合并重复 skill 名称；除非指定 --source，否则使用默认项。
@@ -206,6 +235,7 @@ groups:
     default_id: vendor/yugasun/prune
     variants: vendor/yugasun/prune
     sources: yugasun
+    dependencies: lean,review
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     note: 单一已注册变体。
@@ -213,6 +243,7 @@ groups:
     default_id: vendor/mattpocock/deprecated-qa
     variants: vendor/mattpocock/deprecated-qa
     sources: mattpocock
+    dependencies: none
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     note: 单一已注册变体。
@@ -220,6 +251,7 @@ groups:
     default_id: vendor/mattpocock/deprecated-request-refactor-plan
     variants: vendor/mattpocock/deprecated-request-refactor-plan
     sources: mattpocock
+    dependencies: none
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     note: 单一已注册变体。
@@ -227,6 +259,7 @@ groups:
     default_id: vendor/mattpocock/engineering-research
     variants: vendor/mattpocock/engineering-research
     sources: mattpocock
+    dependencies: none
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     note: 单一已注册变体。
@@ -234,6 +267,7 @@ groups:
     default_id: vendor/mattpocock/engineering-resolving-merge-conflicts
     variants: vendor/mattpocock/engineering-resolving-merge-conflicts
     sources: mattpocock
+    dependencies: none
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     note: 单一已注册变体。
@@ -241,6 +275,7 @@ groups:
     default_id: vendor/yugasun/review
     variants: vendor/yugasun/review
     sources: yugasun
+    dependencies: aiops-setup
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     note: 单一已注册变体。
@@ -248,6 +283,7 @@ groups:
     default_id: vendor/mattpocock/misc-scaffold-exercises
     variants: vendor/mattpocock/misc-scaffold-exercises
     sources: mattpocock
+    dependencies: none
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     note: 单一已注册变体。
@@ -255,6 +291,7 @@ groups:
     default_id: vendor/mattpocock/engineering-setup-matt-pocock-skills
     variants: vendor/mattpocock/engineering-setup-matt-pocock-skills
     sources: mattpocock
+    dependencies: triage
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     note: 单一已注册变体。
@@ -262,6 +299,7 @@ groups:
     default_id: vendor/mattpocock/misc-setup-pre-commit
     variants: vendor/mattpocock/misc-setup-pre-commit
     sources: mattpocock
+    dependencies: none
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     note: 单一已注册变体。
@@ -269,6 +307,7 @@ groups:
     default_id: vendor/mattpocock/engineering-tdd
     variants: vendor/mattpocock/engineering-tdd,vendor/yugasun/tdd
     sources: mattpocock,yugasun
+    dependencies: none
     difference: 来源：mattpocock,yugasun; 概况：mattpocock=20词/2参考/0脚本,yugasun=9词/3参考/0脚本
     recommendation: 推荐 vendor/mattpocock/engineering-tdd 作为未批准变体中的默认项；提升为 approved 前请先审查
     note: 已合并重复 skill 名称；除非指定 --source，否则使用默认项。
@@ -276,6 +315,7 @@ groups:
     default_id: vendor/mattpocock/productivity-teach
     variants: vendor/mattpocock/productivity-teach
     sources: mattpocock
+    dependencies: none
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     note: 单一已注册变体。
@@ -283,6 +323,7 @@ groups:
     default_id: vendor/mattpocock/engineering-to-issues
     variants: vendor/mattpocock/engineering-to-issues,vendor/yugasun/to-issues
     sources: mattpocock,yugasun
+    dependencies: aiops-setup,setup-matt-pocock-skills
     difference: 来源：mattpocock,yugasun; 概况：mattpocock=18词/0参考/0脚本,yugasun=13词/0参考/0脚本
     recommendation: 推荐 vendor/mattpocock/engineering-to-issues 作为未批准变体中的默认项；提升为 approved 前请先审查
     note: 已合并重复 skill 名称；除非指定 --source，否则使用默认项。
@@ -290,6 +331,7 @@ groups:
     default_id: vendor/mattpocock/engineering-to-prd
     variants: vendor/mattpocock/engineering-to-prd,vendor/yugasun/to-prd
     sources: mattpocock,yugasun
+    dependencies: aiops-setup,setup-matt-pocock-skills
     difference: 来源：mattpocock,yugasun; 概况：mattpocock=25词/0参考/0脚本,yugasun=21词/0参考/0脚本
     recommendation: 推荐 vendor/mattpocock/engineering-to-prd 作为未批准变体中的默认项；提升为 approved 前请先审查
     note: 已合并重复 skill 名称；除非指定 --source，否则使用默认项。
@@ -297,6 +339,7 @@ groups:
     default_id: vendor/mattpocock/engineering-triage
     variants: vendor/mattpocock/engineering-triage,vendor/yugasun/triage
     sources: mattpocock,yugasun
+    dependencies: aiops-setup,domain-modeling,grilling,setup-matt-pocock-skills
     difference: 来源：mattpocock,yugasun; 概况：mattpocock=22词/2参考/0脚本,yugasun=17词/2参考/0脚本
     recommendation: 推荐 vendor/mattpocock/engineering-triage 作为未批准变体中的默认项；提升为 approved 前请先审查
     note: 已合并重复 skill 名称；除非指定 --source，否则使用默认项。
@@ -304,6 +347,7 @@ groups:
     default_id: vendor/mattpocock/deprecated-ubiquitous-language
     variants: vendor/mattpocock/deprecated-ubiquitous-language
     sources: mattpocock
+    dependencies: none
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     note: 单一已注册变体。
@@ -311,6 +355,7 @@ groups:
     default_id: vendor/yugasun/ui-mockup
     variants: vendor/yugasun/ui-mockup
     sources: yugasun
+    dependencies: none
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     note: 单一已注册变体。
@@ -318,6 +363,7 @@ groups:
     default_id: vendor/mattpocock/in-progress-wayfinder
     variants: vendor/mattpocock/in-progress-wayfinder
     sources: mattpocock
+    dependencies: domain-modeling,grilling,prototype
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     note: 单一已注册变体。
@@ -325,6 +371,7 @@ groups:
     default_id: vendor/mattpocock/in-progress-wizard
     variants: vendor/mattpocock/in-progress-wizard
     sources: mattpocock
+    dependencies: none
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     note: 单一已注册变体。
@@ -332,6 +379,7 @@ groups:
     default_id: vendor/mattpocock/in-progress-writing-beats
     variants: vendor/mattpocock/in-progress-writing-beats
     sources: mattpocock
+    dependencies: none
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     note: 单一已注册变体。
@@ -339,6 +387,7 @@ groups:
     default_id: vendor/mattpocock/in-progress-writing-fragments
     variants: vendor/mattpocock/in-progress-writing-fragments
     sources: mattpocock
+    dependencies: none
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     note: 单一已注册变体。
@@ -346,6 +395,7 @@ groups:
     default_id: vendor/mattpocock/productivity-writing-great-skills
     variants: vendor/mattpocock/productivity-writing-great-skills
     sources: mattpocock
+    dependencies: none
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     note: 单一已注册变体。
@@ -353,6 +403,7 @@ groups:
     default_id: vendor/mattpocock/in-progress-writing-shape
     variants: vendor/mattpocock/in-progress-writing-shape
     sources: mattpocock
+    dependencies: none
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     note: 单一已注册变体。
