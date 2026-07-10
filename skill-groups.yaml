@@ -409,25 +409,43 @@ groups:
     avoid_when: 当用户要你代为完成工程任务，或只要简短答案而非教学过程时不要用。
     note: 单一已注册变体。
   - name: to-issues
-    default_id: vendor/mattpocock/engineering-to-issues
-    variants: vendor/mattpocock/engineering-to-issues,vendor/yugasun/to-issues
-    sources: mattpocock,yugasun
-    dependencies: aiops-setup,setup-matt-pocock-skills
-    difference: 来源：mattpocock,yugasun; 概况：mattpocock=18词/0参考/0脚本,yugasun=13词/0参考/0脚本
-    recommendation: 推荐 vendor/mattpocock/engineering-to-issues 作为未批准变体中的默认项；提升为 approved 前请先审查
+    default_id: vendor/yugasun/to-issues
+    variants: vendor/yugasun/to-issues
+    sources: yugasun
+    dependencies: aiops-setup
+    difference: 单一已注册变体
+    recommendation: 单一来源；无需合并决策
     use_when: 当用户要把计划、spec 或 PRD 拆成可独立领取的垂直切片 issue 时使用。
     avoid_when: 当还没有足够清晰的计划，或用户要直接实现而不是写 issue 时不要用。
-    note: 已合并重复 skill 名称；除非指定 --source，否则使用默认项。
+    note: 单一已注册变体。
   - name: to-prd
-    default_id: vendor/mattpocock/engineering-to-prd
-    variants: vendor/mattpocock/engineering-to-prd,vendor/yugasun/to-prd
-    sources: mattpocock,yugasun
-    dependencies: aiops-setup,setup-matt-pocock-skills
-    difference: 来源：mattpocock,yugasun; 概况：mattpocock=25词/0参考/0脚本,yugasun=21词/0参考/0脚本
-    recommendation: 推荐 vendor/mattpocock/engineering-to-prd 作为未批准变体中的默认项；提升为 approved 前请先审查
+    default_id: vendor/yugasun/to-prd
+    variants: vendor/yugasun/to-prd
+    sources: yugasun
+    dependencies: aiops-setup
+    difference: 单一已注册变体
+    recommendation: 单一来源；无需合并决策
     use_when: 当用户要把当前对话综合成 PRD 并发布到 issue tracker，且不需要额外访谈时使用。
     avoid_when: 当需求仍需大量澄清、用户只要简单总结，或不应写入 issue tracker 时不要用。
-    note: 已合并重复 skill 名称；除非指定 --source，否则使用默认项。
+    note: 单一已注册变体。
+  - name: to-spec
+    default_id: vendor/mattpocock/engineering-to-spec
+    variants: vendor/mattpocock/engineering-to-spec
+    sources: mattpocock
+    difference: 单一已注册变体
+    recommendation: 单一来源；无需合并决策
+    use_when: 当用户需求匹配默认 skill 描述时使用：Turn the current conversation into a spec and publish it to the project issue tracker — no interview, just synthesis of what you've already discussed.
+    avoid_when: 当需求不匹配上述描述、只是普通对话，或已有更具体的 skill 覆盖时不要用。
+    note: 单一已注册变体。
+  - name: to-tickets
+    default_id: vendor/mattpocock/engineering-to-tickets
+    variants: vendor/mattpocock/engineering-to-tickets
+    sources: mattpocock
+    difference: 单一已注册变体
+    recommendation: 单一来源；无需合并决策
+    use_when: 当用户需求匹配默认 skill 描述时使用：Break a plan, spec, or the current conversation into a set of tracer-bullet tickets, each declaring its blocking edges, published to the configured tracker — edges as text in a local file, or native blocking links on a real tracker.
+    avoid_when: 当需求不匹配上述描述、只是普通对话，或已有更具体的 skill 覆盖时不要用。
+    note: 单一已注册变体。
   - name: triage
     default_id: vendor/mattpocock/engineering-triage
     variants: vendor/mattpocock/engineering-triage,vendor/yugasun/triage
@@ -459,8 +477,8 @@ groups:
     avoid_when: 当用户要生产级前端实现、后端逻辑或非 UI 任务时不要用。
     note: 单一已注册变体。
   - name: wayfinder
-    default_id: vendor/mattpocock/in-progress-wayfinder
-    variants: vendor/mattpocock/in-progress-wayfinder
+    default_id: vendor/mattpocock/engineering-wayfinder
+    variants: vendor/mattpocock/engineering-wayfinder
     sources: mattpocock
     dependencies: domain-modeling,grilling,prototype
     difference: 单一已注册变体

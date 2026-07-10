@@ -1,6 +1,6 @@
 source: mattpocock
 repo: git@github.com:mattpocock/skills.git
-ref: 1445797da5ee4e4054233878c0029e9276f9986a
+ref: d574778f94cf620fcc8ce741584093bc650a61d3
 license: MIT
 skills:
   - id: vendor/mattpocock/deprecated-design-an-interface
@@ -71,14 +71,14 @@ skills:
     upstream_path: skills/engineering/tdd
     status: candidate
     imported_at: 2026-07-03T00:00:00Z
-  - id: vendor/mattpocock/engineering-to-issues
-    upstream_path: skills/engineering/to-issues
+  - id: vendor/mattpocock/engineering-to-spec
+    upstream_path: skills/engineering/to-spec
     status: candidate
-    imported_at: 2026-07-03T00:00:00Z
-  - id: vendor/mattpocock/engineering-to-prd
-    upstream_path: skills/engineering/to-prd
+    imported_at: 2026-07-10T03:14:49Z
+  - id: vendor/mattpocock/engineering-to-tickets
+    upstream_path: skills/engineering/to-tickets
     status: candidate
-    imported_at: 2026-07-03T00:00:00Z
+    imported_at: 2026-07-10T03:14:53Z
   - id: vendor/mattpocock/engineering-triage
     upstream_path: skills/engineering/triage
     status: candidate
@@ -91,10 +91,10 @@ skills:
     upstream_path: skills/in-progress/loop-me
     status: analysis-only
     imported_at: 2026-07-03T00:00:00Z
-  - id: vendor/mattpocock/in-progress-wayfinder
-    upstream_path: skills/in-progress/wayfinder
-    status: analysis-only
-    imported_at: 2026-07-03T00:00:00Z
+  - id: vendor/mattpocock/engineering-wayfinder
+    upstream_path: skills/engineering/wayfinder
+    status: candidate
+    imported_at: 2026-07-10T03:14:58Z
   - id: vendor/mattpocock/in-progress-wizard
     upstream_path: skills/in-progress/wizard
     status: analysis-only

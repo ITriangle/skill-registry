@@ -1,12 +1,13 @@
 project: hermes-agent
 path: /Users/wanglong/AL-WorkSpace/git.github.com/hermes-agent
 skills:
+  - id: vendor/mattpocock/engineering-implement
   - id: vendor/mattpocock/productivity-grill-me
   - id: vendor/mattpocock/productivity-grilling
   - id: vendor/mattpocock/engineering-grill-with-docs
   - id: vendor/mattpocock/engineering-domain-modeling
   - id: vendor/mattpocock/engineering-tdd
-  - id: vendor/mattpocock/engineering-to-issues
+  - id: vendor/mattpocock/engineering-to-tickets
   - id: vendor/mattpocock/engineering-setup-matt-pocock-skills
-  - id: vendor/mattpocock/engineering-to-prd
+  - id: vendor/mattpocock/engineering-to-spec
   - id: vendor/mattpocock/engineering-triage

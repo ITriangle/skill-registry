@@ -1,8 +1,8 @@
-# vendor/mattpocock/engineering-to-prd
+# vendor/mattpocock/engineering-to-spec
 
-- Skill 名称：`to-prd`
+- Skill 名称：`to-spec`
 - 当前状态：`candidate`
-- 描述：Turn the current conversation into a PRD and publish it to the project issue tracker — no interview, just synthesis of what you've already discussed.
+- 描述：Turn the current conversation into a spec and publish it to the project issue tracker — no interview, just synthesis of what you've already discussed.
 
 ## 触发条件审查
 

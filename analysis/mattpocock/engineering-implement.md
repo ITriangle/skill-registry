@@ -2,7 +2,7 @@
 
 - Skill 名称：`implement`
 - 当前状态：`candidate`
-- 描述：Implement a piece of work based on a PRD or set of issues.
+- 描述：Implement a piece of work based on a spec or set of tickets.
 
 ## 触发条件审查
 

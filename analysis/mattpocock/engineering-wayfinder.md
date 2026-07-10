@@ -1,8 +1,8 @@
-# vendor/mattpocock/in-progress-wayfinder
+# vendor/mattpocock/engineering-wayfinder
 
 - Skill 名称：`wayfinder`
-- 当前状态：`analysis-only`
-- 描述：Plan a huge chunk of work — more than one agent session can hold — as a shared map of investigation tickets on your issue tracker, and resolve them one at a time until the way to the goal is clear.
+- 当前状态：`candidate`
+- 描述：Plan a huge chunk of work — more than one agent session can hold — as a shared map of investigation tickets on your issue tracker, and resolve them one at a time until the way to the destination is clear.
 
 ## 触发条件审查
 
@@ -13,7 +13,7 @@
 
 - 脚本：未检测到
 - 参考资料：未检测到
-- 风险提及：文件系统, 密钥
+- 风险提及：网络, 文件系统, 密钥
 
 ## 建议
 
