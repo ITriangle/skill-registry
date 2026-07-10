@@ -1,0 +1,9 @@
+source: yugasun-llm-wiki-skills
+repo: git@github.com:yugasun/llm-wiki-skills.git
+ref: cfb5773ac73c95680b84a1e6872702f0f17d69a5
+license: MIT
+skills:
+  - id: vendor/yugasun-llm-wiki-skills/llm-wiki
+    upstream_path: skills/llm-wiki
+    status: candidate
+    imported_at: 2026-07-10T02:38:05Z

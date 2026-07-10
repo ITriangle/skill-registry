@@ -249,6 +249,15 @@ groups:
     use_when: 当用户要把工作拆成最小可验证增量，优先快速学习、降低浪费并持续收敛时使用。
     avoid_when: 当任务已经被明确拆好，或用户只要一次性执行不需要精益拆解时不要用。
     note: 单一已注册变体。
+  - name: llm-wiki
+    default_id: vendor/yugasun-llm-wiki-skills/llm-wiki
+    variants: vendor/yugasun-llm-wiki-skills/llm-wiki
+    sources: yugasun-llm-wiki-skills
+    difference: 单一已注册变体
+    recommendation: 单一来源；无需合并决策
+    use_when: 当用户需求匹配默认 skill 描述时使用：构建并维护由 LLM 维护的个人知识库。触发：摄取来源进 wiki、查询 wiki 知识、lint 质量、'加入 wiki'、'关于 X 我知道什么'，或提到 LLM wiki / Karpathy wiki。
+    avoid_when: 当需求不匹配上述描述、只是普通对话，或已有更具体的 skill 覆盖时不要用。
+    note: 单一已注册变体。
   - name: loop-me
     default_id: vendor/mattpocock/in-progress-loop-me
     variants: vendor/mattpocock/in-progress-loop-me
