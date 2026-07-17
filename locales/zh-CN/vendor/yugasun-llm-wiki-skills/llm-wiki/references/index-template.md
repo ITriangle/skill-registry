@@ -1,21 +1,21 @@
-# Knowledge Base Index
+# 知识库索引
 
-## {topic-name}
-
-{该主题一行描述。}
-
-| Article | Summary | Updated |
-|---------|---------|---------|
-| [{Article Title}]({topic-name}/{article}.md) | {一句话摘要} | {YYYY-MM-DD} |
-| [{Archived Article}]({topic-name}/{archived}.md) | [Archived] {一句话摘要} | {YYYY-MM-DD} |
-
-## {another-topic}
+## {主题名}
 
 {该主题一行描述。}
 
-| Article | Summary | Updated |
+| 文章 | 摘要 | 更新日期 |
 |---------|---------|---------|
-| [{Article Title}]({another-topic}/{article}.md) | {一句话摘要} | {YYYY-MM-DD} |
+| [{文章标题}]({topic-name}/{article}.md) | {一句话摘要} | {YYYY-MM-DD} |
+| [{归档文章}]({topic-name}/{archived}.md) | [归档] {一句话摘要} | {YYYY-MM-DD} |
+
+## {另一主题}
+
+{该主题一行描述。}
+
+| 文章 | 摘要 | 更新日期 |
+|---------|---------|---------|
+| [{文章标题}]({another-topic}/{article}.md) | {一句话摘要} | {YYYY-MM-DD} |
 
 ---
 
@@ -40,7 +40,7 @@
 - [[concept-slug]]：一句话摘要。
 ```
 
-## Lint 约定
+## 质量检查约定
 
 - 文件存在但不在索引 → 补条目，摘要可用 `(no summary)` / `(无摘要)`
 - 索引指向不存在文件 → 标 `[MISSING]` / `[缺失]`，不擅自删除

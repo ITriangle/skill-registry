@@ -1,14 +1,6 @@
 ---
 name: example-skill
-description: 当需要验证本地 skill registry 的导入、解析、启用或同步链路是否工作时使用。 当处理真实产品、工程或写作任务时不要用。
+description: 仅用于验证本地技能注册表连接是否正常。
 ---
 
-# 中文导读
-
-- 使用场景：当需要验证本地 skill registry 的导入、解析、启用或同步链路是否工作时使用。
-- 不适用：当处理真实产品、工程或写作任务时不要用。
-
-# 上游说明原文
-
-Confirm that the registry symlink flow works, then report the active skill
-path. Do not perform project changes.
+确认注册表的软链接流程正常工作，然后报告当前激活技能的路径。不要对项目进行更改。

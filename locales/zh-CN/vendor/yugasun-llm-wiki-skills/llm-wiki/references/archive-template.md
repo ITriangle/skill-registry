@@ -4,7 +4,7 @@
 > {路径必须相对本文件：同目录只用文件名；跨主题用 ../other-topic/filename.md；也可用 [[wikilink]]}
 > Archived: {YYYY-MM-DD}
 
-## Overview
+## 概览
 
 {一段话概括问题与关键发现。}
 
@@ -14,7 +14,7 @@
 
 {可选 — 仅在有交叉引用时加入：}
 
-## See Also
+## 另请参阅
 
 {指向相关 wiki 文章：
 - 同主题：[其他文章](other-article.md)

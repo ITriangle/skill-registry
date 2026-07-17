@@ -3,13 +3,13 @@ source_id: vendor/yugasun/tdd
 files:
   - path: SKILL.md
     source_sha256: 5fa58d44a02f1e6546401b4f5652a6df62f74f18a3934a0a9698b1c5c3166a28
-    translation_sha256: 05485e0799975b7789ca8fa07d680990f9f82268e36f9d0b9ea2dd5936a762be
+    translation_sha256: 217f7372ae8762d02ca8b511b4024a08cabea98731b2a33315a2d3a210a0ddb4
   - path: mocking.md
     source_sha256: 3ceb807fdf4a47d6a93d4d9a891e5ba6d362a6247bd08adc451feebfc17361ef
-    translation_sha256: 3ceb807fdf4a47d6a93d4d9a891e5ba6d362a6247bd08adc451feebfc17361ef
+    translation_sha256: 0f7c5b25b7dcf1d3d4e83f4df62160f502c0aa529bdde31abc3c32265327a420
   - path: refactoring.md
     source_sha256: 54fced22dd1911b7094c3fe7979b7c1a40d40be307482c4adf7dc0588f27d6cc
-    translation_sha256: 54fced22dd1911b7094c3fe7979b7c1a40d40be307482c4adf7dc0588f27d6cc
+    translation_sha256: 4fd46a07eda33e78e74cf991b99fdd0d19f21889a1d76951499bd61363b29994
   - path: tests.md
     source_sha256: e12182f5c4c6a844b7c6ab4b8d2623b642aaaae5460fe58ed087efd4f3d5fb8a
-    translation_sha256: e12182f5c4c6a844b7c6ab4b8d2623b642aaaae5460fe58ed087efd4f3d5fb8a
+    translation_sha256: 1c44dee8ceb40f45dade7737ad26095a041a6b22e5228bc0e9f383468c0655a0

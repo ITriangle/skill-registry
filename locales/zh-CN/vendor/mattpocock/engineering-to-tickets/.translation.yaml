@@ -3,4 +3,4 @@ source_id: vendor/mattpocock/engineering-to-tickets
 files:
   - path: SKILL.md
     source_sha256: 918bdefab9313100cb1f7ccb412e2a773fe2f2801dd20d44f6b2acf7a42ca456
-    translation_sha256: 5ac9b41c69433bc800411f4ded16c09e81a098bad72308368104adaf379acc18
+    translation_sha256: 8666dcad1baa1f669e3efda2b3e64a4897466f045908990884ef2b0a1a4793cd

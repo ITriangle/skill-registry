@@ -1,34 +1,27 @@
 ---
 name: tdd
-description: 当用户要 test-first 构建功能或修 bug，强调 red-green-refactor、集成测试或通过公共接口验证时使用。 当没有可测试行为、用户要求先快速探索，或只需要文档和配置修改时不要用。
+description: 测试驱动开发——通过公共接口完成纵向的红灯—绿灯—重构切片。
 ---
-
-# 中文导读
-
-- 使用场景：当用户要 test-first 构建功能或修 bug，强调 red-green-refactor、集成测试或通过公共接口验证时使用。
-- 不适用：当没有可测试行为、用户要求先快速探索，或只需要文档和配置修改时不要用。
-
-# 上游说明原文
 
 # TDD
 
-Tests verify **behavior through public interfaces**, not implementation. Good tests survive refactors; bad tests break on rename.
+测试应通过**公共接口验证行为**，而不是验证实现。好的测试能经受重构；坏的测试会因重命名而失败。
 
-See [tests.md](tests.md) and [mocking.md](mocking.md) for examples.
+示例见 [tests.md](tests.md) 和 [mocking.md](mocking.md)。
 
-## Anti-pattern: horizontal slices
+## 反模式：横向切片
 
-Don't write all tests then all code. One behavior: RED → GREEN → repeat.
+不要先写完所有测试、再写所有代码。一次处理一个行为：红灯 → 绿灯 → 重复。
 
-## Workflow
+## 工作流
 
-1. **Plan** — read `CONTEXT.md`/ADRs. Confirm interface changes and behaviors to test with user.
-2. **Tracer bullet** — one test, one minimal implementation, passes.
-3. **Loop** — one test at a time; only code to pass current test; no speculation.
-4. **Refactor** — only when GREEN; see [refactoring.md](refactoring.md).
+1. **计划**——阅读 `CONTEXT.md`/ADR。与用户确认接口变更和需要测试的行为。
+2. **曳光弹**——一个测试、一份最小实现，并让测试通过。
+3. **循环**——每次只写一个测试；只编写能通过当前测试的代码；不要臆测未来需求。
+4. **重构**——只在绿灯状态下进行；参见 [refactoring.md](refactoring.md)。
 
-## Per-cycle checklist
+## 每轮检查清单
 
-- [ ] Describes behavior, not implementation
-- [ ] Uses public interface only
-- [ ] Minimal code for this test
+- [ ] 描述行为，而不是实现
+- [ ] 只使用公共接口
+- [ ] 只为当前测试编写最少代码

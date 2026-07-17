@@ -17,3 +17,7 @@ translate licenses, scripts, or code. After editing a mirror, run:
 bin/skillctl translation-stamp <skill-id> --locale <locale>
 bin/skillctl translation-audit --locale <locale>
 ```
+
+A mirror must translate the complete natural-language content. Chinese summaries
+followed by English source text, pure-English copies, and placeholder sections
+such as `# 上游说明原文` fail the audit.

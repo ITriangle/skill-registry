@@ -1,19 +1,19 @@
-# Out-of-Scope KB
+# 范围外知识库
 
-`.out-of-scope/<concept>.md` records **rejected enhancements** (not bugs, not already-built features).
+`.out-of-scope/<concept>.md` 记录**被拒绝的增强项**（不记录 bug，也不记录已经构建的功能）。
 
 ```markdown
-# Concept Name
+# 概念名称
 
-**Decision:** rejected
-**Reason:** durable why (scope, architecture, strategy)
-**Prior requests:** #42, #87
+**决策：** 拒绝
+**原因：** 长期有效的理由（范围、架构、战略）
+**此前请求：** #42、#87
 ```
 
-**During triage:** read all files; match by concept similarity; surface matches to maintainer.
+**分诊期间：**读取所有文件；按概念相似性匹配；把匹配项呈现给维护者。
 
-**On wontfix (enhancement):** create or append file, comment with link, close.
+**对增强项作 wontfix 处理时：**创建或追加文件，发表评论并附上链接，然后关闭。
 
-**Already implemented:** close with pointer to code — do **not** write `.out-of-scope/`.
+**已经实现：**附上代码位置并关闭——**不要**写入 `.out-of-scope/`。
 
-Maintainer may delete a file to reconsider; old issues stay closed.
+维护者可以删除文件来重新考虑；旧 issue 保持关闭。

@@ -3,25 +3,25 @@ source_id: vendor/yugasun/aiops-setup
 files:
   - path: SKILL.md
     source_sha256: ecc6ccc2d45b329dfda7b861dba35f969d6913415e5652d48b03452f87944f2f
-    translation_sha256: f160955c57a598c510ce102a172b0419b67de3b5ea25326bf0122ba6989274b0
+    translation_sha256: 3616589f92ff4f58f6934af6fc2edcaa21c506455a31ccfda45ac65b7602c4db
   - path: aiops-yaml.md
     source_sha256: faa184ad5ae4503bb39866b5debf9c75023f91a197dc946736210917b9dfef73
-    translation_sha256: faa184ad5ae4503bb39866b5debf9c75023f91a197dc946736210917b9dfef73
+    translation_sha256: 54c859d758ec01426b9500888863d2f654f3515a7dde6b97330cad2c6563c0c9
   - path: constitution-template.md
     source_sha256: c0e3ab534c39b58c892d4395e9ffa83a8f98ee3c6d25990efc8e2caaf3e0d1e3
-    translation_sha256: c0e3ab534c39b58c892d4395e9ffa83a8f98ee3c6d25990efc8e2caaf3e0d1e3
+    translation_sha256: 26f82aa63dafca46fad5749ece4081d9d66ee9678c74826504f3e63ff4f64ad4
   - path: domain.md
     source_sha256: 57b9f0c8395462eb98aeca50751a2ecf218112dd1d429c26593ba79db1a82aca
-    translation_sha256: 57b9f0c8395462eb98aeca50751a2ecf218112dd1d429c26593ba79db1a82aca
+    translation_sha256: 9b6901960a294688014148d2133a71bc7ed9edcd52da6c55f8906abb4677b85a
   - path: issue-tracker-github.md
     source_sha256: 1e7ac76d3dd7f0ce41d6bf86912619a4bac164a70c6e246ae48f6825e222d56d
-    translation_sha256: 1e7ac76d3dd7f0ce41d6bf86912619a4bac164a70c6e246ae48f6825e222d56d
+    translation_sha256: fcdad016d00a4c6528eb13350a8bd24684c51f3c3f3fe5fe97683e5340997e56
   - path: issue-tracker-gitlab.md
     source_sha256: 6282954685bf55b7da7fad9f45dc4226d39e498ebaee1e06372708033fa40a09
-    translation_sha256: 6282954685bf55b7da7fad9f45dc4226d39e498ebaee1e06372708033fa40a09
+    translation_sha256: 924a6ff6e36ccd7090ebd808fa488b1eb961edf2972f7ace68059127ac6494be
   - path: issue-tracker-local.md
     source_sha256: 9a052f4599525e581721ec24cb2ae3e0296b79053e39f684b540d34d3a4f6528
-    translation_sha256: 9a052f4599525e581721ec24cb2ae3e0296b79053e39f684b540d34d3a4f6528
+    translation_sha256: fd3cc5a1459e4940f55cb6a23311530a8aac50a181e2c8e881dff3fd8a2bff27
   - path: triage-labels.md
     source_sha256: e856715708ed41e787b34ccca846cc912caf1756c4dc1db9293cb7c6263f9434
-    translation_sha256: e856715708ed41e787b34ccca846cc912caf1756c4dc1db9293cb7c6263f9434
+    translation_sha256: 5b57bf24e223485c21f30327c1569c2c2a0cc99f5199bdc6e6c53c62f4840d26

@@ -3,4 +3,4 @@ source_id: vendor/yugasun/file-refactor
 files:
   - path: SKILL.md
     source_sha256: 8eda92f7f3656144ac5e9dc7fa4d79f7787e59bbc85f5641821ae5c3af8187c0
-    translation_sha256: f51aeb10716302d915fd78ce5c1127db818cb84739c53acdb02ac54ce965d144
+    translation_sha256: 6c526ffc531a1a4138a014ca8217df58b2231fdf3417140b571b462c533be8f7

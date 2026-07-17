@@ -3,4 +3,4 @@ source_id: vendor/yugasun/grill-with-docs
 files:
   - path: SKILL.md
     source_sha256: bc6daf32546a2ec3fa32daf392d3315e56b2c5d85a60b715012e2e5ccf7be8dc
-    translation_sha256: a24f163d73f0dddc556de9774e3cff8e63ccdb36ecf0c0b02c1d6dbcced86a42
+    translation_sha256: b90d9c08538fd4ed0fb536f4452108702f93161998cd5fb10b51d26ecd50c55b

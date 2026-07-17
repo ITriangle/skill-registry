@@ -3,10 +3,10 @@ source_id: vendor/yugasun/improve-codebase-architecture
 files:
   - path: HTML-REPORT.md
     source_sha256: e884f957928b880ec5f3beb2b55f9fd8e2c247bc2eaa1eac76a372defc87af17
-    translation_sha256: e884f957928b880ec5f3beb2b55f9fd8e2c247bc2eaa1eac76a372defc87af17
+    translation_sha256: 1d9e86d57242dc233fe430a9c8d37a62e1492de77b679d6049ab2e749c2e3c37
   - path: SKILL.md
     source_sha256: 13e02cd122c8fb1c6e17cdb46addd6ece3ad83d53eaf343b414f05df54985396
-    translation_sha256: 351c57fdc5b0321d3394fee2a36dc95f9ac4e2304efae4cee5a4bb7216a913c8
+    translation_sha256: b9df5720ee20e7f659574538e3d3b9086c750aae75717c9d049ea908129177cc
   - path: sweep-patterns.md
     source_sha256: c6407be0e25ad8216dd59708a8aa1bc46ddfd7c3dcc510535b7c519d82ec9f65
-    translation_sha256: c6407be0e25ad8216dd59708a8aa1bc46ddfd7c3dcc510535b7c519d82ec9f65
+    translation_sha256: 389b991eaa70d73e478bacfda1823493e40869f7cfc6187aaca777a8a502bc69

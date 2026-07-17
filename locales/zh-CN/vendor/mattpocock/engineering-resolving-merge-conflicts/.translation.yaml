@@ -3,4 +3,4 @@ source_id: vendor/mattpocock/engineering-resolving-merge-conflicts
 files:
   - path: SKILL.md
     source_sha256: c7c9ba81362a786aac05d2223123bf1bd2f8a99c3243a72882ede9c68bedfb24
-    translation_sha256: faff8202bdd665de45462df5905fa677a6d126cc7613bf38e926df8bb04958c8
+    translation_sha256: 284c223fc604223f34c7547b16a0424731dd32acba12566356e968ab822187ff

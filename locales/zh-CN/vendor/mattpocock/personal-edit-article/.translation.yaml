@@ -3,4 +3,4 @@ source_id: vendor/mattpocock/personal-edit-article
 files:
   - path: SKILL.md
     source_sha256: e10fba546f45357fe0aaa7494b9e186910d4525818d19f9b2ad6f28cc506aa5e
-    translation_sha256: df86a4cf1b8e5783168fcc9f2b2e999b1eda6083b92cbc98d9f6c0896883c97b
+    translation_sha256: 04b4e9652b71e2427055fe779c2d27d3e65399e8ccb97d4406880d411cb378c8

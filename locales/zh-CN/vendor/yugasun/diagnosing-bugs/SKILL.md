@@ -1,59 +1,52 @@
 ---
 name: diagnosing-bugs
-description: 当用户报告 hard bug、性能回退、失败、异常、慢请求，或明确要 diagnose/debug 时使用。 当用户已经给出明确修复方案只需照做，或问题不是可复现的故障诊断时不要用。
+description: 针对棘手 bug 和性能回归的诊断循环。用于用户要求 diagnose/debug，或报告功能损坏、失败、缓慢时。
 ---
 
-# 中文导读
+# 诊断 Bug
 
-- 使用场景：当用户报告 hard bug、性能回退、失败、异常、慢请求，或明确要 diagnose/debug 时使用。
-- 不适用：当用户已经给出明确修复方案只需照做，或问题不是可复现的故障诊断时不要用。
+只有在给出明确理由时才可跳过阶段。读取 `CONTEXT.md` 和本地 ADR，了解模块上下文。
 
-# 上游说明原文
+## 阶段 0——查询代码图谱（可选，有图谱时）
 
-# Diagnosing Bugs
+如果存在 `graphify-out/graph.json`，先简短告诉用户“查询代码图谱了解影响范围”，然后在开始诊断前查询代码图谱：
 
-Skip phases only when explicitly justified. Read `CONTEXT.md` and local ADRs for module context.
+1. `/code-graph query impact <suspected-file>`——查找受疑似代码区域影响的所有模块
+2. `/code-graph query deps <suspected-module>`——了解疑似模块所依赖的内容
+3. `/code-graph query hotspot`——检查 bug 所在区域是否也是已知热点（高耦合 + 频繁变更）
 
-## Phase 0 — Code graph query (optional, if available)
+在阶段 3 中利用这些结果缩小假设空间。如果不存在图谱，静默跳过。
 
-If `graphify-out/graph.json` exists, briefly tell the user "查询代码图谱了解影响范围" then query the code graph before starting diagnosis:
+## 阶段 1——建立紧密反馈循环
 
-1. `/code-graph query impact <suspected-file>` — find all modules affected by the suspected code area
-2. `/code-graph query deps <suspected-module>` — understand what the suspected module depends on
-3. `/code-graph query hotspot` — check if the bug area is also a known hotspot (high coupling + frequent changes)
+**这就是此技能的核心。**一个能在*这个* bug 上变红的明确通过/失败信号，胜过盯着代码看。
 
-Use these results to narrow the hypothesis space in Phase 3. If no graph exists, skip silently.
+按以下顺序尝试：失败测试 → curl/脚本 → CLI fixture → 无头浏览器 → 重放 trace → 一次性 harness → fuzz → bisect harness → 新旧版本差分 → HITL 脚本。
 
-## Phase 1 — Build a tight feedback loop
+然后收紧循环：更快、断言更精准、确定性更强。
 
-**This is the skill.** A tight pass/fail signal that goes red on *this* bug beats staring at code.
+对于非确定性 bug：提高复现率，直到可调试。如果无法建立循环，就停止——列出尝试过的内容，请求环境访问权或已捕获的产物。**没有能变红的命令，就不能进入阶段 2。**
 
-Try in order: failing test → curl/script → CLI fixture → headless browser → replay trace → throwaway harness → fuzz → bisect harness → differential old/new → HITL script.
+完成标准：有一条代理可运行的命令，能变红、具确定性、速度快，并且已经运行过一次（粘贴调用命令与输出）。
 
-Then tighten: faster, sharper assertion, more deterministic.
+## 阶段 2——复现并最小化
 
-Non-deterministic bugs: raise reproduction rate until debuggable. If no loop is possible, stop — list what you tried, ask for env access or captured artifacts. **No red-capable command, no Phase 2.**
+循环必须在**用户所述的**症状上变红。每次只削减一项来缩小复现用例——剩下的每一部分都必须不可或缺。
 
-Done when one agent-runnable command is red-capable, deterministic, fast, and already run once (paste invocation + output).
+## 阶段 3——提出假设
 
-## Phase 2 — Reproduce + minimise
+测试前列出 3–5 个按优先级排序、可证伪的假设。条件允许时向用户展示该列表。
 
-Loop goes red on the **user's** symptom. Shrink repro one cut at a time — every remaining piece must be load-bearing.
+## 阶段 4——插桩
 
-## Phase 3 — Hypothesise
+一次只改变一个变量。调试器优于定向日志。为日志添加 `[DEBUG-xxxx]` 标签，以便清理。性能问题：先测量基线，再进行二分定位。
 
-3–5 ranked, falsifiable hypotheses before testing. Show the list to the user when possible.
+## 阶段 5——修复并添加回归测试
 
-## Phase 4 — Instrument
+只有存在正确 seam（在调用点体现真实 bug 模式）时，才在修复前编写回归测试。没有 seam → 将其记录为架构发现。
 
-One variable at a time. Debugger > targeted logs. Tag logs `[DEBUG-xxxx]` for cleanup. Perf: measure baseline, then bisect.
+## 阶段 6——清理
 
-## Phase 5 — Fix + regression test
+删除调试标签和一次性 harness，重新运行阶段 1 的循环，并在提交消息中说明胜出的假设。
 
-Regression test before fix **only at a correct seam** (real bug pattern at call site). No seam → document as architectural finding.
-
-## Phase 6 — Cleanup
-
-Remove debug tags, delete throwaway harnesses, re-run Phase 1 loop, state winning hypothesis in commit message.
-
-**Post-fix:** if prevention needs architectural change (no test seam, tangled coupling), recommend `/aiops` with **Architecture health** — after the fix, with specifics.
+**修复后：**如果预防复发需要架构变更（没有测试 seam、耦合纠缠），在完成修复后给出具体信息，并建议使用带 **Architecture health** 的 `/aiops`。

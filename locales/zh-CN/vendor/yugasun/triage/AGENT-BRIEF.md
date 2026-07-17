@@ -1,28 +1,28 @@
-# Agent Brief
+# 代理简报
 
-Contract for AFK agents when an issue/PR moves to `ready-for-agent`.
+当 issue/PR 移动到 `ready-for-agent` 时，提供给 AFK 代理的契约。
 
-**Durable:** interfaces and behavior, not file paths or line numbers.
-**Behavioral:** what the system should do, not step-by-step edits.
-**Complete:** testable acceptance criteria + explicit out-of-scope.
+**持久：**描述接口和行为，而不是文件路径或行号。
+**行为导向：**描述系统应该做什么，而不是逐步编辑指令。
+**完整：**包含可测试的验收标准和明确的范围外事项。
 
 ```markdown
-## Agent Brief
+## 代理简报
 
-**Category:** bug | enhancement
-**Summary:** one line
+**类别：** bug | enhancement
+**摘要：** 一行
 
-**Current behavior:** …
-**Desired behavior:** …
+**当前行为：** …
+**期望行为：** …
 
-**Key interfaces:**
-- `TypeName` / `function()` — what changes and why
+**关键接口：**
+- `TypeName` / `function()`——更改什么以及原因
 
-**Acceptance criteria:**
+**验收标准：**
 - [ ] …
 
-**Out of scope:**
+**范围之外：**
 - …
 ```
 
-For PRs: current behavior = state of the diff; desired = finish/fix gaps on existing code.
+对于 PR：当前行为 = diff 的现状；期望行为 = 补完或修复现有代码中的缺口。

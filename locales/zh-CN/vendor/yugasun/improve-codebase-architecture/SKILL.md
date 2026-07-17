@@ -1,92 +1,87 @@
 ---
 name: improve-codebase-architecture
-description: 当用户要扫描代码库架构改进机会，并用报告或访谈选择下一步重构方向时使用。 当只需要修一个具体 bug、做小范围重构或已有明确实现任务时不要用。
+description: >
+  扫描代码库中的模块深化机会，以可视化 HTML 报告呈现，然后围绕你选中的一项深入追问。
+  用于用户提出架构评审、代码库健康、深化、重构建议，或抱怨架构摩擦时。
 ---
 
-# 中文导读
+# 改进代码库架构
 
-- 使用场景：当用户要扫描代码库架构改进机会，并用报告或访谈选择下一步重构方向时使用。
-- 不适用：当只需要修一个具体 bug、做小范围重构或已有明确实现任务时不要用。
+发现架构摩擦并提出**深化机会**——把浅模块重构为深模块。目标是提升可测试性和 AI 可导航性。
 
-# 上游说明原文
+此命令以项目的领域模型和 [design-vocabulary.md](../architect-design/design-vocabulary.md) 为依据——每项建议都必须准确使用其中的术语。
 
-# Improve Codebase Architecture
+`CONTEXT.md` 中的领域语言为良好 seam 命名；`docs/adr/` 中的 ADR 记录此命令不应重新争论的决策。
 
-Surface architectural friction and propose **deepening opportunities** — refactors that turn shallow modules into deep ones. The aim is testability and AI-navigability.
+## 流程
 
-This command is _informed_ by the project's domain model and [design-vocabulary.md](../architect-design/design-vocabulary.md) — use those terms exactly in every suggestion.
+### 1. 图谱检查（可选）
 
-The domain language in `CONTEXT.md` gives names to good seams; ADRs in `docs/adr/` record decisions this command should not re-litigate.
+`architecture_health` flow 会先运行 **`graph_build` 阶段**（`phases.py`）。如果进入这里时还没有图谱，检查 `graphify-out/graph.json`：
 
-## Process
+- 如果存在 `graphify-out/graph.json`，告诉用户：“代码图谱已就绪（N 个模块），将基于图谱做增强分析。”然后查询 `/code-graph query god-nodes` 和 `/code-graph query communities` 获取全局视图。按需通过 `/code-graph query` 查询具体模块。
+- 如果不存在图谱，告诉用户：“未检测到代码图谱，使用有机探索模式。如需更精确的分析，可先运行 `/code-graph build`（需要先安装 graphify）。”然后回退到有机探索。
 
-### 1. Graph check (optional)
+### 2. 多模态扫描
 
-`architecture_health` flows run a **`graph_build` phase** first (`phases.py`). If you arrive here without a graph, check for `graphify-out/graph.json`:
+使用 Agent 工具并行运行 6 个视角代理。每个代理从不同角度查询代码图谱。代理提示词模板见 [sweep-patterns.md](sweep-patterns.md)。
 
-- If `graphify-out/graph.json` exists, tell the user: "代码图谱已就绪（N 个模块），将基于图谱做增强分析。" Then query `/code-graph query god-nodes` and `/code-graph query communities` to get the global view. Query specific modules as needed via `/code-graph query`.
-- If no graph exists, tell the user: "未检测到代码图谱，使用有机探索模式。如需更精确的分析，可先运行 `/code-graph build`（需要先安装 graphify）。" Then fall back to organic exploration.
+**结构代理**——识别浅模块（接口约等于实现的 god-node）
 
-### 2. Multi-modal sweep
+**数据流代理**——追踪跨模块数据流和 seam 泄漏
 
-Run 6 perspective agents in parallel using the Agent tool. Each agent queries the code graph from a different angle. See [sweep-patterns.md](sweep-patterns.md) for agent prompt templates.
+**变更代理**——从热点中识别摩擦：高耦合 + 高变更频率模块
 
-**Structure agent** — Identify shallow modules (god-nodes where interface ≈ implementation)
+**测试代理**——绘制未经测试的关键 seam（高入度、零测试覆盖）
 
-**Data-flow agent** — Trace cross-module data flow and seam leakage
+**安全代理**——识别信任边界违规，以及身份验证与业务逻辑混杂
 
-**Change agent** — Identify friction from hotspots: high-coupling + high-churn modules
+**性能代理**——识别结构性性能风险：宽范围状态查询、缺少缓存 seam、过深的同步链
 
-**Test agent** — Map untested critical seams (high in-degree, zero test coverage)
+### 3. 交叉验证
 
-**Security agent** — Identify trust boundary violations and auth/business logic mixing
+启动一个接收全部 6 个视角的综合代理：
+- 对发现去重（同一模块被多个代理标记 = 更高置信度）
+- 按收敛程度排序：得到 2 个以上代理确认的发现优先级最高
+- 对最重要的发现应用**删除测试**
+- 生成最终候选列表（5–10 项）
 
-**Performance agent** — Structural performance risks: broad-state queries, missing cache seams, deep sync chains
+### 4. 以 HTML 报告呈现候选项
 
-### 3. Cross-validate
+把独立完整的 HTML 文件写入操作系统临时目录，确保仓库中不留下任何内容。从 `$TMPDIR` 解析临时目录，缺失时回退到 `/tmp`（Windows 使用 `%TEMP%`），并写入 `<tmpdir>/architecture-review-<timestamp>.html`，确保每次运行获得新文件。为用户打开它——Linux 使用 `xdg-open <path>`，macOS 使用 `open <path>`，Windows 使用 `start <path>`——并告诉用户绝对路径。
 
-Spawn a synthesis agent that receives all 6 perspectives:
-- De-duplicate findings (same module flagged by multiple agents = higher confidence)
-- Rank by convergence: findings confirmed by 2+ agents rank highest
-- Apply the **deletion test** to the top findings
-- Produce a final candidate list (5-10 items)
+报告使用 **Tailwind CDN** 进行布局和样式设计，并在图/流/时序能可靠表达结构时使用 **Mermaid CDN**。将 Mermaid 与手工 CSS/SVG 视觉元素混合使用——关系呈图结构时（调用图、依赖、时序）使用 Mermaid；需要更具编辑风格的表现（质量图、剖面图、折叠动画）时使用手工 div/SVG。每个候选项都有一张**前后对比可视化**。突出视觉表达。
 
-### 4. Present candidates as an HTML report
+为每个候选项渲染一张卡片，包含：
 
-Write a self-contained HTML file to the OS temp directory so nothing lands in the repo. Resolve the temp dir from `$TMPDIR`, falling back to `/tmp` (or `%TEMP%` on Windows), and write to `<tmpdir>/architecture-review-<timestamp>.html` so each run gets a fresh file. Open it for the user — `xdg-open <path>` on Linux, `open <path>` on macOS, `start <path>` on Windows — and tell them the absolute path.
+- **文件**——涉及哪些文件/模块
+- **问题**——当前架构为何造成摩擦
+- **解决方案**——用自然语言描述将发生的变化
+- **收益**——以 locality 和 leverage 解释，以及测试会如何改善
+- **改进前/后示意图**——并排、定制绘制，展示浅薄现状及深化结果
+- **推荐强度**——`Strong`、`Worth exploring`、`Speculative` 之一，显示为徽章
+- **扫描证据**——哪些视角代理标记了它（每个代理一个徽章）
 
-The report uses **Tailwind via CDN** for layout and styling, and **Mermaid via CDN** for diagrams where a graph/flow/sequence reliably communicates the structure. Mix Mermaid with hand-crafted CSS/SVG visuals — use Mermaid when relationships are graph-shaped (call graphs, dependencies, sequences), and hand-built divs/SVG when you want something more editorial (mass diagrams, cross-sections, collapse animations). Each candidate gets a **before/after visualisation**. Be visual.
+报告末尾增加**首要建议**章节：最先处理哪个候选项，以及原因。
 
-For each candidate, render a card with:
+**领域使用 CONTEXT.md 中的词汇，结构使用 [design-vocabulary.md](../architect-design/design-vocabulary.md) 中的词汇。**如果 `CONTEXT.md` 定义了“Order”，就说“Order intake module”，不要说“FooBarHandler”，也不要说“Order service”。
 
-- **Files** — which files/modules are involved
-- **Problem** — why the current architecture is causing friction
-- **Solution** — plain English description of what would change
-- **Benefits** — explained in terms of locality and leverage, and how tests would improve
-- **Before / After diagram** — side-by-side, custom-drawn, illustrating the shallowness and the deepening
-- **Recommendation strength** — one of `Strong`, `Worth exploring`, `Speculative`, rendered as a badge
-- **Sweep evidence** — which perspective agents flagged this (badge per agent)
+**ADR 冲突**：如果候选项与已有 ADR 冲突，仅在摩擦严重到值得重新审视 ADR 时才提出。在卡片中清晰标注（例如警告提示：*“与 ADR-0007 冲突——但值得重新讨论，因为……”*）。不要列出 ADR 禁止的每个理论重构。
 
-End the report with a **Top recommendation** section: which candidate you'd tackle first and why.
+完整 HTML 骨架、图示模式和样式指南见 [HTML-REPORT.md](HTML-REPORT.md)。
 
-**Use CONTEXT.md vocabulary for the domain, and [design-vocabulary.md](../architect-design/design-vocabulary.md) for structure.** If `CONTEXT.md` defines "Order," talk about "the Order intake module" — not "the FooBarHandler," and not "the Order service."
+此时不要提出接口。文件写完后询问用户：“你想探索其中哪一项？”
 
-**ADR conflicts**: if a candidate contradicts an existing ADR, only surface it when the friction is real enough to warrant revisiting the ADR. Mark it clearly in the card (e.g. a warning callout: _"contradicts ADR-0007 — but worth reopening because…"_). Don't list every theoretical refactor an ADR forbids.
+### 5. 深入追问循环
 
-See [HTML-REPORT.md](HTML-REPORT.md) for the full HTML scaffold, diagram patterns, and styling guidance.
+用户选择候选项后，运行 `/grilling` 技能，与他们逐步走过设计树——约束、依赖、深化后模块的形态、seam 后面的内容，以及哪些测试能够保留下来。
 
-Do NOT propose interfaces yet. After the file is written, ask the user: "Which of these would you like to explore?"
+决策逐渐明确时，就地落实副作用——运行 `/domain-modeling` 技能，随过程保持领域模型最新：
 
-### 5. Grilling loop
+- **用 `CONTEXT.md` 中不存在的概念为深化模块命名？**把该术语添加到 `CONTEXT.md`。如果文件不存在，在需要时创建。
+- **在对话中明确了模糊术语？**立即更新 `CONTEXT.md`。
+- **用户以关键理由拒绝候选项？**提出记录 ADR，措辞为：“要我把这个记录为 ADR，以免今后的架构评审再次建议它吗？”只有未来探索者确实需要该理由才能避免再次提出同一建议时才这样做——跳过临时理由（“现在不值得”）和不言自明的理由。
 
-Once the user picks a candidate, run the `/grilling` skill to walk the design tree with them — constraints, dependencies, the shape of the deepened module, what sits behind the seam, what tests survive.
+## 旧版模式（无代码图谱）
 
-Side effects happen inline as decisions crystallise — run the `/domain-modeling` skill to keep the domain model current as you go:
-
-- **Naming a deepened module after a concept not in `CONTEXT.md`?** Add the term to `CONTEXT.md`. Create the file lazily if it doesn't exist.
-- **Sharpening a fuzzy term during the conversation?** Update `CONTEXT.md` right there.
-- **User rejects the candidate with a load-bearing reason?** Offer an ADR, framed as: _"Want me to record this as an ADR so future architecture reviews don't re-suggest it?"_ Only offer when the reason would actually be needed by a future explorer to avoid re-suggesting the same thing — skip ephemeral reasons ("not worth it right now") and self-evident ones.
-
-## Legacy mode (no code graph)
-
-If the user declines `/code-graph build`, fall back to a single Explore agent for organic exploration — the original behavior. The HTML report should note that findings are based on exploration only, not structured graph data, and may be less comprehensive.
+如果用户拒绝 `/code-graph build`，回退到单个 Explore 代理进行有机探索——即原始行为。HTML 报告应注明发现只基于探索，而非结构化图谱数据，因此可能不够全面。

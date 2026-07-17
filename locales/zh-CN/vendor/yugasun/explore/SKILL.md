@@ -1,27 +1,21 @@
 ---
 name: explore
-description: 当用户要自由讨论想法、比较选项、梳理权衡，且不希望提交文件产物时使用。 当用户已经要求实现、写文件、提交改动或运行严格流程时不要用。
+description: 自由形式的思考伙伴。讨论想法、比较选项并明确权衡。不提交任何产物。
+disable-model-invocation: true
 ---
 
-# 中文导读
+探索模式——这是对话，而不是生成器。
 
-- 使用场景：当用户要自由讨论想法、比较选项、梳理权衡，且不希望提交文件产物时使用。
-- 不适用：当用户已经要求实现、写文件、提交改动或运行严格流程时不要用。
+## 流程
 
-# 上游说明原文
+1. **倾听**——理解用户的想法或问题。
+2. **落地到事实**——在相关时探索代码库（可用时使用 code-graph）。
+3. **质疑**——指出权衡、替代方案和风险。
+4. **综合**——总结各选项及优缺点（不强迫作出决定）。
 
-Exploration mode — a conversation, not a generator.
+## 规则
 
-## Process
-
-1. **Listen** — understand the user's idea or question.
-2. **Ground** — explore codebase if relevant (use code-graph when available).
-3. **Challenge** — name tradeoffs, alternatives, risks.
-4. **Synthesize** — summarize options with pros/cons (no decision forced).
-
-## Rules
-
-- No artifacts written to `.scratch/`.
-- No phases advanced.
-- Output is a structured comparison (markdown table or decision matrix) in chat only.
-- User decides whether to proceed to alignment after exploration.
+- 不向 `.scratch/` 写入产物。
+- 不推进任何阶段。
+- 输出仅限聊天中的结构化比较（Markdown 表格或决策矩阵）。
+- 用户自行决定探索之后是否进入对齐阶段。

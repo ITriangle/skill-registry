@@ -1,13 +1,7 @@
 ---
 name: grill-me
-description: 当用户要通过高强度追问来打磨计划、方案或设计时使用。 当用户已经要求执行，或不想被访谈式追问时不要用。
+description: 通过持续追问来打磨计划或设计。
+disable-model-invocation: true
 ---
 
-# 中文导读
-
-- 使用场景：当用户要通过高强度追问来打磨计划、方案或设计时使用。
-- 不适用：当用户已经要求执行，或不想被访谈式追问时不要用。
-
-# 上游说明原文
-
-Run a `/grilling` session.
+运行一次 `/grilling` 会话。

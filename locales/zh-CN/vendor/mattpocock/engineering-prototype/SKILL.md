@@ -1,37 +1,30 @@
 ---
 name: prototype
-description: 当用户要做一次性原型来验证状态模型、业务逻辑手感或 UI 方向时使用。 当目标是生产级实现、长期维护代码，或问题无需原型验证时不要用。
+description: 构建一个抛弃式原型来回答设计问题。当用户想快速验证状态模型或逻辑是否合理，或探索 UI 应有的外观时使用。
 ---
 
-# 中文导读
+# 原型
 
-- 使用场景：当用户要做一次性原型来验证状态模型、业务逻辑手感或 UI 方向时使用。
-- 不适用：当目标是生产级实现、长期维护代码，或问题无需原型验证时不要用。
+原型是**用来回答一个问题的抛弃式代码**。问题决定原型形态。
 
-# 上游说明原文
+## 选择分支
 
-# Prototype
+根据用户 prompt、周边代码，或在用户在线时直接询问，确定要回答哪类问题：
 
-A prototype is **throwaway code that answers a question**. The question decides the shape.
+- **“这套逻辑 / 状态模型合理吗？”** → [LOGIC.md](LOGIC.md)。构建微型交互式终端应用，推动 state machine 经历那些难以在纸面推演的情况。
+- **“它应该长什么样？”** → [UI.md](UI.md)。在单一路由上生成多个截然不同的 UI 变体，可通过 URL search param 和底部浮动栏切换。
 
-## Pick a branch
+两个分支会产出非常不同的工件——选错会浪费整个原型。如果问题确实有歧义且无法联系用户，默认选择更符合周边代码的分支（后端 module → 逻辑；page 或 component → UI），并在原型顶部声明假设。
 
-Identify which question is being answered — from the user's prompt, the surrounding code, or by asking if the user is around:
+## 两个分支都适用的规则
 
-- **"Does this logic / state model feel right?"** → [LOGIC.md](LOGIC.md). Build a tiny interactive terminal app that pushes the state machine through cases that are hard to reason about on paper.
-- **"What should this look like?"** → [UI.md](UI.md). Generate several radically different UI variations on a single route, switchable via a URL search param and a floating bottom bar.
+1. **从第一天起就是抛弃式代码，并清晰标记。** 将原型代码放在最终会使用结论的位置附近（紧邻所验证的 module 或 page），使上下文明确；但命名必须让普通读者看出它是原型，而非生产代码。抛弃式 UI route 应遵守项目已有路由约定，不要发明新的顶层结构。
+2. **一条命令运行。** 使用项目现有 task runner 支持的方式——`pnpm <name>`、`python <path>`、`bun <path>` 等。用户必须无需思考即可启动。
+3. **默认不持久化。** 状态存于内存。持久化应是原型要*验证*的对象，而非原型的依赖。如果问题明确涉及数据库，使用 scratch DB 或名称清晰标注“PROTOTYPE — wipe me”的本地文件。
+4. **跳过润色。** 不写测试；除了保证原型*能运行*之外不做错误处理；不建抽象。目标是快速学习，然后删除。
+5. **展示状态。** 每次操作（逻辑）后或每次切换变体（UI）时，输出或渲染完整相关状态，让用户看清变化。
+6. **完成后删除或吸收。** 原型回答问题后，要么删除，要么把验证后的决策折叠进正式代码——不要让它在仓库中腐化。
 
-The two branches produce very different artifacts — getting this wrong wastes the whole prototype. If the question is genuinely ambiguous and the user isn't reachable, default to whichever branch better matches the surrounding code (a backend module → logic; a page or component → UI) and state the assumption at the top of the prototype.
+## 完成时
 
-## Rules that apply to both
-
-1. **Throwaway from day one, and clearly marked as such.** Locate the prototype code close to where it will actually be used (next to the module or page it's prototyping for) so context is obvious — but name it so a casual reader can see it's a prototype, not production. For throwaway UI routes, obey whatever routing convention the project already uses; don't invent a new top-level structure.
-2. **One command to run.** Whatever the project's existing task runner supports — `pnpm <name>`, `python <path>`, `bun <path>`, etc. The user must be able to start it without thinking.
-3. **No persistence by default.** State lives in memory. Persistence is the thing the prototype is _checking_, not something it should depend on. If the question explicitly involves a database, hit a scratch DB or a local file with a clear "PROTOTYPE — wipe me" name.
-4. **Skip the polish.** No tests, no error handling beyond what makes the prototype _runnable_, no abstractions. The point is to learn something fast and then delete it.
-5. **Surface the state.** After every action (logic) or on every variant switch (UI), print or render the full relevant state so the user can see what changed.
-6. **Delete or absorb when done.** When the prototype has answered its question, either delete it or fold the validated decision into the real code — don't leave it rotting in the repo.
-
-## When done
-
-The _answer_ is the only thing worth keeping from a prototype. Capture it somewhere durable (commit message, ADR, issue, or a `NOTES.md` next to the prototype) along with the question it was answering. If the user is around, that capture is a quick conversation; if not, leave the placeholder so they (or you, on the next pass) can fill in the verdict before deleting the prototype.
+原型中唯一值得保留的是*答案*。将答案及其所回答的问题记录在持久位置（commit message、ADR、issue，或原型旁的 `NOTES.md`）。如果用户在线，通过简短对话完成记录；如果不在线，留下占位符，让用户（或下一轮的你）在删除原型前补上结论。

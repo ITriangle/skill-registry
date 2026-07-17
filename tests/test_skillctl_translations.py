@@ -123,6 +123,32 @@ class TranslationMirrorTests(unittest.TestCase):
         problems = skillctl.all_translation_problems("zh-CN")
         self.assertTrue(any("orphan translated skill directory" in item for item in problems))
 
+    def test_placeholder_and_english_copy_are_rejected(self) -> None:
+        (self.translated / "SKILL.md").write_text(
+            "---\nname: demo\ndescription: 示例技能。\n---\n\n"
+            "# 中文导读\n\n# 上游说明原文\n\nRead [guide](guide.md).\n",
+            encoding="utf-8",
+        )
+        (self.translated / "guide.md").write_text(
+            "# 中文提示\n\n" + "This English paragraph is still copied and has not been translated. " * 8,
+            encoding="utf-8",
+        )
+        (self.source / "guide.md").write_text(
+            "This English paragraph is still copied and has not been translated. " * 8,
+            encoding="utf-8",
+        )
+        problems = skillctl.translation_content_problems(self.skill_id, "zh-CN")
+        self.assertTrue(any("placeholder translation content" in item for item in problems))
+        self.assertTrue(any("insufficient Chinese translation" in item for item in problems))
+        self.assertTrue(any("translation too similar" in item for item in problems))
+
+    def test_folded_front_matter_description_is_parsed(self) -> None:
+        meta = skillctl.parse_front_matter(
+            "---\nname: demo\ndescription: >\n  中文第一行，\n  中文第二行。\n---\n"
+        )
+        self.assertEqual(meta["name"], "demo")
+        self.assertEqual(meta["description"], "中文第一行， 中文第二行。")
+
 
 if __name__ == "__main__":
     unittest.main()

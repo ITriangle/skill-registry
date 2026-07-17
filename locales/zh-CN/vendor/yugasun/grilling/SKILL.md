@@ -1,17 +1,10 @@
 ---
 name: grilling
-description: 当用户要在构建前压力测试计划或设计，或使用 grill 相关触发语请求追问时使用。 当需求已经清楚且需要动手执行，或用户不希望进入访谈流程时不要用。
+description: 持续追问用户的计划或设计。在构建前对计划进行压力测试，或用户使用任何 grill 触发语时使用。
 ---
 
-# 中文导读
+持续追问，直到你与用户形成清晰一致的心智模型。每次只问一个问题——得到回答后才能提出下一个问题。
 
-- 使用场景：当用户要在构建前压力测试计划或设计，或使用 grill 相关触发语请求追问时使用。
-- 不适用：当需求已经清楚且需要动手执行，或用户不希望进入访谈流程时不要用。
+逐分支遍历设计决策树；按照依赖顺序解决相互关联的决策。每个问题都要附上你推荐的答案。
 
-# 上游说明原文
-
-Interview relentlessly until you share a clear mental model. One question at a time — wait for an answer before the next.
-
-Walk the design tree branch by branch; resolve dependencies between decisions in order. Offer your recommended answer with each question.
-
-If a question can be answered by exploring the codebase, explore instead of asking.
+如果问题可以通过探索代码库得到答案，就去探索，而不是询问用户。

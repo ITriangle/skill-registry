@@ -1,46 +1,41 @@
 ---
 name: file-refactor
-description: 当用户要对单个文件或少量文件做受控重构，保持行为稳定并减少局部复杂度时使用。 当需要跨系统架构重设、产品设计、或大范围迁移计划时不要用。
+description: >
+  将源文件控制在 500 行以内。拆分混合多种关注点的文件——类型、工具函数、hook、
+  子组件、常量。当文件接近上限，或用户提到重构文件、拆分文件、文件过长或过大时使用。
 ---
 
-# 中文导读
+# 文件重构
 
-- 使用场景：当用户要对单个文件或少量文件做受控重构，保持行为稳定并减少局部复杂度时使用。
-- 不适用：当需要跨系统架构重设、产品设计、或大范围迁移计划时不要用。
+让每个源文件保持在 **500 行**以内。在超过上限之前拆分。
 
-# 上游说明原文
+## 触发时机
 
-# File Refactor
+- 文件超过 500 行
+- 模块混合了类型、工具函数、处理器、渲染和常量
+- 屏幕组件包含可提取的内联子组件
+- 服务在一个文件中混合纯辅助函数、数据类和编排逻辑
 
-Keep every source file under **500 lines**. Split before it crosses the limit.
+## TypeScript/React 拆分顺序
 
-## When to trigger
+1. **类型**——接口、类型别名、枚举 → `types.ts`
+2. **纯工具函数**——格式化、分组、转换 → `utils.ts`
+3. **复杂状态逻辑** → `hooks/useXxx.ts`
+4. **子组件**——UI 片段 → `components/XxxYyy.tsx`
+5. **常量/配置**——硬编码数组、配置对象 → `constants.ts`
 
-- A file exceeds 500 lines
-- A module mixes types, utils, handlers, rendering, and constants
-- A screen component contains inline sub-components that are extractable
-- A service combines pure helpers, dataclasses, and orchestration in one file
+## Python 拆分顺序
 
-## TypeScript / React splitting order
+1. **数据模型**——`@dataclass`、`TypedDict`、`Protocol` → `models.py`
+2. **纯辅助函数**——无副作用的格式化/解析 → `utils.py` 或 `*_format.py`
+3. **编排**——原文件保留为协调器（CLI 入口、服务门面）
+4. **CLI 分组**——子命令处理器 → 专用模块
+5. **常量**——模板、frozenset → `constants.py`
 
-1. **Types** — interfaces, type aliases, enums → `types.ts`
-2. **Pure utilities** — formatting, grouping, transforms → `utils.ts`
-3. **Complex state logic** → `hooks/useXxx.ts`
-4. **Sub-components** — UI pieces → `components/XxxYyy.tsx`
-5. **Constants / config** — hardcoded arrays, config objects → `constants.ts`
+## 规则
 
-## Python splitting order
-
-1. **Data models** — `@dataclass`, `TypedDict`, `Protocol` → `models.py`
-2. **Pure helpers** — side-effect-free formatting/parsing → `utils.py` or `*_format.py`
-3. **Orchestration** — original file stays as coordinator (CLI entry, service facade)
-4. **CLI groups** — subcommand handlers → dedicated modules
-5. **Constants** — templates, frozensets → `constants.py`
-
-## Rules
-
-- **Single responsibility** — each file does one thing
-- **Cohesion** — related code stays together
-- **Preserve exports** — never break existing imports; re-export from original file if needed
-- **Mirror neighbors** — follow existing package layout; don't invent new patterns
-- After splitting: typecheck + lint must pass
+- **单一职责**——每个文件只做一件事
+- **内聚**——相关代码放在一起
+- **保留导出**——绝不破坏现有 import；必要时从原文件重新导出
+- **与相邻代码一致**——遵循现有包布局；不要发明新模式
+- 拆分后：类型检查和 lint 必须通过

@@ -1,21 +1,15 @@
 ---
 name: implement
-description: 当用户已有 PRD、issue 或明确工作项，需要按规格实现代码改动时使用。 当需求尚未澄清、需要先研究或只做代码评审时不要用。
+description: "根据规格或一组工单实现一项工作。"
+disable-model-invocation: true
 ---
 
-# 中文导读
+实现用户在规格或工单中描述的工作。
 
-- 使用场景：当用户已有 PRD、issue 或明确工作项，需要按规格实现代码改动时使用。
-- 不适用：当需求尚未澄清、需要先研究或只做代码评审时不要用。
+尽可能在预先约定的接缝处使用 /tdd。
 
-# 上游说明原文
+定期运行类型检查和单个测试文件，并在最后运行一次完整测试套件。
 
-Implement the work described by the user in the spec or tickets.
+完成后，使用 /code-review 审查工作。
 
-Use /tdd where possible, at pre-agreed seams.
-
-Run typechecking regularly, single test files regularly, and the full test suite once at the end.
-
-Once done, use /code-review to review the work.
-
-Commit your work to the current branch.
+将工作提交到当前分支。

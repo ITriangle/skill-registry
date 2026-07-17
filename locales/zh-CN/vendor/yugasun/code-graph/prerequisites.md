@@ -1,23 +1,23 @@
-# graphify Prerequisites
+# graphify 前置条件
 
-graphify must be installed for deterministic code graph extraction. It's a Python tool that uses Tree-sitter to parse 20+ languages — no manual grep guessing.
+必须安装 graphify，才能以确定性方式提取代码图谱。它是一个使用 Tree-sitter 解析 20 多种语言的 Python 工具，无需依靠手工 grep 猜测。
 
-**If the user doesn't have graphify installed**, offer these options in order of preference:
+**如果用户尚未安装 graphify**，请按以下优先顺序提供选项：
 
 ```bash
-# Option 1: uv (recommended — isolated environment, no conflicts)
-# First install uv if not present: curl -LsSf https://astral.sh/uv/install.sh | sh
+# 选项 1：uv（推荐——环境隔离，不会产生冲突）
+# 如果尚未安装 uv，先执行：curl -LsSf https://astral.sh/uv/install.sh | sh
 uv tool install graphifyy
 
-# Option 2: pipx (also isolated)
+# 选项 2：pipx（同样隔离）
 pipx install graphifyy
 
-# Option 3: pip (simplest, may conflict with other packages)
+# 选项 3：pip（最简单，但可能与其他软件包冲突）
 pip install graphifyy
 ```
 
-After install, verify: `graphify --version`. If the command isn't found after uv install, suggest `uv tool update-shell`.
+安装后运行 `graphify --version` 验证。如果通过 uv 安装后找不到命令，建议执行 `uv tool update-shell`。
 
-The PyPI package name is `graphifyy` (double-y) — the CLI command is `graphify`.
+PyPI 软件包名为 `graphifyy`（两个 y），CLI 命令则是 `graphify`。
 
-**If the user declines to install**, tell them: "代码图谱功能跳过，其他 skill 正常使用。" and proceed without the graph. Do not block or error.
+**如果用户拒绝安装**，请告知：“代码图谱功能跳过，其他 skill 正常使用。”随后在没有图谱的情况下继续。不要阻断流程或报错。

@@ -3,4 +3,4 @@ source_id: vendor/example/example-skill
 files:
   - path: SKILL.md
     source_sha256: b1db6aa99478ad223b4068996681800ce88064325318118f320e7b928a38e842
-    translation_sha256: 23abab1db0c164f777d38e05336158ad1106c40eafc7bbfa37dab64d866e99e7
+    translation_sha256: 06fa270da13f79f94d5ddfc0fe4ac3307991600db1b1f520ccc1acfcfd15f63f

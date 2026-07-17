@@ -72,7 +72,9 @@ bin/skillctl translation-audit
 ```
 
 `import`, `refresh-groups`, project `audit`, and `sync` fail while any required
-Chinese mirror is missing or stale.
+Chinese mirror is missing or stale. The audit also rejects placeholder sections,
+English-only mirrors, and translations that remain substantially identical to
+the English prose; a matching hash alone is not considered a completed translation.
 
 ## Project manifest
 

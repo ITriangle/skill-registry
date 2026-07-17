@@ -1,118 +1,114 @@
 ---
 name: review
-description: 当用户要对当前代码、实现方案或交付结果做检查评审，发现风险、缺陷和遗漏时使用。 当用户要从零实现、做需求访谈或生成产品文档时不要用。
+description: >
+  以三种模式审查——代码（diff 对照标准/规格）、设计（规划前审查 NOTES + tech-spec）、
+  漂移（发布前对照 tech-spec 审查实现）。根据 Flow Conductor 阶段或用户意图选择模式；
+  不要混合不同产物类型。
 ---
 
-# 中文导读
+# 审查
 
-- 使用场景：当用户要对当前代码、实现方案或交付结果做检查评审，发现风险、缺陷和遗漏时使用。
-- 不适用：当用户要从零实现、做需求访谈或生成产品文档时不要用。
+共有三种模式。每种模式都有自己的输入、审查维度和输出产物。**不要在一个文件中混用模式。**
 
-# 上游说明原文
+## 模式选择
 
-# Review
-
-Three modes. Each mode has its own inputs, axes, and output artifact. **Do not mix modes in one file.**
-
-## Mode selection
-
-| Mode | Trigger | Agent | Output |
+| 模式 | 触发条件 | 代理 | 输出 |
 | --- | --- | --- | --- |
-| **code** | `delivery` sub-phase, user asks to review diff/PR | code-reviewer | `.scratch/<slug>/REVIEW.md` |
-| **design** | `design_review` phase, user asks to review design | design-reviewer | `.scratch/<slug>/DESIGN_REVIEW.md` |
-| **drift** | `drift_check` phase (after delivery, before ship) | design-reviewer | `.scratch/<slug>/DRIFT_REPORT.md` |
+| **code** | `delivery` 子阶段；用户要求审查 diff/PR | code-reviewer | `.scratch/<slug>/REVIEW.md` |
+| **design** | `design_review` 阶段；用户要求审查设计 | design-reviewer | `.scratch/<slug>/DESIGN_REVIEW.md` |
+| **drift** | `drift_check` 阶段（交付后、发布前） | design-reviewer | `.scratch/<slug>/DRIFT_REPORT.md` |
 
-When unsure: Flow Conductor phase name wins. Direct invocation defaults to **code** unless the user names design or drift.
+不确定时，以 Flow Conductor 阶段名称为准。直接调用时默认使用 **code**，除非用户明确指定 design 或 drift。
 
 ---
 
-## Code mode
+## Code 模式
 
-Review `git diff <fixed-point>...HEAD`:
+审查 `git diff <fixed-point>...HEAD`：
 
-- **Standards** — matches repo coding standards?
-- **Spec** — matches originating issue/PRD?
-- **Constitution** (optional) — when `CONSTITUTION.md` exists at repo root, violates any non-negotiable principle?
+- **标准**——是否符合仓库编码标准？
+- **规格**——是否符合来源 issue/PRD？
+- **宪法**（可选）——仓库根目录存在 `CONSTITUTION.md` 时，是否违反任何不可妥协的原则？
 
-Run `/aiops-setup` if `docs/agents/issue-tracker.md` is missing.
+如果缺少 `docs/agents/issue-tracker.md`，运行 `/aiops-setup`。
 
-### Process
+### 流程
 
-1. **Pin fixed point** — commit, branch, tag, or `main`. Confirm ref resolves and diff is non-empty.
-2. **Find spec** — issue refs in commits (`docs/agents/issue-tracker.md`), user path, or `docs/`/`.scratch/` PRD. No spec → Spec axis skips.
-3. **Find standards** — `CODING_STANDARDS.md`, `CONTRIBUTING.md`, etc.
-4. **Find constitution** — `CONSTITUTION.md` at repo root. Missing → Constitution axis skips.
-5. **Parallel sub-agents** — one per active axis. Each under 400 words, cite sources.
-6. **Aggregate** — one section per axis verbatim. One-line summary per axis; don't merge axes.
+1. **固定基准点**——commit、branch、tag 或 `main`。确认 ref 可解析且 diff 非空。
+2. **查找规格**——commit 中的 issue 引用（`docs/agents/issue-tracker.md`）、用户给出的路径，或 `docs/`/`.scratch/` 中的 PRD。没有规格 → 跳过规格维度。
+3. **查找标准**——`CODING_STANDARDS.md`、`CONTRIBUTING.md` 等。
+4. **查找宪法**——仓库根目录的 `CONSTITUTION.md`。缺失 → 跳过宪法维度。
+5. **并行子代理**——每个启用的维度一个代理。每个结果不超过 400 词，并引用来源。
+6. **汇总**——每个维度原样保留为独立章节。每个维度写一行摘要；不要合并维度。
 
-A change can pass one axis and fail another — keep axes separate.
+一项变更可能通过一个维度，却未通过另一个——务必保持维度独立。
 
-### Output: REVIEW.md
+### 输出：REVIEW.md
 
 ```markdown
-# Code Review: <feature-slug>
+# 代码审查：<feature-slug>
 
-## Summary
-<overall assessment>
+## 摘要
+<总体评估>
 
-## Design Alignment
+## 设计一致性
 - [ ] 实现符合 NOTES.md 设计决策
 - [ ] 接口符合 tech-spec.md 规格
 - [ ] 无超出 scope 的变更
 
-## Findings
+## 发现
 
-### Blocking (必须修复)
+### 阻塞项（必须修复）
 #### B1: <file:line> — <title>
 - **问题**: …
 - **建议**: …
 
-### Non-blocking (建议改进)
+### 非阻塞项（建议改进）
 #### N1: <file:line> — <title>
 - **问题**: …
 - **建议**: …
 
-## Verdict
+## 结论
 **APPROVE** | **REQUEST_CHANGES**
 ```
 
-Gate: `review_approve` requires `REVIEW.md` contains `APPROVE`.
+门禁：`review_approve` 要求 `REVIEW.md` 包含 `APPROVE`。
 
 ---
 
-## Design mode
+## Design 模式
 
-Review design artifacts **before** planning or implementation. No code diff — review `NOTES.md` + `tech-spec.md` only.
+在规划或实现**之前**审查设计产物。不看代码 diff——只审查 `NOTES.md` + `tech-spec.md`。
 
-Vocabulary for depth/seam/deletion-test checks: [design-vocabulary.md](../architect-design/design-vocabulary.md).
+深度/seam/deletion-test 检查所用词汇见：[design-vocabulary.md](../architect-design/design-vocabulary.md)。
 
-### Inputs
+### 输入
 
 - `.scratch/<slug>/NOTES.md`
 - `.scratch/<slug>/tech-spec.md`
-- `CONTEXT.md` (project root or per-area)
+- `CONTEXT.md`（项目根目录或各区域目录）
 - `docs/adr/`
-- `.scratch/<slug>/mockups/` (if UI mockups exist)
+- `.scratch/<slug>/mockups/`（如果存在 UI 模型）
 
-### Process
+### 流程
 
-1. Read NOTES.md decisions — each must list at least one rejected alternative.
-2. Read tech-spec.md module inventory — apply deletion test and depth assessment per [design-vocabulary.md](../architect-design/design-vocabulary.md).
-3. Cross-check CONTEXT.md vocabulary and existing ADRs — flag conflicts unless explicitly justified.
-4. If `CONSTITUTION.md` exists, check design against non-negotiable principles.
-5. Independent second perspective — do not rubber-stamp architect reasoning.
+1. 阅读 NOTES.md 中的决策——每项决策必须列出至少一个被否决的替代方案。
+2. 阅读 tech-spec.md 的模块清单——依据 [design-vocabulary.md](../architect-design/design-vocabulary.md) 对每个模块应用 deletion test 并评估深度。
+3. 交叉检查 CONTEXT.md 的词汇和现有 ADR——除非有明确理由，否则标记冲突。
+4. 如果存在 `CONSTITUTION.md`，检查设计是否遵守不可妥协的原则。
+5. 提供独立的第二视角——不要照单全收架构师的推理。
 
-Do not review implementation details (that is code mode).
+不要审查实现细节（那属于 code 模式）。
 
-### Output: DESIGN_REVIEW.md
+### 输出：DESIGN_REVIEW.md
 
 ```markdown
-# Design Review: <feature-slug>
+# 设计审查：<feature-slug>
 
-## Summary
-<one paragraph>
+## 摘要
+<一段话>
 
-## Design Soundness
+## 设计健全性
 - [ ] 每个设计决策列出了至少一个被否决的替代方案及原因
 - [ ] 模块通过 deletion test（非 pass-through）
 - [ ] 接口设计遵循 depth 原则：小接口 + 深实现
@@ -123,71 +119,71 @@ Do not review implementation details (that is code mode).
 - [ ] 无过早优化或过度设计
 - [ ] Scope 边界清晰，out-of-scope 明确排除
 
-## Findings
+## 发现
 
-### Blocking (必须修正才能进入规划)
+### 阻塞项（必须修正才能进入规划）
 #### D1: <title>
 - **问题**: …
 - **建议**: …
 - **关联**: NOTES.md Decision X / tech-spec.md §Y
 
-### Non-blocking (建议改进)
+### 非阻塞项（建议改进）
 #### N1: <title>
 - **建议**: …
 
-## Verdict
+## 结论
 **APPROVE** | **REQUEST_CHANGES**
 ```
 
-Gate: `design_review_approve` requires `DESIGN_REVIEW.md` contains `APPROVE`. Blocking findings block planner until resolved.
+门禁：`design_review_approve` 要求 `DESIGN_REVIEW.md` 包含 `APPROVE`。阻塞项会阻止 planner，直至问题解决。
 
 ---
 
-## Drift mode
+## Drift 模式
 
-After delivery, before ship: does the **implementation** match the **approved design**?
+交付后、发布前：**实现**是否符合**已批准的设计**？
 
-### Inputs
+### 输入
 
 - `.scratch/<slug>/tech-spec.md`
-- `.scratch/<slug>/NOTES.md` (scope and decisions)
-- `git diff` since journey start or user-specified fixed point
+- `.scratch/<slug>/NOTES.md`（范围和决策）
+- 从工作历程起点或用户指定基准点开始的 `git diff`
 
-### Process
+### 流程
 
-1. Pin diff fixed point (same as code mode).
-2. For each tech-spec requirement: implemented? partially? missing?
-3. For each behaviour in the diff: in spec? out of scope?
-4. Flag scope creep and spec gaps separately.
+1. 固定 diff 基准点（与 code 模式相同）。
+2. 对 tech-spec 的每项要求逐一检查：已实现？部分实现？缺失？
+3. 对 diff 中的每项行为逐一检查：规格内？超出范围？
+4. 分别标记范围蔓延和规格缺口。
 
-### Output: DRIFT_REPORT.md
+### 输出：DRIFT_REPORT.md
 
 ```markdown
-# Drift Report: <feature-slug>
+# 漂移报告：<feature-slug>
 
-## Summary
-<overall drift assessment>
+## 摘要
+<总体漂移评估>
 
-## Spec coverage
-| Requirement (tech-spec) | Status | Evidence |
+## 规格覆盖情况
+| 要求（tech-spec） | 状态 | 证据 |
 | --- | --- | --- |
-| … | implemented / partial / missing | file:line or "not found" |
+| … | 已实现 / 部分实现 / 缺失 | file:line 或“未找到” |
 
-## Undocumented behaviour
-| Change in diff | In spec? | Notes |
+## 未记录的行为
+| diff 中的变更 | 在规格中？ | 说明 |
 | --- | --- | --- |
-| … | yes / no / partial | … |
+| … | 是 / 否 / 部分 | … |
 
-## Findings
+## 发现
 
-### Blocking (must fix or update spec before ship)
+### 阻塞项（发布前必须修复或更新规格）
 #### F1: …
 
-### Non-blocking
+### 非阻塞项
 #### N1: …
 
-## Verdict
+## 结论
 **PASS** | **DRIFT_FOUND**
 ```
 
-Gate: `drift_check_pass` requires `DRIFT_REPORT.md` exists. Use `PASS` in verdict when no blocking drift.
+门禁：`drift_check_pass` 要求存在 `DRIFT_REPORT.md`。没有阻塞性漂移时，结论使用 `PASS`。

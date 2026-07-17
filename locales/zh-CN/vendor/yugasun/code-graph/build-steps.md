@@ -1,61 +1,61 @@
-# Build and Update Steps
+# 构建与更新步骤
 
 ## `/code-graph build`
 
-Full scan. Use when no graph exists or a full rebuild is requested.
+完整扫描。不存在图谱或用户要求完整重建时使用。
 
-### Step 1 — Verify prerequisites
+### 步骤 1——验证前置条件
 
-See [prerequisites.md](prerequisites.md). Quick check:
+参见 [prerequisites.md](prerequisites.md)。快速检查：
 
 ```bash
 which graphify || uv tool install graphifyy
 ```
 
-### Step 2 — Run graphify
+### 步骤 2——运行 graphify
 
 ```bash
 graphify .
 ```
 
-Key flags:
-- `--wiki` — generate wiki articles for communities and god nodes (recommended for aiops)
-- `--mode deep` — aggressive extraction for thorough coverage
-- `--exclude 'node_modules' --exclude 'dist' --exclude '.scratch'` — skip build output
+关键选项：
+- `--wiki`——为社区和 god node 生成 wiki 文章（建议 aiops 使用）
+- `--mode deep`——使用激进提取，实现全面覆盖
+- `--exclude 'node_modules' --exclude 'dist' --exclude '.scratch'`——跳过构建输出
 
-graphify produces:
-- `graphify-out/graph.json` — the structured graph
-- `graphify-out/` — studio visualization, SVG, wiki articles, text report
+graphify 产出：
+- `graphify-out/graph.json`——结构化图谱
+- `graphify-out/`——studio 可视化、SVG、wiki 文章、文本报告
 
-### Step 3 — Semantic annotation (model)
+### 步骤 3——语义注释（模型）
 
-Read `graphify-out/graph.json` and add model-generated annotations to `.scratch/graph/annotations.json`. Schema: [graph-schema.md](graph-schema.md#annotationsschema).
+读取 `graphify-out/graph.json`，并把模型生成的注释添加到 `.scratch/graph/annotations.json`。Schema 参见：[graph-schema.md](graph-schema.md#annotationsschema)。
 
-For each node, annotate: `purpose`, `depth` (`deep` | `shallow` | `unknown`), `tags`, `complexity`, `is_test_file`.
+为每个节点注释：`purpose`、`depth`（`deep` | `shallow` | `unknown`）、`tags`、`complexity`、`is_test_file`。
 
-For hotspots, cross-reference graphify's god nodes with `git log --oneline -30`.
+对于热点，将 graphify 的 god node 与 `git log --oneline -30` 交叉核对。
 
-### Step 4 — Update .gitignore if needed
+### 步骤 4——需要时更新 .gitignore
 
-If `graphify-out/` and `.scratch/graph/` are not in `.gitignore`, suggest adding them.
+如果 `.gitignore` 中没有 `graphify-out/` 和 `.scratch/graph/`，建议添加。
 
 ## `/code-graph query <subcommand>`
 
-Requires `graphify-out/graph.json`. Output formats: [query-patterns.md](query-patterns.md).
+要求存在 `graphify-out/graph.json`。输出格式见 [query-patterns.md](query-patterns.md)。
 
-Maintainers: `python3 <aiops-root>/skills/aiops/scripts/code_graph_query.py <subcommand>`
+维护者命令：`python3 <aiops-root>/skills/aiops/scripts/code_graph_query.py <subcommand>`
 
-| Subcommand | Purpose |
+| 子命令 | 用途 |
 | --- | --- |
-| `modules` | All nodes with purpose, depth, edge count |
-| `deps <node>` | Outgoing edges |
-| `rdeps <node>` | Incoming edges |
-| `impact <file>` | Transitive blast radius |
-| `hotspot` | High-coupling + recently changed |
-| `god-nodes` | Top N by edge count |
-| `shallow` | depth=shallow nodes |
-| `orphans` | Zero incoming edges |
-| `communities` | Louvain clusters |
+| `modules` | 列出所有节点及其用途、深度、边数量 |
+| `deps <node>` | 出边 |
+| `rdeps <node>` | 入边 |
+| `impact <file>` | 传递性影响范围 |
+| `hotspot` | 高耦合 + 最近有变更 |
+| `god-nodes` | 按边数量排序的前 N 个节点 |
+| `shallow` | depth=shallow 的节点 |
+| `orphans` | 零入边节点 |
+| `communities` | Louvain 集群 |
 
 ## `/code-graph update`
 
@@ -63,4 +63,4 @@ Maintainers: `python3 <aiops-root>/skills/aiops/scripts/code_graph_query.py <sub
 graphify --update .
 ```
 
-graphify SHA256-caches in `.graphify/cache/`. Re-run semantic annotation only for changed nodes. If >30% of nodes changed, fall back to full `build`.
+graphify 使用 `.graphify/cache/` 中的 SHA256 缓存。只为发生变化的节点重新运行语义注释。如果超过 30% 的节点发生变化，则回退到完整 `build`。

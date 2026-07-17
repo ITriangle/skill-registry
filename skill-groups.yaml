@@ -234,7 +234,7 @@ groups:
     variants: vendor/mattpocock/engineering-improve-codebase-architecture,vendor/yugasun/improve-codebase-architecture
     sources: mattpocock,yugasun
     dependencies: code-graph,codebase-design,domain-modeling,grilling
-    difference: 来源：mattpocock,yugasun; 概况：mattpocock=20词/1参考/0脚本,yugasun=1词/2参考/0脚本
+    difference: 来源：mattpocock,yugasun; 概况：mattpocock=20词/1参考/0脚本,yugasun=37词/2参考/0脚本
     recommendation: 推荐 vendor/mattpocock/engineering-improve-codebase-architecture 作为未批准变体中的默认项；提升为 approved 前请先审查
     use_when: 当用户要扫描代码库架构改进机会，并用报告或访谈选择下一步重构方向时使用。
     avoid_when: 当只需要修一个具体 bug、做小范围重构或已有明确实现任务时不要用。

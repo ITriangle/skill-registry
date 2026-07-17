@@ -1,60 +1,60 @@
-# CONTEXT.md Format
+# CONTEXT.md 格式
 
-## Structure
-
-```md
-# {Context Name}
-
-{One or two sentence description of what this context is and why it exists.}
-
-## Language
-
-**Order**:
-{A one or two sentence description of the term}
-_Avoid_: Purchase, transaction
-
-**Invoice**:
-A request for payment sent to a customer after delivery.
-_Avoid_: Bill, payment request
-
-**Customer**:
-A person or organization that places orders.
-_Avoid_: Client, buyer, account
-```
-
-## Rules
-
-- **Be opinionated.** When multiple words exist for the same concept, pick the best one and list the others under `_Avoid_`.
-- **Keep definitions tight.** One or two sentences max. Define what it IS, not what it does.
-- **Only include terms specific to this project's context.** General programming concepts (timeouts, error types, utility patterns) don't belong even if the project uses them extensively. Before adding a term, ask: is this a concept unique to this context, or a general programming concept? Only the former belongs.
-- **Group terms under subheadings** when natural clusters emerge. If all terms belong to a single cohesive area, a flat list is fine.
-
-## Single vs multi-context repos
-
-**Single context (most repos):** One `CONTEXT.md` at the repo root.
-
-**Multiple contexts:** A `CONTEXT-MAP.md` at the repo root lists the contexts, where they live, and how they relate to each other:
+## 结构
 
 ```md
-# Context Map
+# {上下文名称}
 
-## Contexts
+{用一两句话描述此上下文是什么，以及为何存在。}
 
-- [Ordering](./src/ordering/CONTEXT.md) — receives and tracks customer orders
-- [Billing](./src/billing/CONTEXT.md) — generates invoices and processes payments
-- [Fulfillment](./src/fulfillment/CONTEXT.md) — manages warehouse picking and shipping
+## 语言
 
-## Relationships
+**Order**：
+{用一两句话描述该术语}
+_避免使用_：Purchase、transaction
 
-- **Ordering → Fulfillment**: Ordering emits `OrderPlaced` events; Fulfillment consumes them to start picking
-- **Fulfillment → Billing**: Fulfillment emits `ShipmentDispatched` events; Billing consumes them to generate invoices
-- **Ordering ↔ Billing**: Shared types for `CustomerId` and `Money`
+**Invoice**：
+交付后发送给客户的付款请求。
+_避免使用_：Bill、payment request
+
+**Customer**：
+下订单的个人或组织。
+_避免使用_：Client、buyer、account
 ```
 
-The skill infers which structure applies:
+## 规则
 
-- If `CONTEXT-MAP.md` exists, read it to find contexts
-- If only a root `CONTEXT.md` exists, single context
-- If neither exists, create a root `CONTEXT.md` lazily when the first term is resolved
+- **明确表达主张。**多个词表示同一概念时，选出最佳术语，把其他词列在 `_避免使用_` 下。
+- **保持定义紧凑。**最多一两句话。定义它*是什么*，而不是它做什么。
+- **只纳入此项目上下文特有的术语。**通用编程概念（超时、错误类型、工具模式）不属于这里，即使项目大量使用。添加术语前先问：这是此上下文独有的概念，还是通用编程概念？只纳入前者。
+- 自然形成集群时，**将术语分组到小标题下**。如果所有术语都属于一个内聚领域，使用扁平列表即可。
 
-When multiple contexts exist, infer which one the current topic relates to. If unclear, ask.
+## 单上下文与多上下文仓库
+
+**单上下文（大多数仓库）：**仓库根目录有一个 `CONTEXT.md`。
+
+**多上下文：**仓库根目录的 `CONTEXT-MAP.md` 列出上下文、所在位置及相互关系：
+
+```md
+# 上下文地图
+
+## 上下文
+
+- [Ordering](./src/ordering/CONTEXT.md)——接收并跟踪客户订单
+- [Billing](./src/billing/CONTEXT.md)——生成发票并处理付款
+- [Fulfillment](./src/fulfillment/CONTEXT.md)——管理仓库拣货和发货
+
+## 关系
+
+- **Ordering → Fulfillment**：Ordering 发出 `OrderPlaced` 事件；Fulfillment 消费事件并开始拣货
+- **Fulfillment → Billing**：Fulfillment 发出 `ShipmentDispatched` 事件；Billing 消费事件并生成发票
+- **Ordering ↔ Billing**：共享 `CustomerId` 和 `Money` 类型
+```
+
+技能自行推断适用哪种结构：
+
+- 存在 `CONTEXT-MAP.md` 时，读取它来查找上下文
+- 只有根目录 `CONTEXT.md` 时，使用单上下文
+- 两者都不存在时，在解决第一个术语时按需创建根目录 `CONTEXT.md`
+
+存在多个上下文时，推断当前主题属于哪一个；如果不清楚，就询问。

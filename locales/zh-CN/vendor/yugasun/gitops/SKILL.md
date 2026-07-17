@@ -1,34 +1,29 @@
 ---
 name: gitops
-description: 当用户要处理 git 工作流、分支、提交、变更整理、发布前检查或协作操作时使用。 当任务不涉及版本控制，或用户只要代码解释和实现而无需 git 流程时不要用。
+description: >
+  Git 操作封装：同步、暂存、提交、推送。生成引用 .scratch 产物的 Conventional Commits
+  消息。用于用户提到 gitops、commit、push、同步代码，或需要版本控制操作时。
 ---
-
-# 中文导读
-
-- 使用场景：当用户要处理 git 工作流、分支、提交、变更整理、发布前检查或协作操作时使用。
-- 不适用：当任务不涉及版本控制，或用户只要代码解释和实现而无需 git 流程时不要用。
-
-# 上游说明原文
 
 # Gitops
 
-Git version control operations for the aiops delivery chain.
+用于 aiops 交付链的 Git 版本控制操作。
 
-## Operations
+## 操作
 
 ### sync
 
-Pull latest from remote. Default strategy: rebase.
+从远程拉取最新内容。默认策略：rebase。
 
 ```
 git pull --rebase
 ```
 
-If merge conflict: report to user, do not auto-resolve.
+如果发生合并冲突：报告给用户，不要自动解决。
 
 ### status
 
-Show current working tree state.
+显示当前工作树状态。
 
 ```
 git status
@@ -37,7 +32,7 @@ git diff --stat
 
 ### stage
 
-Stage files for commit. Supports selective staging.
+暂存待提交文件。支持选择性暂存。
 
 ```
 git add <files>
@@ -45,9 +40,9 @@ git add <files>
 
 ### commit
 
-Create commit with Conventional Commits message.
+使用 Conventional Commits 消息创建提交。
 
-**Format:**
+**格式：**
 ```
 <type>(<scope>): <subject>
 
@@ -56,22 +51,22 @@ Create commit with Conventional Commits message.
 Refs: .scratch/<feature-slug>/
 ```
 
-**Types:** feat | fix | refactor | test | docs | chore
+**类型：** feat | fix | refactor | test | docs | chore
 
-**Message generation:**
-- Read `.scratch/<feature>/NOTES.md` for design context
-- Read `.scratch/<feature>/REVIEW.md` to confirm review passed
-- Scope = feature-slug or module name
-- Subject = imperative, lowercase, no period
-- Body = reference upstream artifacts for traceability
+**消息生成：**
+- 读取 `.scratch/<feature>/NOTES.md` 获取设计上下文
+- 读取 `.scratch/<feature>/REVIEW.md` 确认评审通过
+- Scope = feature-slug 或模块名
+- Subject = 祈使语气、小写、不加句号
+- Body = 引用上游产物，确保可追溯性
 
-**Pre-commit checks:**
-- All blocking REVIEW.md findings resolved
-- No untracked .scratch files in commit (add to .gitignore if needed)
+**提交前检查：**
+- 所有阻塞性的 REVIEW.md 发现都已解决
+- 提交中没有未跟踪的 .scratch 文件（需要时将其加入 .gitignore）
 
 ### push
 
-Push to remote. Requires user confirmation.
+推送到远程。需要用户确认。
 
 ```
 git push origin <branch>
@@ -79,26 +74,26 @@ git push origin <branch>
 
 ### branch
 
-Branch management: create, switch, list.
+分支管理：创建、切换、列出。
 
 ```
-git checkout -b <branch>   # create + switch
-git checkout <branch>      # switch
-git branch                 # list
+git checkout -b <branch>   # 创建并切换
+git checkout <branch>      # 切换
+git branch                 # 列出
 ```
 
-## Flow
+## 流程
 
-1. `sync` — pull latest
-2. `status` — review changes
-3. `stage` — select files
-4. `commit` — with generated message
-5. `push` — after user confirms
+1. `sync`——拉取最新内容
+2. `status`——检查更改
+3. `stage`——选择文件
+4. `commit`——使用生成的消息提交
+5. `push`——用户确认后推送
 
-## Constraints
+## 约束
 
-- Never modify code files
-- Never auto-resolve merge conflicts
-- Always confirm with user before push
-- Commit message must reference .scratch artifacts when available
-- If `.scratch/<feature>/REVIEW.md` exists and verdict is REQUEST_CHANGES, block commit and report
+- 绝不修改代码文件
+- 绝不自动解决合并冲突
+- 推送前始终向用户确认
+- 有 .scratch 产物时，提交消息必须引用这些产物
+- 如果存在 `.scratch/<feature>/REVIEW.md` 且 verdict 为 REQUEST_CHANGES，则阻止提交并报告

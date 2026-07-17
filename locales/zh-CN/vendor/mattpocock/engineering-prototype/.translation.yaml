@@ -3,10 +3,10 @@ source_id: vendor/mattpocock/engineering-prototype
 files:
   - path: LOGIC.md
     source_sha256: da91dc92195c00d5dc33863b8c1a030998025a0f8583ebf2babd770825b7f70c
-    translation_sha256: da91dc92195c00d5dc33863b8c1a030998025a0f8583ebf2babd770825b7f70c
+    translation_sha256: 4c0bc8bbd9d413d36ac04c4575b8455f77cb92b287f3f7cee8e76a0576a0d0cd
   - path: SKILL.md
     source_sha256: efa2a92a2f0f8e7d9d0ecb0cfc65ffd5748c73fa3a25fe164e1c8f426938fb52
-    translation_sha256: 8fe78884151d7e1a03e83567ce90c4159d96bc248d591c7bd3f4c262b66f051c
+    translation_sha256: 786b705548017fb51e9085ca41d37c3a25941c132178715a22abc347fb274b39
   - path: UI.md
     source_sha256: d76d565149ee50456c5ddc5e29c27fec8737637874fe5c37d970db085a200b27
-    translation_sha256: d76d565149ee50456c5ddc5e29c27fec8737637874fe5c37d970db085a200b27
+    translation_sha256: 6aca00218e2a516264e0d4d1b38586a758207ad082206ee40672959f9fd94974

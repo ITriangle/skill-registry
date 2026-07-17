@@ -3,4 +3,4 @@ source_id: vendor/mattpocock/in-progress-writing-beats
 files:
   - path: SKILL.md
     source_sha256: 668185cfb6eb6a324b8d864404c398e21f3cddbb637b760e39b7784c8c5e4fee
-    translation_sha256: 8bdb546959919a58835c8add020cc052437d42070a40415986963e738eaa3550
+    translation_sha256: 82c1e645cc755a00ddbb4f753a0397af1ff8725fcf64b451cbde31d3bf3b264b

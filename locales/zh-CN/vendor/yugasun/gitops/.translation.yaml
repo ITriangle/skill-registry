@@ -3,4 +3,4 @@ source_id: vendor/yugasun/gitops
 files:
   - path: SKILL.md
     source_sha256: 1f02ba85310cef038c55582a2d1d2595feba3d29951d8a30c775489daf27316f
-    translation_sha256: 008017fb8eaa4a7e3d06e9be062763ee6adaf1b77ec7fc518dd33b1330586ad8
+    translation_sha256: 505f9733da7ef888bb2e48afd322c329c6ecc72b7594c024bc3f2086c90ad817

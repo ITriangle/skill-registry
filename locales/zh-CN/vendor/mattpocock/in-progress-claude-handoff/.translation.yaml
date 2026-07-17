@@ -3,4 +3,4 @@ source_id: vendor/mattpocock/in-progress-claude-handoff
 files:
   - path: SKILL.md
     source_sha256: bbb25773158d78f610461e4041ffb56fe871cb297626e1f52b0535a9083b7996
-    translation_sha256: 09e4f8dc610d77315b93c5d016daa3edd6271299f4c0888520a17d342567c436
+    translation_sha256: a7a6d87f92c402a9bdd63ce35ab446ba3970004c4d0515081c9077525a3f36fb

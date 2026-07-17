@@ -3,4 +3,4 @@ source_id: vendor/yugasun/grilling
 files:
   - path: SKILL.md
     source_sha256: 0a1636660b48bbea1da39cb1d3ed7b7dc301cbf2a8f7ef61dbf22524cafde71e
-    translation_sha256: 9264ee96d39317ec51090020ee905c185a24252bd2138e4cea62ead415acb6dd
+    translation_sha256: 6434e4f85b8d41bbf338f5a02b14a680a2199f6e244aa79a9a4b5af9d4f74ac4

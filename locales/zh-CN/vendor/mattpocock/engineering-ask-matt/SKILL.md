@@ -1,82 +1,76 @@
 ---
 name: ask-matt
-description: 当用户不确定该使用哪个 Matt Pocock skill 或工程流程，需要先做 skill 路由判断时使用。 当用户已经明确点名具体 skill，或任务显然不属于该 skill 集合时不要用。
+description: 询问哪种技能或流程适合当前情形。它是此仓库技能的路由器。
+disable-model-invocation: true
 ---
 
-# 中文导读
+# 询问 Matt
 
-- 使用场景：当用户不确定该使用哪个 Matt Pocock skill 或工程流程，需要先做 skill 路由判断时使用。
-- 不适用：当用户已经明确点名具体 skill，或任务显然不属于该 skill 集合时不要用。
+你不可能记住每个技能，所以直接问。
 
-# 上游说明原文
+**流程（flow）**是穿过多个技能的一条路径。大多数路径沿一条**主流程**前进，另有两条**入口匝道**汇入。其他技能要么独立运行，要么是在底层工作的词汇层。
 
-# Ask Matt
+## 主流程：从想法到交付
 
-You don't remember every skill, so ask.
+大多数工作都会经过这条路线：你有一个想法，并希望把它构建出来。
 
-A **flow** is a path through the skills. Most paths run along one **main flow**, and two **on-ramps** merge onto it. Everything else is standalone, or a vocabulary layer that runs underneath.
+1. **`/grill-with-docs`**——通过采访打磨想法。**已有代码库**时从这里开始：它有状态，会把学到的内容保存在 `CONTEXT.md` 和 ADR 中。（没有代码库？使用 `/grill-me`——见“独立技能”。两者都运行相同的 `/grilling` 原语；`grill-with-docs` 会留下书面轨迹。）
+2. **分支——所有问题都能在对话中解决吗？**如果某个问题需要通过可运行结果来回答（状态、业务逻辑，或必须亲眼看到的 UI），就绕道原型，并在往返两个方向都用 **`/handoff`** 衔接（见“跨越会话”）：
+   - 使用 **`/handoff`** 导出，然后针对该文件打开新会话；
+   - 使用 **`/prototype`** 通过一次性代码回答问题；
+   - 使用 **`/handoff`** 把学到的内容带回，并在原始想法线程中引用。
+3. **分支——这是多会话构建吗？**
+   - **是** → 使用 **`/to-spec`**（把线程转成规格），再用 **`/to-tickets`** 拆成 tracer-bullet ticket，每个 ticket 声明自己的**阻塞边**。在本地跟踪器中，它是手工依次处理的 `tickets.md`；在真实跟踪器中，这些边成为原生阻塞链接，因此只要某个 ticket 的阻塞项都已完成，就可以领取——针对每个 ticket 启动一次 **`/implement`**，并且**每个 ticket 之间都清空上下文**。
+   - **否** → 就在这里、同一个上下文窗口中使用 **`/implement`**。
 
-## The main flow: idea → ship
+   无论哪种情况，**`/implement`** 都会在内部驱动 **`/tdd`** 来构建每个 issue——每次完成一个 red-green 切片——然后在提交前运行 **`/code-review`**，从 Standards + Spec 两个轴评审 diff。只想以测试优先方式构建具体行为、不需要完整规格时，单独使用 **`/tdd`**；想相对于某个固定基准评审分支或 PR 时，单独使用 **`/code-review`**。
 
-The route most work travels. You have an idea and want it built.
+### 上下文卫生
 
-1. **`/grill-with-docs`** — sharpen the idea by interview. Start here when you **have a codebase**: it's stateful, retaining what it learns in `CONTEXT.md` and ADRs. (No codebase? Use `/grill-me` — see Standalone. Both run the same `/grilling` primitive; `grill-with-docs` is the one that leaves a paper trail.)
-2. **Branch — can you settle every question in conversation?** If a question needs a runnable answer (state, business logic, a UI you have to see), detour through a prototype, bridged by **`/handoff`** in both directions (see Crossing sessions):
-   - **`/handoff`** out, then open a fresh session against that file,
-   - **`/prototype`** to answer the question with throwaway code,
-   - **`/handoff`** back what you learned, and reference it from the original idea thread.
-3. **Branch — is this a multi-session build?**
-   - **Yes** → **`/to-spec`** (turn the thread into a spec), then **`/to-tickets`** to split it into tracer-bullet tickets, each declaring its **blocking edges**. On a local tracker that's an ordered `tickets.md` you work by hand; on a real tracker the edges become native blocking links, so any ticket whose blockers are done can be grabbed — kick off **`/implement`** per ticket, **clearing context between each one**.
-   - **No** → **`/implement`** right here, in the same context window.
+让步骤 1–3 处于**一个不中断的上下文窗口**中——在 `/to-tickets` 结束前不要压缩或清空——这样 grilling、规格和 ticket 都建立在同一套思考之上。之后，每次 `/implement` 都从新鲜上下文开始，依据 ticket 工作。
 
-   Either way, **`/implement`** builds each issue by driving **`/tdd`** internally — one red-green slice at a time — then closes out by running **`/code-review`**, a two-axis review (Standards + Spec) of the diff, before committing. Reach for **`/tdd`** on its own when you just want to build a concrete behaviour test-first without a full spec, and **`/code-review`** on its own whenever you want to review a branch or PR against a fixed point.
+这一做法的上限是 [smart zone](https://www.aihero.dev/ai-coding-dictionary/smart-zone)：模型仍能敏锐推理的窗口（顶尖模型约为 120k token）。如果会话在 `/to-tickets` 之前已接近上限，不要勉强在退化状态下继续——使用 `/handoff`，在新线程中继续。
 
-### Context hygiene
+## 入口匝道
 
-Keep steps 1–3 in **one unbroken context window** — don't compact or clear until after `/to-tickets` — so the grilling, spec, and tickets all build on the same thinking. Each `/implement` then starts fresh, working from the ticket.
+入口匝道代表一种会产生工作、随后汇入主流程的起始情形。
 
-The limit on this is the **[smart zone](https://www.aihero.dev/ai-coding-dictionary/smart-zone)**: the window (~120k tokens on state-of-the-art models) within which the model still reasons sharply. If a session approaches it before `/to-tickets`, don't push on degraded — `/handoff` and continue in a fresh thread.
+- **Bug 和请求不断堆积** → **`/triage`**。它让 issue 经过各个分诊角色，产出代理可直接执行的 issue，之后由 **`/implement`** 领取。
 
-## On-ramps
+  分诊只适用于**不是你创建的** issue——bug 报告、传入的功能请求，以及任何未经处理的外部输入。`/to-tickets` 生成的 ticket 已经适合代理执行，所以**不要再分诊它们**。
 
-A starting situation that generates work, then merges onto the main flow.
+- **某些东西坏了** → **`/diagnosing-bugs`**。用于棘手问题：一眼看不出的 bug、间歇性 flake，或在两个已知正常状态之间悄然引入的回归。它会拒绝在建立**紧密反馈循环**之前提出理论——即一条已经能在*这个* bug 上变红的命令——然后带着回归测试修复。如果事后分析发现真正的问题是缺少能锁定 bug 的良好 seam，它会交接给 **`/improve-codebase-architecture`**。
 
-- **Bugs and requests piling up** → **`/triage`**. It moves issues through triage roles and produces agent-ready issues, which **`/implement`** later picks up.
+- **巨大而模糊的工作——绿地项目或超大功能，无法在一个会话中完成** → **`/wayfinder`**。当从当前位置到目的地的路径还不可见时，它会在 issue 跟踪器上绘制调查 ticket 的**共享地图**，逐项解决——产出的是**决策，而非交付物**——直到迷雾退去、路线清晰。之后在 **`/to-spec`** 处汇入主流程（或者工作后来发现足够小，就直接进入 **`/implement`**）。**`/grill-with-docs`** 用于打磨一个会话内可以把握的想法；wayfinder 用于无法在一个会话中把握的想法。
 
-  Triage is only for issues **you didn't create** — bug reports, incoming feature requests, anything that arrives raw. Tickets that `/to-tickets` produced are already agent-ready, so **don't triage them**.
+## 代码库健康
 
-- **Something's broken** → **`/diagnosing-bugs`**. For the hard ones: the bug that resists a first glance, the intermittent flake, the regression that crept in between two known-good states. It refuses to theorise until it has a **tight feedback loop** — one command that already goes red on *this* bug — then fixes with a regression test. Its post-mortem hands off to **`/improve-codebase-architecture`** when the real finding is that there's no good seam to lock the bug down.
+这不是功能开发，而是维护工作。
 
-- **A huge, foggy effort — a greenfield project or a huge feature build, too big for one session** → **`/wayfinder`**. When the way from here to the destination isn't visible yet, it charts a **shared map** of investigation tickets on the issue tracker and resolves them one at a time — producing **decisions, not deliverables** — until the fog is pushed back and the way is clear. Then it merges onto the main flow at **`/to-spec`** (or, if the effort turned out small enough, straight to **`/implement`**). Where **`/grill-with-docs`** sharpens an idea you can hold in one session, wayfinder is for the idea you can't.
+- **`/improve-codebase-architecture`**——有空时随时运行，让代码库保持适合代理操作。它会发现**深化机会**；选择其中一项会*生成一个想法*，随后可在主流程的 `/grill-with-docs` 处继续。它是寻找候选项的勘测；下面的 **`/codebase-design`** 则是设计已选候选项的工作台。
 
-## Codebase health
+## 底层词汇
 
-Not feature work — upkeep.
+两个由模型调用的参考技能运行在其他技能的*底层*——各自是其词汇的单一真源。如果问题出在**词语**而非流程，可直接使用它们；也可以让上层技能自行调用。
 
-- **`/improve-codebase-architecture`** — run whenever you have a spare moment to keep the codebase good for agents to operate in. It surfaces **deepening opportunities**; picking one _generates an idea_ you can take into the main flow at `/grill-with-docs`. It's the survey that finds the candidates; **`/codebase-design`** (below) is the bench you design the chosen one on.
+- **`/domain-modeling`**——打磨项目的*领域*语言：质疑模糊术语、解决含义过载的词（例如“account”承担三个职责），把难以逆转的决策记录为 ADR。这是 `/grill-with-docs` 用来维持 `CONTEXT.md` 术语表清晰的主动纪律。
+- **`/codebase-design`**——用于设计模块*形态*的深模块词汇（module、interface、depth、seam、adapter、leverage、locality）：在干净 seam 处，用小接口隐藏大量行为。`/tdd` 和 `/improve-codebase-architecture` 都使用这套语言。
 
-## Vocabulary underneath
+## 跨越会话
 
-Two model-invoked references that run *beneath* the other skills — each the single source of truth for its vocabulary. Reach for them directly when the **words**, not the process, are the problem; or let the skills above pull them in.
+- **`/handoff`**——当线程已满，或需要分叉出去（例如进入 `/prototype` 会话）时，把对话压缩成 Markdown 文件。不要留在原处继续——**打开新会话并引用该文件**，把上下文带过去。它是上下文窗口之间的双向桥梁。需要**新鲜会话**但又要**保留当前对话**时使用。
+- **`/compact`**（内置）——停留在**同一个对话**中，让早先轮次被摘要。在**阶段之间的有意断点**使用，因为此时可以接受丢失逐字历史。不要在阶段中途压缩——代理可能迷失方向。`/handoff` 用于分叉；`/compact` 用于继续。
 
-- **`/domain-modeling`** — sharpen the project's *domain* language: challenge a fuzzy term, resolve an overloaded word ("account" doing three jobs), record a hard-to-reverse decision as an ADR. It's the active discipline `/grill-with-docs` drives to keep `CONTEXT.md` a clean glossary.
-- **`/codebase-design`** — the deep-module vocabulary (module, interface, depth, seam, adapter, leverage, locality) for designing a module's *shape*: a lot of behaviour behind a small interface at a clean seam. `/tdd` and `/improve-codebase-architecture` both speak it.
+## 独立技能
 
-## Crossing sessions
+完全处于主流程之外。
 
-- **`/handoff`** — when a thread is full or you need to branch off (e.g. into a `/prototype` session), this compacts the conversation into a markdown file. You don't continue in place — you **open a new session and reference that file** to carry the context across. It's the bridge between context windows, in either direction. Use it when you want a **fresh session** but need the **current conversation preserved**.
-- **`/compact`** (built-in) — stay in the **same conversation**, letting the earlier turns be summarized. Use it at **intentional breaks between phases**, when you don't mind losing the verbatim history. Don't compact mid-phase — the agent can lose its way. `/handoff` forks; `/compact` continues.
+- **`/grill-me`**——与 `/grill-with-docs` 相同的严格采访，但用于**没有代码库**的情况。无状态：不在本地保存任何内容，也不构建 `CONTEXT.md`。用于打磨任何不属于仓库的计划或设计。
+- **`/prototype`**——用一个小型、一次性程序回答一个设计问题：这个状态模型感觉对吗，或这个 UI 应该是什么样子。从第一天起就按一次性代码处理——保留答案，删除代码。它是主流程步骤 2 的绕行路径；任何设计问题难以在纸面解决时都可以使用。
+- **`/research`**——把阅读工作委托给**后台代理**：它依据**一手资料**调查问题，然后在仓库留下带引用的 Markdown 文件。它阅读时你可以继续工作。产出的文件应被带入 `/grill-with-docs` 的主流程——研究为思考提供素材，而不是取代思考。
+- **`/teach`**——以当前目录作为有状态工作区，跨多个会话学习一个概念。
+- **`/writing-great-skills`**——编写和编辑优质技能的参考。
 
-## Standalone
+## 前置条件
 
-Off the main flow entirely.
-
-- **`/grill-me`** — the same relentless interview as `/grill-with-docs`, but for when you have **no codebase**. Stateless: it saves nothing locally, builds no `CONTEXT.md`. Reach for it to sharpen any plan or design that doesn't live in a repo.
-- **`/prototype`** — a small, throwaway program that answers one design question: does this state model feel right, or what should this UI look like. Throwaway from day one — keep the answer, delete the code. It's the detour in step 2 of the main flow, but reach for it any time a design question is hard to settle on paper.
-- **`/research`** — delegate reading legwork to a **background agent**: it investigates a question against **primary sources**, then leaves a cited Markdown file in the repo. Keep working while it reads. The file it produces is something to take *into* the main flow at `/grill-with-docs` — research feeds the thinking, it doesn't replace it.
-- **`/teach`** — learn a concept over multiple sessions, using the current directory as a stateful workspace.
-- **`/writing-great-skills`** — reference for writing and editing skills well.
-
-## Precondition
-
-**`/setup-matt-pocock-skills`** — run before your first engineering flow to configure the issue tracker, triage labels, and doc layout the other skills assume. Custom issue trackers also work.
+首次运行工程流程前，先执行 **`/setup-matt-pocock-skills`**，配置其他技能所依赖的 issue 跟踪器、分诊标签和文档布局。也支持自定义 issue 跟踪器。

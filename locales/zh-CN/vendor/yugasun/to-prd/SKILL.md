@@ -1,74 +1,68 @@
 ---
 name: to-prd
-description: 当用户要把当前对话综合成 PRD 并发布到 issue tracker，且不需要额外访谈时使用。 当需求仍需大量澄清、用户只要简单总结，或不应写入 issue tracker 时不要用。
+description: 将当前对话综合整理成 PRD，并发布到 issue tracker。不进行访谈——使用已经掌握的信息。
+disable-model-invocation: true
 ---
 
-# 中文导读
+将上下文综合整理成 PRD。**不要**进行访谈——使用对话和代码库中的信息。
 
-- 使用场景：当用户要把当前对话综合成 PRD 并发布到 issue tracker，且不需要额外访谈时使用。
-- 不适用：当需求仍需大量澄清、用户只要简单总结，或不应写入 issue tracker 时不要用。
+如果缺少 `docs/agents/issue-tracker.md` 或 triage label，运行 `/aiops-setup`。
 
-# 上游说明原文
+## 流程
 
-Synthesize context into a PRD. Do **not** interview — use the conversation and codebase.
+1. 如有需要，探索仓库。使用 `CONTEXT.md` 中的词汇和本地 ADR。
+2. 勾勒测试 seam——优先使用已有 seam、尽可能选最高层 seam、数量越少越好。与用户确认。
+3. 使用下方模板编写 PRD，并用 `ready-for-agent` label 发布到 issue tracker。
 
-Run `/aiops-setup` if `docs/agents/issue-tracker.md` or triage labels are missing.
+## PRD 模板
 
-## Process
+**问题陈述**——面向用户的问题。
 
-1. Explore repo if needed. Use `CONTEXT.md` vocabulary and local ADRs.
-2. Sketch test seams — prefer existing, highest seam, fewest seams. Confirm with user.
-3. Write PRD (template below) and publish to issue tracker with `ready-for-agent` label.
+**解决方案**——面向用户的解决方案。
 
-## PRD template
+**用户故事**——编号列表，格式为 `作为 <角色>，我希望 <功能>，以便 <收益>`（列表要详尽）。
 
-**Problem Statement** — user-facing problem.
+**实现决策**——模块、接口、架构、schema、API（不写文件路径；如果原型片段编码了某项决策，可以使用）。
 
-**Solution** — user-facing solution.
+**测试决策**——优秀测试应是什么样、要测试哪些模块、有哪些先例。
 
-**User Stories** — numbered `As a <actor>, I want <feature>, so that <benefit>` (extensive list).
+**范围之外**
 
-**Implementation Decisions** — modules, interfaces, architecture, schema, API (no file paths; prototype snippets OK if they encode a decision).
+**补充说明**
 
-**Testing Decisions** — what good tests look like, modules to test, prior art.
+## Delta 模式（棕地变更）
 
-**Out of Scope**
-
-**Further Notes**
-
-## Delta mode (brownfield changes)
-
-When the PRD describes changes to an **existing system** (not a greenfield feature), use delta format instead of the full template above. Focus only on what changes:
+当 PRD 描述的是对**现有系统**的改动（而不是绿地功能）时，使用 delta 格式代替上方完整模板。只关注发生变化的部分：
 
 ```markdown
 # PRD: <slug> (delta)
 
-## Context
-One paragraph on what already exists and why it's changing.
+## 背景
+用一段话说明已经存在什么，以及为什么要改变。
 
-## Changes
+## 变更
 
-### ADDED
-- New behavior or interface being introduced
-- New modules, endpoints, or data structures
+### 新增
+- 新引入的行为或接口
+- 新模块、endpoint 或数据结构
 
-### MODIFIED
-- [existing behavior] → [new behavior]
-- [existing interface] → [updated interface]
+### 修改
+- [现有行为] → [新行为]
+- [现有接口] → [更新后的接口]
 
-### REMOVED
-- Deprecated behavior being removed
-- Modules or interfaces being deleted
+### 移除
+- 要移除的已弃用行为
+- 要删除的模块或接口
 
-## Impact
-- Which existing modules are affected
-- Migration path for breaking changes
+## 影响
+- 哪些现有模块受到影响
+- 破坏性变更的迁移路径
 
-## Testing
-- What existing tests need updating
-- New tests for added/modified behavior
+## 测试
+- 哪些现有测试需要更新
+- 针对新增/修改行为的新测试
 
-## Out of Scope
+## 范围之外
 ```
 
-**When to use delta**: if `tech-spec.md` references modifications to existing modules (not purely new code), prefer delta format. The conductor or planner should suggest delta when the architecture scan or design reveals significant existing code involvement.
+**何时使用 delta**：如果 `tech-spec.md` 涉及修改现有模块（而非纯新增代码），优先使用 delta 格式。当架构扫描或设计表明会显著牵涉现有代码时，conductor 或 planner 应建议使用 delta。

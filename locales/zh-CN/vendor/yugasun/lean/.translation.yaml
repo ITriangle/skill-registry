@@ -3,4 +3,4 @@ source_id: vendor/yugasun/lean
 files:
   - path: SKILL.md
     source_sha256: bdbddd7929ccf5f78beb285eeac40299f2b4dad2887bff97bc0b84b2f9ee6dbf
-    translation_sha256: cb9262f1222d43ddb8c414fc0d860f4aea0f0d8e5ca73fda7fc953dffa6fab6a
+    translation_sha256: a05d88de568db37b314e15906c300aa49b4f32d96d7b7f21e78aec9673bc1a45

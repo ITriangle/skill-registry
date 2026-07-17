@@ -3,4 +3,4 @@ source_id: vendor/mattpocock/engineering-code-review
 files:
   - path: SKILL.md
     source_sha256: 6a65cc61114f96db07ec41e3920e67c9c5bf70dd6e0901eb9460ebcb2bdc209f
-    translation_sha256: 52ff736901c1ec8411db425f7a49f2092a9dedb45d3b690ecd59009efbe5e899
+    translation_sha256: 78e31d662c3fe75f79ac53d970afce03a520947b6e641d41c2902c86d2b09133

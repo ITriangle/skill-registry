@@ -1,48 +1,48 @@
-# Sweep Patterns
+# 扫描模式
 
-Prompt templates and output schemas for the 4 perspective agents used by the multi-modal sweep. Each agent runs independently and queries the code graph from a distinct angle.
+多模态扫描所使用的 6 个视角代理的提示词模板和输出 schema。每个代理独立运行，并从不同角度查询代码图谱。
 
-## Agent 1: Structure agent
+## 代理 1：结构代理
 
-**Purpose**: Identify shallow modules and deepening candidates.
+**用途**：识别浅模块和深化候选项。
 
-**Prompt template**:
+**提示词模板**：
 
 ```
-You are the Structure agent in an architecture review.
+你是架构评审中的结构代理。
 
-Query /code-graph query modules and /code-graph query god-nodes for the project overview.
+查询 /code-graph query modules 和 /code-graph query god-nodes，获取项目概览。
 
-Then query:
-1. /code-graph query shallow — list modules where interface ≈ implementation
-2. /code-graph query god-nodes — list modules with highest in-degree
-3. Cross-reference: shallow modules that are ALSO god-nodes are the highest-priority deepening candidates
+然后查询：
+1. /code-graph query shallow——列出接口约等于实现的模块
+2. /code-graph query god-nodes——列出入度最高的模块
+3. 交叉核对：同时也是 god-node 的浅模块，是优先级最高的深化候选项
 
-For each candidate, apply the deletion test:
-- Would deleting this module concentrate complexity (good — it was a pass-through)?
-- Or would it scatter complexity across N callers (bad — it was earning its keep)?
+对每个候选项应用删除测试：
+- 删除该模块会让复杂性集中起来吗（好——它原本只是透传）？
+- 还是会把复杂性分散到 N 个调用方（坏——它原本发挥了应有价值）？
 
-Output a JSON array of findings:
+以 JSON 数组输出发现：
 [
   {
     "module": "src/utils/helpers.ts",
     "issue": "shallow",
-    "evidence": "12 exports, 14 total symbols — ratio 0.86",
-    "deletion_test": "scatters — 8 callers depend on it",
+    "evidence": "12 个导出，合计 14 个符号——比率 0.86",
+    "deletion_test": "scatters——8 个调用方依赖它",
     "impact": "high",
     "confidence": "high"
   }
 ]
 ```
 
-**Output schema**:
+**输出 schema**：
 ```json
 {
   "findings": [
     {
-      "module": "string — module id",
+      "module": "string——模块 ID",
       "issue": "shallow | pass-through | god-node-with-shallow-depth",
-      "evidence": "string — what makes it shallow",
+      "evidence": "string——浅模块判定依据",
       "deletion_test": "concentrates | scatters",
       "impact": "high | medium | low",
       "confidence": "high | medium | low"
@@ -51,74 +51,74 @@ Output a JSON array of findings:
 }
 ```
 
-## Agent 2: Data-flow agent
+## 代理 2：数据流代理
 
-**Purpose**: Trace cross-module data flow and identify seam leakage.
+**用途**：追踪跨模块数据流并识别 seam 泄漏。
 
-**Prompt template**:
+**提示词模板**：
 
 ```
-You are the Data-flow agent in an architecture review.
+你是架构评审中的数据流代理。
 
-Query /code-graph query modules and /code-graph query god-nodes for the project overview.
+查询 /code-graph query modules 和 /code-graph query god-nodes，获取项目概览。
 
-Query /code-graph query modules to get the full module list.
-For the top 10 modules by edge count, query their deps and rdeps.
+查询 /code-graph query modules，获取完整模块列表。
+对按边数排序的前 10 个模块，查询其 deps 和 rdeps。
 
-Identify:
-1. Modules where data crosses a seam unnecessarily — e.g. Module A passes raw data through Module B just to reach Module C
-2. Modules that transform data they shouldn't own — e.g. an auth module doing JSON serialization
-3. Circular dependencies — Module A depends on B which depends on A
-4. Configuration leakage — modules reading config from unrelated modules
+识别：
+1. 数据不必要地跨越 seam 的模块——例如，模块 A 把原始数据传过模块 B，只为到达模块 C
+2. 转换了本不该归自己所有的数据的模块——例如 auth 模块执行 JSON 序列化
+3. 循环依赖——模块 A 依赖 B，而 B 又依赖 A
+4. 配置泄漏——模块从无关模块中读取配置
 
-For each finding, trace the data path through the graph.
+对每项发现，沿图谱追踪数据路径。
 
-Output a JSON array:
+输出 JSON 数组：
 [
   {
     "type": "leakage",
     "path": ["src/api/", "src/utils/format.ts", "src/auth/"],
-    "description": "Auth token passes through format.ts unnecessarily",
+    "description": "Auth token 不必要地经过 format.ts",
     "modules_affected": ["src/auth/", "src/api/"],
     "confidence": "high"
   }
 ]
 ```
 
-**Output schema**:
+**输出 schema**：
 ```json
 {
   "findings": [
     {
       "type": "leakage | circular | config-leakage | unnecessary-passthrough",
-      "path": ["string — ordered module ids forming the data path"],
-      "description": "string — what's wrong",
-      "modules_affected": ["string — module ids"],
+      "path": ["string——构成数据路径的有序模块 ID"],
+      "description": "string——问题描述",
+      "modules_affected": ["string——模块 ID"],
       "confidence": "high | medium | low"
     }
   ]
 }
 ```
 
-## Agent 3: Change agent
+## 代理 3：变更代理
 
-**Purpose**: Identify friction from change patterns — hotspots and high-churn modules.
+**用途**：从变更模式中识别摩擦——热点和高变更频率模块。
 
-**Prompt template**:
+**提示词模板**：
 
 ```
-You are the Change agent in an architecture review.
+你是架构评审中的变更代理。
 
-1. Query /code-graph query hotspot for high-coupling + recently changed modules
-2. Run git log --oneline -30 to find the most-changed files in the last 30 commits
-3. Cross-reference: modules appearing in BOTH the hotspot list AND the git log are high-confidence friction signals
-4. For each hotspot, check if the churn is concentrated in a few files or spread across many
+1. 查询 /code-graph query hotspot，查找高耦合 + 最近有变更的模块
+2. 运行 git log --oneline -30，查找最近 30 次提交中变更最频繁的文件
+3. 交叉核对：同时出现在热点列表和 git log 中的模块，是高置信度摩擦信号
+4. 对每个热点，检查变更是集中在少数文件，还是分散到许多文件
 
-A module that changes often AND has high in-degree is an architectural smell:
-- Either it has too many responsibilities (violation of depth)
-- Or its dependents are too tightly coupled to its internals
+一个经常变更且入度很高的模块是一种架构异味：
+- 要么它承担了太多职责（违反深度原则）
+- 要么它的依赖方与其内部实现耦合过紧
 
-Output a JSON array:
+输出 JSON 数组：
 [
   {
     "module": "src/core/engine.ts",
@@ -126,48 +126,48 @@ Output a JSON array:
     "out_degree": 6,
     "recent_commits": 12,
     "churn_files": 3,
-    "friction_signal": "high-coupling + high-churn",
+    "friction_signal": "高耦合 + 高变更频率",
     "confidence": "high"
   }
 ]
 ```
 
-**Output schema**:
+**输出 schema**：
 ```json
 {
   "findings": [
     {
-      "module": "string — module id",
+      "module": "string——模块 ID",
       "in_degree": 0,
       "out_degree": 0,
       "recent_commits": 0,
       "churn_files": 0,
-      "friction_signal": "string — what pattern you see",
+      "friction_signal": "string——观察到的模式",
       "confidence": "high | medium | low"
     }
   ]
 }
 ```
 
-## Agent 4: Test agent
+## 代理 4：测试代理
 
-**Purpose**: Map test coverage gaps at the module level.
+**用途**：在模块层面绘制测试覆盖缺口。
 
-**Prompt template**:
+**提示词模板**：
 
 ```
-You are the Test agent in an architecture review.
+你是架构评审中的测试代理。
 
-1. Query /code-graph query modules to get all modules
-2. For each module, search for corresponding test files:
-   - grep for test files matching the module name pattern
-   - Check if test files import from the module
-3. Identify untested critical modules — those with high in-degree but no test coverage
-4. Identify untested seams — module boundaries where behavior could change without a test catching it
+1. 查询 /code-graph query modules，获取所有模块
+2. 对每个模块搜索对应的测试文件：
+   - 使用 grep 查找名称模式与模块匹配的测试文件
+   - 检查测试文件是否从该模块导入
+3. 识别未经测试的关键模块——入度高但没有测试覆盖的模块
+4. 识别未经测试的 seam——行为可能变化却不会被测试发现的模块边界
 
-Rank by risk: high in-degree + no tests = highest risk.
+按风险排序：高入度 + 无测试 = 最高风险。
 
-Output a JSON array:
+输出 JSON 数组：
 [
   {
     "module": "src/auth/",
@@ -175,61 +175,61 @@ Output a JSON array:
     "has_tests": false,
     "test_files": [],
     "risk": "high",
-    "reason": "Core auth module with 12 dependents, zero test coverage"
+    "reason": "核心 auth 模块有 12 个依赖方，但测试覆盖为零"
   }
 ]
 ```
 
-**Output schema**:
+**输出 schema**：
 ```json
 {
   "findings": [
     {
-      "module": "string — module id",
+      "module": "string——模块 ID",
       "in_degree": 0,
       "has_tests": false,
-      "test_files": ["string — test file paths"],
+      "test_files": ["string——测试文件路径"],
       "risk": "high | medium | low",
-      "reason": "string — why this matters"
+      "reason": "string——此问题为何重要"
     }
   ]
 }
 ```
 
-## Cross-validation
+## 交叉验证
 
-After all 6 agents complete, a synthesis agent receives all findings and:
+全部 6 个代理完成后，一个综合代理接收所有发现，并执行以下操作：
 
-1. **De-duplicates**: Same module flagged by multiple agents = higher confidence
-2. **Ranks by convergence**: 3+ agents agree → Strong. 2 agents → Worth exploring. 1 agent → Speculative
-3. **Applies deletion test** to top candidates
-4. **Produces the final candidate list** for the HTML report
+1. **去重**：同一模块被多个代理标记 = 更高置信度
+2. **按收敛度排序**：3 个以上代理一致 → Strong；2 个代理 → Worth exploring；1 个代理 → Speculative
+3. 对最重要的候选项**应用删除测试**
+4. 为 HTML 报告**生成最终候选列表**
 
-The convergence count is recorded as the recommendation strength badge on each candidate card.
+收敛计数会记录为每张候选项卡片上的推荐强度徽章。
 
-## Agent 5: Security agent
+## 代理 5：安全代理
 
-**Purpose**: Identify modules where untrusted data enters or secrets are mishandled.
+**用途**：识别不受信任数据进入的位置或密钥处理不当的模块。
 
-**Prompt template**:
+**提示词模板**：
 
 ```
-You are the Security agent in an architecture review.
+你是架构评审中的安全代理。
 
-1. Query /code-graph query modules to get all modules
-2. Identify trust boundaries — where does external input enter the system?
-   - HTTP handlers, CLI argument parsers, file readers, env var consumers
-3. For each boundary, check if input validation happens AT the boundary or deeper
-   - Validation pushed downstream = architectural smell (the seam owns too little)
-4. Look for modules that mix auth/authz logic with business logic
-5. Check for secret handling patterns: hardcoded strings, unguarded env reads
+1. 查询 /code-graph query modules，获取所有模块
+2. 识别信任边界——外部输入从哪里进入系统？
+   - HTTP 处理器、CLI 参数解析器、文件读取器、环境变量消费方
+3. 对每个边界，检查输入验证是在边界处进行，还是被推到更深处
+   - 验证被推到下游 = 架构异味（seam 拥有的职责过少）
+4. 查找把 auth/authz 逻辑与业务逻辑混在一起的模块
+5. 检查密钥处理模式：硬编码字符串、无保护的环境变量读取
 
-Output a JSON array:
+输出 JSON 数组：
 [
   {
     "module": "src/api/handlers.ts",
     "issue": "validation-downstream",
-    "evidence": "raw request body passed to service layer without sanitisation",
+    "evidence": "原始请求正文未经清理就传入 service 层",
     "trust_boundary": true,
     "risk": "high",
     "confidence": "high"
@@ -237,14 +237,14 @@ Output a JSON array:
 ]
 ```
 
-**Output schema**:
+**输出 schema**：
 ```json
 {
   "findings": [
     {
-      "module": "string — module id",
+      "module": "string——模块 ID",
       "issue": "validation-downstream | mixed-auth-logic | secret-exposure | unguarded-input",
-      "evidence": "string — what makes it risky",
+      "evidence": "string——风险依据",
       "trust_boundary": true,
       "risk": "high | medium | low",
       "confidence": "high | medium | low"
@@ -253,44 +253,44 @@ Output a JSON array:
 }
 ```
 
-## Agent 6: Performance agent
+## 代理 6：性能代理
 
-**Purpose**: Identify structural causes of performance risk — not profiler data, but architectural patterns that make performance hard to improve.
+**用途**：识别性能风险的结构性原因——不是 profiler 数据，而是让性能难以改善的架构模式。
 
-**Prompt template**:
+**提示词模板**：
 
 ```
-You are the Performance agent in an architecture review.
+你是架构评审中的性能代理。
 
-1. Query /code-graph query god-nodes for modules with the highest in-degree
-2. Identify synchronous-looking call chains that span 3+ modules (deep call stacks with no async boundary)
-3. Look for modules that load broad state to serve narrow queries
-   - A module that reads 10 fields to return 1 is a depth problem, not a query problem
-4. Identify missing caching seams — hot paths (high in-degree modules) with no observable cache layer
-5. Check for modules that make multiple external calls (DB, HTTP, filesystem) in a single interface
+1. 查询 /code-graph query god-nodes，查找入度最高的模块
+2. 识别跨越 3 个以上模块、看起来同步执行的调用链（没有 async 边界的深调用栈）
+3. 查找为了狭窄查询而加载宽范围状态的模块
+   - 一个模块读取 10 个字段却只返回 1 个，是深度问题，而不是查询问题
+4. 识别缺少缓存 seam 的位置——没有可观察缓存层的热路径（高入度模块）
+5. 检查在单一接口中发起多个外部调用（DB、HTTP、文件系统）的模块
 
-Output a JSON array:
+输出 JSON 数组：
 [
   {
     "module": "src/data/loader.ts",
     "issue": "broad-state-narrow-query",
-    "evidence": "loads full user record for email-only lookups — 12 callers",
-    "upgrade_path": "add projection parameter to loader interface",
+    "evidence": "为仅查询 email 加载完整用户记录——12 个调用方",
+    "upgrade_path": "向 loader 接口添加 projection 参数",
     "impact": "high",
     "confidence": "medium"
   }
 ]
 ```
 
-**Output schema**:
+**输出 schema**：
 ```json
 {
   "findings": [
     {
-      "module": "string — module id",
+      "module": "string——模块 ID",
       "issue": "broad-state-narrow-query | deep-sync-chain | missing-cache-seam | fan-out-calls",
-      "evidence": "string — structural pattern observed",
-      "upgrade_path": "string — architectural change that would fix it",
+      "evidence": "string——观察到的结构模式",
+      "upgrade_path": "string——能够修复问题的架构变更",
       "impact": "high | medium | low",
       "confidence": "high | medium | low"
     }

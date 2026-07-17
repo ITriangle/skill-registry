@@ -1,42 +1,36 @@
 ---
 name: prototype
-description: 当用户要做一次性原型来验证状态模型、业务逻辑手感或 UI 方向时使用。 当目标是生产级实现、长期维护代码，或问题无需原型验证时不要用。
+description: 用于回答一个设计问题的抛弃式原型——终端逻辑探索器，或在单一路由上展示多种 UI 变体。
+disable-model-invocation: true
 ---
 
-# 中文导读
+# 原型
 
-- 使用场景：当用户要做一次性原型来验证状态模型、业务逻辑手感或 UI 方向时使用。
-- 不适用：当目标是生产级实现、长期维护代码，或问题无需原型验证时不要用。
+用抛弃式代码回答**一个问题**。将答案记录到 `NOTES.md`（在 PRD 或 `/aiops-implement` 吸收原型结论之前，这是必需步骤）。
 
-# 上游说明原文
+## 选择分支
 
-# Prototype
+- **逻辑 / 状态 / API 形态** → 一个微型交互式终端应用。纯逻辑模块 + 轻薄 TUI 外壳。用一条命令运行。除非问题本身涉及持久化，否则使用内存状态。
+- **外观和布局** → 在一个路由上提供 3–5 个**结构明显不同**的 UI 变体，可通过 `?variant=` 和底部浮动栏切换。优先嵌入已有页面，而不是新增路由。
 
-Throwaway code that answers **one question**. Capture the answer in `NOTES.md` (required before PRD or `/aiops-implement` absorption).
+如果含义不明确：匹配周边代码（后端 → 逻辑；页面 → UI），并说明该假设。
 
-## Pick a branch
+## 两个分支都适用的规则
 
-- **Logic / state / API shape** → tiny interactive terminal app. Pure logic module + thin TUI shell. One command to run. In-memory state unless persistence is the question.
-- **Look and layout** → 3–5 **structurally different** UI variants on one route, switchable via `?variant=` and a floating bottom bar. Prefer embedding in an existing page over a new route.
+1. 命名和位置必须让人一眼看出它是抛弃式代码，并靠近它所验证的代码。
+2. 使用一条命令运行（`pnpm`、`python` 等）。
+3. 不写测试，只做最少错误处理，不引入超出问题本身所需的抽象。
+4. 每次操作或切换变体后，显示完整状态。
+5. 完成后删除或吸收到正式实现中——不要留下腐化代码。
 
-If ambiguous: match surrounding code (backend → logic; page → UI) and state the assumption.
+## 逻辑分支
 
-## Rules (both branches)
+- 编码前先用一段话陈述问题。
+- 将逻辑隔离在可移植的纯模块中（reducer、state machine 或纯函数）。TUI 是抛弃式外壳。
+- TUI：每个 tick 清屏，显示状态和键盘快捷键，循环直到退出。
 
-1. Name and locate so it's obviously throwaway, near the code it informs.
-2. One command to run (`pnpm`, `python`, etc.).
-3. No tests, minimal error handling, no abstractions beyond the question.
-4. Surface full state after each action or variant switch.
-5. Delete or absorb when done — don't leave rot.
+## UI 分支
 
-## Logic branch
-
-- State the question in one paragraph before coding.
-- Isolate logic in a portable pure module (reducer, state machine, or pure functions). TUI is throwaway.
-- TUI: clear screen each tick, show state + keyboard shortcuts, loop until quit.
-
-## UI branch
-
-- Variants must differ in layout/hierarchy, not just color.
-- Switcher: bottom bar, URL param, arrow keys (skip when input focused), hidden in production.
-- Winner gets folded into real code; losers and switcher deleted.
+- 变体必须在布局/层级上不同，而不能只是颜色不同。
+- 切换器：底部栏、URL 参数、方向键（输入框聚焦时跳过），生产环境中隐藏。
+- 胜出的方案折叠进正式代码；删除失败方案和切换器。

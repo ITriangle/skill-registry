@@ -3,4 +3,4 @@ source_id: vendor/mattpocock/engineering-implement
 files:
   - path: SKILL.md
     source_sha256: 6d3fd9e83b8f36e5213854779db49b256a457a7ebb4a503e53fa7dcff696adc3
-    translation_sha256: 942f8b4acf28f5e7a3d368584b551c8fbbfcaa432febed2045685369a0e6c216
+    translation_sha256: ad4f76fb758f89c5695dfe710542ecfa74221c4d6f4fa5edf2a5bc702f485e5c

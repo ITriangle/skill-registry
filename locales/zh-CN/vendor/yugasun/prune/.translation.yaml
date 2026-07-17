@@ -3,4 +3,4 @@ source_id: vendor/yugasun/prune
 files:
   - path: SKILL.md
     source_sha256: ffb6da6711300740d7b3391b577e6a43b45d74e426307abd9af173e904076402
-    translation_sha256: 9f26068ce2d3149800f3068f54c3464404d4a9959e55e639ce1dc077f59d1169
+    translation_sha256: 60edc92b39b2ac2efb229954ee63f271b2d938aa25f928b6f341d84fd23d6d20

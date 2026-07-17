@@ -4,8 +4,8 @@
 
 | 口令 | 行为 | 写文件？ |
 |------|------|----------|
-| `加入 wiki：…` | Ingest：raw + 编译 + index + log | 是 |
-| `关于 X 我知道什么` | Query：只读综合 | 默认否；用户要求归档才写 `queries/` |
+| `加入 wiki：…` | 摄取：raw + 编译 + index + log | 是 |
+| `关于 X 我知道什么` | 查询：只读综合 | 默认否；用户要求归档才写 `queries/` |
 | `lint wiki` | `scripts/lint-wiki.sh` + 启发式 | 是（log；自动修索引时改 index） |
 | `本周回顾` | 冲突 / 开放问题 / 高频未建页 | 是 |
 | `本月回顾` | 工作地图类 synthesis + 覆盖范围 | 是 |

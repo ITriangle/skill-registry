@@ -56,3 +56,4 @@ Read [references/registry-operations.md](references/registry-operations.md) when
 - Keep `analysis-only` and `deprecated` skills out of project activation unless explicitly requested.
 - Use `--allow-candidate` only because current registry entries are intentionally still candidates; do not silently promote them to `approved`.
 - Keep Chinese mirrors review-only: translate `SKILL.md` and Markdown/TXT documentation, preserve identifiers and links, and never register or activate files from `locales/`.
+- Do not treat a Chinese summary plus copied English prose as a translation. `translation-audit` must reject placeholders, English-only files, and near-copies of the source prose.

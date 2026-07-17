@@ -3,4 +3,4 @@ source_id: vendor/yugasun/to-issues
 files:
   - path: SKILL.md
     source_sha256: 0dded44feb6849bd54694648aec6a5d5c19f0d98c9f0abe4ee37102070de790f
-    translation_sha256: 2392f7ac4f53d6a02421048e169dbf72b5500a389e4ed18ec037ab43bc34d23f
+    translation_sha256: 2ee95cf5b984bc8f550009a7d420f4f12788fa6c3fbf00608cdeec2444b1d391

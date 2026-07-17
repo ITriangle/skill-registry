@@ -3,16 +3,16 @@ source_id: vendor/mattpocock/productivity-teach
 files:
   - path: GLOSSARY-FORMAT.md
     source_sha256: d177def491519d97873291f2e860d8f1d60ead78feecb82eee022177958069c6
-    translation_sha256: d177def491519d97873291f2e860d8f1d60ead78feecb82eee022177958069c6
+    translation_sha256: 892f7de914f82b591837075a5b519475ec16d5c8241b754be683249ddc7d6a79
   - path: LEARNING-RECORD-FORMAT.md
     source_sha256: 855f81017625256584bbf62bd5edb9b0c86605c4cc1139c56acc36b802595d17
-    translation_sha256: 855f81017625256584bbf62bd5edb9b0c86605c4cc1139c56acc36b802595d17
+    translation_sha256: 396f675585c5747b286c3cd4486f95dfe6e798ff3089fd4ee81671473f859946
   - path: MISSION-FORMAT.md
     source_sha256: 8da6d3ac84eb2eb19f17c260b6acf01c560d3ac7a4501c415eea0e985602f4d7
-    translation_sha256: 8da6d3ac84eb2eb19f17c260b6acf01c560d3ac7a4501c415eea0e985602f4d7
+    translation_sha256: bfad45e616d09ea53c22bb3290344b7bb84abc3afae8ebb79bb9c6806c6b6002
   - path: RESOURCES-FORMAT.md
     source_sha256: 2bc634a64b0d0daa10904f9222e7aa0d361420dfacabbf092fbe3a72222edc08
-    translation_sha256: 2bc634a64b0d0daa10904f9222e7aa0d361420dfacabbf092fbe3a72222edc08
+    translation_sha256: fc0151f9adaa13a11676074cf9f011dcf2435a3a2bc374c6615a95811871df42
   - path: SKILL.md
     source_sha256: 6d2dbe5e03084cf26fef66b535127b36cd1bcbe9478e26b0626029cd51dc2259
-    translation_sha256: b9d0c47f4f2270f41ef010daade89009e9358262eb97ea351fbcd0589cd8f303
+    translation_sha256: 68b4dbd34b7a1715f630f4c435f7fd44b296c15a59be21267306067746ba5519

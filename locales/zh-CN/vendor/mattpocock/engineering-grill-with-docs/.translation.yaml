@@ -3,4 +3,4 @@ source_id: vendor/mattpocock/engineering-grill-with-docs
 files:
   - path: SKILL.md
     source_sha256: 610d091047bcfb9db0f75c057d15538481a721111579fc5ec7f83ad9131a2165
-    translation_sha256: abcb6aadefd199da5edc230b35df34541a6da4e40a9414d94063acd4e95b6ea2
+    translation_sha256: 8bda83477f613acbd4c4b35674456e47fba7eeaaad11b7439fb50537c5099e3b

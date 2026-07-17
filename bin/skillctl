@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import difflib
 import hashlib
 import os
 import re
@@ -422,6 +423,52 @@ def markdown_links(text: str) -> set[str]:
     return links
 
 
+def translation_prose(text: str) -> str:
+    """Return natural-language prose while ignoring code and stable identifiers."""
+    text = re.sub(r"```.*?```", " ", text, flags=re.DOTALL)
+    text = re.sub(r"`[^`]*`", " ", text)
+    text = re.sub(r"https?://\S+", " ", text)
+    text = re.sub(r"^---\n.*?\n---\n", " ", text, count=1, flags=re.DOTALL)
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def chinese_character_count(text: str) -> int:
+    return len(re.findall(r"[\u3400-\u9fff]", text))
+
+
+def latin_word_count(text: str) -> int:
+    return len(re.findall(r"\b[A-Za-z][A-Za-z'-]*\b", text))
+
+
+def semantic_translation_problems(source_text: str, translated_text: str, label: str) -> list[str]:
+    problems: list[str] = []
+    if "# 上游说明原文" in translated_text or "# 中文导读" in translated_text:
+        problems.append(f"placeholder translation content: {label}")
+
+    source_prose = translation_prose(source_text)
+    translated_prose = translation_prose(translated_text)
+    source_latin = latin_word_count(source_prose)
+    source_chinese = chinese_character_count(source_prose)
+    if source_latin < 12 or source_chinese >= max(8, source_latin // 3):
+        return problems
+
+    translated_latin = latin_word_count(translated_prose)
+    translated_chinese = chinese_character_count(translated_prose)
+    if translated_chinese < max(8, translated_latin // 3):
+        problems.append(f"insufficient Chinese translation: {label}")
+
+    if len(source_prose) >= 120 and len(translated_prose) >= 120:
+        similarity = difflib.SequenceMatcher(
+            None,
+            source_prose.casefold(),
+            translated_prose.casefold(),
+            autojunk=False,
+        ).ratio()
+        if similarity >= 0.72:
+            problems.append(f"translation too similar to English source: {label} ({similarity:.0%})")
+    return problems
+
+
 def translation_content_problems(skill_id: str, locale: str) -> list[str]:
     source_dir = skill_path(skill_id)
     translated_dir = translated_skill_path(skill_id, locale)
@@ -457,6 +504,13 @@ def translation_content_problems(skill_id: str, locale: str) -> list[str]:
     for rel in sorted(expected & actual):
         source_file = source_dir / rel
         translated_file = translated_dir / rel
+        problems.extend(
+            semantic_translation_problems(
+                read_text(source_file),
+                read_text(translated_file),
+                f"{skill_id}:{rel}",
+            )
+        )
         if source_file.suffix.lower() != ".md":
             continue
         source_links = markdown_links(read_text(source_file))
@@ -579,14 +633,30 @@ def parse_front_matter(text: str) -> dict[str, str]:
     if end == -1:
         raise SkillctlError("SKILL.md front matter is not closed")
     meta: dict[str, str] = {}
-    for raw_line in text[4:end].splitlines():
+    lines = text[4:end].splitlines()
+    index = 0
+    while index < len(lines):
+        raw_line = lines[index]
         stripped = raw_line.strip()
         if not stripped or stripped.startswith("#"):
+            index += 1
             continue
         if ":" not in stripped:
+            index += 1
             continue
         key, value = stripped.split(":", 1)
-        meta[key.strip()] = strip_quotes(value.strip())
+        value = value.strip()
+        if value in (">", "|"):
+            continuation: list[str] = []
+            index += 1
+            while index < len(lines) and (not lines[index].strip() or lines[index][0].isspace()):
+                continuation.append(lines[index].strip())
+                index += 1
+            separator = " " if value == ">" else "\n"
+            meta[key.strip()] = separator.join(continuation).strip()
+            continue
+        meta[key.strip()] = strip_quotes(value)
+        index += 1
     return meta
 
 

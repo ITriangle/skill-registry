@@ -24,6 +24,8 @@ Before steps 8-9, translate all Markdown/TXT documentation except licenses into
 `locales/zh-CN/<skill-id>/`, run `bin/skillctl translation-stamp <skill-id>`,
 and require `bin/skillctl translation-audit` to pass. An import may update the
 English source and then exit non-zero until this mirror work is complete.
+Translate the full natural-language content; do not retain an English body under
+a Chinese guide or stamp an untranslated copy.
 
 Default status guidance:
 

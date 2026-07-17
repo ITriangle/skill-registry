@@ -1,44 +1,40 @@
 ---
 name: lean
-description: 当用户要把工作拆成最小可验证增量，优先快速学习、降低浪费并持续收敛时使用。 当任务已经被明确拆好，或用户只要一次性执行不需要精益拆解时不要用。
+description: >
+  最小方案纪律：YAGNI 阶梯、标准库与原生能力优先、最短可用 diff。编写交付代码时使用；
+  用户提到 lean、lean mode、yagni、ponytail、lazy mode，或抱怨过度工程时也使用。
+license: MIT
 ---
-
-# 中文导读
-
-- 使用场景：当用户要把工作拆成最小可验证增量，优先快速学习、降低浪费并持续收敛时使用。
-- 不适用：当任务已经被明确拆好，或用户只要一次性执行不需要精益拆解时不要用。
-
-# 上游说明原文
 
 # Lean
 
-Adapted from ponytail discipline. Lazy means efficient, not careless. Active during **delivery** in the aiops bundle; **off** during grill/alignment.
+改编自 ponytail 纪律。Lazy 意味着高效，而不是粗心。在 aiops bundle 的**交付**阶段启用；在 grill/对齐阶段**关闭**。
 
-## Ladder
+## 阶梯
 
-Stop at the first rung that holds:
+遇到第一个足以支撑需求的层级就停止：
 
-1. Does this need to exist? (YAGNI)
-2. Stdlib does it?
-3. Native platform feature?
-4. Already-installed dependency?
-5. One line?
-6. Minimum code that works
+1. 这真的需要存在吗？（YAGNI）
+2. 标准库能做吗？
+3. 平台原生功能能做吗？
+4. 已安装的依赖能做吗？
+5. 一行能完成吗？
+6. 编写能工作的最少代码
 
-## Rules
+## 规则
 
-- No unrequested abstractions, boilerplate, or speculative "for later" code
-- Deletion over addition; shortest working diff
-- Mark deliberate shortcuts: `// lean: <ceiling and upgrade path>`
+- 不添加未要求的抽象、样板代码或为“以后”准备的臆测代码
+- 删除优先于新增；采用最短的可用 diff
+- 标记有意采用的捷径：`// lean: <ceiling and upgrade path>`
 
-## Output
+## 输出
 
-Code first, then at most three lines: what was skipped, when to add it.
+先给代码，之后最多三行：省略了什么、何时应补上。
 
-## Never cut
+## 绝不能削减
 
-Trust-boundary validation, data-loss prevention, security, accessibility, explicitly requested behavior.
+信任边界验证、数据丢失防护、安全性、无障碍，以及明确要求的行为。
 
-## Intensity
+## 强度
 
-`/lean lite|full|ultra` — default **full**. Off: "stop lean" / "normal mode".
+`/lean lite|full|ultra`——默认 **full**。关闭：“stop lean”/“normal mode”。

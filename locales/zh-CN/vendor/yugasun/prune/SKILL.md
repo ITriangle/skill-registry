@@ -1,29 +1,24 @@
 ---
 name: prune
-description: 当用户要收缩范围、删除多余复杂度、整理未完成计划或把方案削到可交付核心时使用。 当用户要新增功能、扩展范围，或尚未有可裁剪的方案和代码时不要用。
+description: >
+  只审查 diff 中的过度工程。每个发现一行：位置、应删除什么、用什么替代。
+  在 aiops 交付中是 `/review` 前的硬门禁。当用户提到 prune、简化审查、能删除什么或过度工程时使用。
 ---
-
-# 中文导读
-
-- 使用场景：当用户要收缩范围、删除多余复杂度、整理未完成计划或把方案削到可交付核心时使用。
-- 不适用：当用户要新增功能、扩展范围，或尚未有可裁剪的方案和代码时不要用。
-
-# 上游说明原文
 
 # Prune
 
-Hunt unnecessary complexity in the diff. One line per finding. Goal: shorter diff.
+在 diff 中寻找不必要的复杂性。每个发现一行。目标：缩短 diff。
 
-## Format
+## 格式
 
 `L<line>: <tag> <what>. <replacement>.`
 
-Tags: `delete`, `stdlib`, `native`, `yagni`, `shrink`
+标签：`delete`、`stdlib`、`native`、`yagni`、`shrink`
 
-## Scoring
+## 评分
 
-End with `net: -<N> lines possible.` or `Lean already. Ship.`
+以 `net: -<N> lines possible.` 或 `Lean already. Ship.` 结尾。
 
-## Boundaries
+## 边界
 
-Complexity only — correctness and security belong in `/review`. Pre-delivery constraint: `/lean`. List cuts; do not apply unless asked.
+只关注复杂性——正确性和安全性属于 `/review`。交付前约束：`/lean`。列出删减建议；除非用户要求，否则不要应用。

@@ -3,10 +3,10 @@ source_id: vendor/yugasun/triage
 files:
   - path: AGENT-BRIEF.md
     source_sha256: f0bdf175dd313a1e621d45edbdc90d0d5473aab983708ae6c4659e706984bea8
-    translation_sha256: f0bdf175dd313a1e621d45edbdc90d0d5473aab983708ae6c4659e706984bea8
+    translation_sha256: 8cae4b8b5fda465aa7ca1f655b10b960927a1de8e907951c51e638f7361225d3
   - path: OUT-OF-SCOPE.md
     source_sha256: 2de469ebd2bbc3a53caca80ed0653a9a698441c3dac35204fa080a831e8410c3
-    translation_sha256: 2de469ebd2bbc3a53caca80ed0653a9a698441c3dac35204fa080a831e8410c3
+    translation_sha256: 9b94070db03d7047275073d118db47c4d8f7d5b70f9cc9f63e5fa4a7c19d331e
   - path: SKILL.md
     source_sha256: c23f68987d5c4387c784d37f2d546c0b68e0a1bc3ecc64009277f32b82002402
-    translation_sha256: cf8bbad2c341988528366e540226bcba59c421fe02070df405d3eb37b9a11a2d
+    translation_sha256: 2eeb2b5fd62244f93c8797d5a3f7c0b9ba5dcbf461a13cf4062f21d6c16f943c

@@ -3,13 +3,13 @@ source_id: vendor/yugasun-llm-wiki-skills/llm-wiki
 files:
   - path: SKILL.md
     source_sha256: c14d4eec37b8be17074078680bf8055aaf14ee4b69e5e505925536fdbf90208d
-    translation_sha256: b3a2de740ac9d617f364dd17412d8107aff7a2cf57b2d37978eb20e65d08ce29
+    translation_sha256: 0165ca4b7d77f55e06827223a4453f1fdb20cbaa6d686217f7bedc6e8eb4b221
   - path: references/archive-template.md
     source_sha256: 0c444f0f8de500695951ee101b7c3b4ff9f0829230dde0cfb005150d7c331feb
-    translation_sha256: 0c444f0f8de500695951ee101b7c3b4ff9f0829230dde0cfb005150d7c331feb
+    translation_sha256: 91184dcb380b69b66807784ac82b725e649657e02eb095441d96daed25e334ca
   - path: references/article-template.md
     source_sha256: f50ecca0d88634699d6fe682d3c613f39ec629d58fb105c3c82bdd9d784a84b8
-    translation_sha256: f50ecca0d88634699d6fe682d3c613f39ec629d58fb105c3c82bdd9d784a84b8
+    translation_sha256: 84f0ea4178aa88d274a1f582dafc6aed74c2042f698edfa33a32fafd314e5bde
   - path: references/comparison-template.md
     source_sha256: 571999bd834b5cf3efe45cb685f9872e63a64fbbfe68fe16eaddbb0465351390
     translation_sha256: 571999bd834b5cf3efe45cb685f9872e63a64fbbfe68fe16eaddbb0465351390
@@ -21,13 +21,13 @@ files:
     translation_sha256: f6e7baaaf454d8734da5cd88f6594b173ed077c072ea080baf60d996dfd67971
   - path: references/index-template.md
     source_sha256: 78f41dce522d9e73b30a83e3d7b7ccc76766332b61d2c07e7ef38b2b45537d66
-    translation_sha256: 78f41dce522d9e73b30a83e3d7b7ccc76766332b61d2c07e7ef38b2b45537d66
+    translation_sha256: feed1091e64c0b292a818ffade7c4630a442ef04f567f8baf564ba2cea316983
   - path: references/log-template.md
     source_sha256: 500e7d4d7ecd6b313355be01b8c759c89013135ce444911241a1e16cbd2038c8
-    translation_sha256: 500e7d4d7ecd6b313355be01b8c759c89013135ce444911241a1e16cbd2038c8
+    translation_sha256: e791b304aacc3b82ed18450251b5528d8f54d906601e7eb91463472860e3da52
   - path: references/ops-loop.md
     source_sha256: 728111c3363caf45600b2740e41d91b6e6ac3ba1fc63f2a2dd5fc488a34da997
-    translation_sha256: 728111c3363caf45600b2740e41d91b6e6ac3ba1fc63f2a2dd5fc488a34da997
+    translation_sha256: c924f9d1594abf9fc7ecd15d2befbe69cb45847a2735cdfa0297fcaea2145cf3
   - path: references/query-archive-template.md
     source_sha256: eb396dee0da8102204067c3f15de98670f4601037df4cccced9c5029a39026e0
     translation_sha256: eb396dee0da8102204067c3f15de98670f4601037df4cccced9c5029a39026e0

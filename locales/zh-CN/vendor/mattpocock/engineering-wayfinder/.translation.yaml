@@ -3,4 +3,4 @@ source_id: vendor/mattpocock/engineering-wayfinder
 files:
   - path: SKILL.md
     source_sha256: bef437de697fb6984a8a90b7fd82f128609148d6e02f635ce419d03555b351e1
-    translation_sha256: 162fd1c9ee04d595028354b1866e787344d38c07531e918d4453005740e39a21
+    translation_sha256: d5624e9c35b0053588f6c56be17057c0185601e18f5476fc5ca68fdec1a96b46
