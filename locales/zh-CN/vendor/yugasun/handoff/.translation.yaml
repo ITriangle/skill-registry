@@ -1,0 +1,6 @@
+locale: zh-CN
+source_id: vendor/yugasun/handoff
+files:
+  - path: SKILL.md
+    source_sha256: 23f2655cad6b3bd2cdb9723f6b5a9b0dfb442c607d9aa9e6a3d33ff92fe0a67c
+    translation_sha256: 2e5f3583bf73dfee6f40aa7be48cdc7115d04ceaedb2b843c3ef5e1f04ab1ebf

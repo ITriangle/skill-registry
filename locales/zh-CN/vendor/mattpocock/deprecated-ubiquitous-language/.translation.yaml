@@ -1,0 +1,6 @@
+locale: zh-CN
+source_id: vendor/mattpocock/deprecated-ubiquitous-language
+files:
+  - path: SKILL.md
+    source_sha256: 2449e2345b96b9f1e861c697b5eab50d03ae1254481a4306b6f815684e523b3a
+    translation_sha256: 9d13770c76edc74daf2bacf3ff82161fc89c79c00cdc8dadfed729faf0859871

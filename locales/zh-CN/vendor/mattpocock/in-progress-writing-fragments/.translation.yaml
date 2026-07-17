@@ -1,0 +1,6 @@
+locale: zh-CN
+source_id: vendor/mattpocock/in-progress-writing-fragments
+files:
+  - path: SKILL.md
+    source_sha256: c61b6608f227b0eee1b832273360cf5088ad68c343c15ec9c06673086662e64e
+    translation_sha256: 4fbf71666c88357d96abea92bf05769cb3c49dd75fd12c720edac8824c83d743

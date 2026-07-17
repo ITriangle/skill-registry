@@ -1,0 +1,6 @@
+locale: zh-CN
+source_id: vendor/mattpocock/misc-setup-pre-commit
+files:
+  - path: SKILL.md
+    source_sha256: 872f4037cb7e6e0e340d4175c086550072959925dffc87b160d1a30dc9f63bbd
+    translation_sha256: 6f1d86c5700750e4731f53506efcffeb18c290eacc9811dc494ac503209949aa

@@ -1,0 +1,6 @@
+locale: zh-CN
+source_id: vendor/mattpocock/productivity-handoff
+files:
+  - path: SKILL.md
+    source_sha256: 57c9f1f392d7352cdc85b1e39ca49eddc70ce1dc278bd9653fb4f23dfc2560fc
+    translation_sha256: a2e137e3b5f86762718dbbaf20f93a9f31c75adf365bc4e136f5d6dbe578addb

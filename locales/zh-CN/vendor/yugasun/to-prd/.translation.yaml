@@ -1,0 +1,6 @@
+locale: zh-CN
+source_id: vendor/yugasun/to-prd
+files:
+  - path: SKILL.md
+    source_sha256: 54af7b64a84b7d4c6e86f4e30ce65332f3a26bc3eae86dfb70a6aabc7458e61c
+    translation_sha256: 4159a19e8cce242b6b48f7519d0a5a5e530d8b5578385870ed6f293837aa79cc

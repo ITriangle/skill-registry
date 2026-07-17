@@ -1,0 +1,12 @@
+locale: zh-CN
+source_id: vendor/yugasun/triage
+files:
+  - path: AGENT-BRIEF.md
+    source_sha256: f0bdf175dd313a1e621d45edbdc90d0d5473aab983708ae6c4659e706984bea8
+    translation_sha256: f0bdf175dd313a1e621d45edbdc90d0d5473aab983708ae6c4659e706984bea8
+  - path: OUT-OF-SCOPE.md
+    source_sha256: 2de469ebd2bbc3a53caca80ed0653a9a698441c3dac35204fa080a831e8410c3
+    translation_sha256: 2de469ebd2bbc3a53caca80ed0653a9a698441c3dac35204fa080a831e8410c3
+  - path: SKILL.md
+    source_sha256: c23f68987d5c4387c784d37f2d546c0b68e0a1bc3ecc64009277f32b82002402
+    translation_sha256: cf8bbad2c341988528366e540226bcba59c421fe02070df405d3eb37b9a11a2d

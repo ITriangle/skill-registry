@@ -1,0 +1,6 @@
+locale: zh-CN
+source_id: vendor/mattpocock/engineering-to-spec
+files:
+  - path: SKILL.md
+    source_sha256: 267638edd513b5918de626ad5605d261952abb7428cb308869c663ca924e93e7
+    translation_sha256: 826fa82022b12b982d917d8b151f002541a657e0a37776b3857872c65292c0c6

@@ -1,0 +1,42 @@
+locale: zh-CN
+source_id: vendor/yugasun-llm-wiki-skills/llm-wiki
+files:
+  - path: SKILL.md
+    source_sha256: c14d4eec37b8be17074078680bf8055aaf14ee4b69e5e505925536fdbf90208d
+    translation_sha256: b3a2de740ac9d617f364dd17412d8107aff7a2cf57b2d37978eb20e65d08ce29
+  - path: references/archive-template.md
+    source_sha256: 0c444f0f8de500695951ee101b7c3b4ff9f0829230dde0cfb005150d7c331feb
+    translation_sha256: 0c444f0f8de500695951ee101b7c3b4ff9f0829230dde0cfb005150d7c331feb
+  - path: references/article-template.md
+    source_sha256: f50ecca0d88634699d6fe682d3c613f39ec629d58fb105c3c82bdd9d784a84b8
+    translation_sha256: f50ecca0d88634699d6fe682d3c613f39ec629d58fb105c3c82bdd9d784a84b8
+  - path: references/comparison-template.md
+    source_sha256: 571999bd834b5cf3efe45cb685f9872e63a64fbbfe68fe16eaddbb0465351390
+    translation_sha256: 571999bd834b5cf3efe45cb685f9872e63a64fbbfe68fe16eaddbb0465351390
+  - path: references/concept-template.md
+    source_sha256: 86901b5bfe934efb716383cb0859443db15d3976c5773f558f4517f38aa96547
+    translation_sha256: 86901b5bfe934efb716383cb0859443db15d3976c5773f558f4517f38aa96547
+  - path: references/entity-template.md
+    source_sha256: f6e7baaaf454d8734da5cd88f6594b173ed077c072ea080baf60d996dfd67971
+    translation_sha256: f6e7baaaf454d8734da5cd88f6594b173ed077c072ea080baf60d996dfd67971
+  - path: references/index-template.md
+    source_sha256: 78f41dce522d9e73b30a83e3d7b7ccc76766332b61d2c07e7ef38b2b45537d66
+    translation_sha256: 78f41dce522d9e73b30a83e3d7b7ccc76766332b61d2c07e7ef38b2b45537d66
+  - path: references/log-template.md
+    source_sha256: 500e7d4d7ecd6b313355be01b8c759c89013135ce444911241a1e16cbd2038c8
+    translation_sha256: 500e7d4d7ecd6b313355be01b8c759c89013135ce444911241a1e16cbd2038c8
+  - path: references/ops-loop.md
+    source_sha256: 728111c3363caf45600b2740e41d91b6e6ac3ba1fc63f2a2dd5fc488a34da997
+    translation_sha256: 728111c3363caf45600b2740e41d91b6e6ac3ba1fc63f2a2dd5fc488a34da997
+  - path: references/query-archive-template.md
+    source_sha256: eb396dee0da8102204067c3f15de98670f4601037df4cccced9c5029a39026e0
+    translation_sha256: eb396dee0da8102204067c3f15de98670f4601037df4cccced9c5029a39026e0
+  - path: references/raw-template.md
+    source_sha256: d5c4bacb93c4c9bdf0f92ff21e92d58f986280891d0cad933cd32c54df0bec32
+    translation_sha256: d5c4bacb93c4c9bdf0f92ff21e92d58f986280891d0cad933cd32c54df0bec32
+  - path: references/source-adapters.md
+    source_sha256: 523a52e83369d839475262e6c6512999b24d56aefd8d84a79baba5b73338b878
+    translation_sha256: 151dfd547e304008d61b13e8bc39017ca7fd345e7dbfcb34854694817e5d31b5
+  - path: references/synthesis-template.md
+    source_sha256: 9d8366e043d82176dffe9edeb830429ae47fab9281153bf5de559d4e94b56a09
+    translation_sha256: 9d8366e043d82176dffe9edeb830429ae47fab9281153bf5de559d4e94b56a09

@@ -1,0 +1,21 @@
+locale: zh-CN
+source_id: vendor/mattpocock/engineering-setup-matt-pocock-skills
+files:
+  - path: SKILL.md
+    source_sha256: 8cd1fa43ff89492320404e5b18fb06d9488256be5dffc291ff038fc98bb98fb9
+    translation_sha256: b7c31e9516a51a907f9942421b5dd36b1756de355c7a1fd2643ddf9accfd78c6
+  - path: domain.md
+    source_sha256: 25be404b58798b3cb2d51c93dba2ab052fc3a425632185726ac3f5fcff193b99
+    translation_sha256: 25be404b58798b3cb2d51c93dba2ab052fc3a425632185726ac3f5fcff193b99
+  - path: issue-tracker-github.md
+    source_sha256: 52e9f9f1ec0f6d47c6785ac500708ac0521f34abb4cc5475b5dc747165dab17e
+    translation_sha256: 52e9f9f1ec0f6d47c6785ac500708ac0521f34abb4cc5475b5dc747165dab17e
+  - path: issue-tracker-gitlab.md
+    source_sha256: 4470f2f64d015fba01af877233296b401bb0d44b5acb9572ffc3ff6b30e8de88
+    translation_sha256: 4470f2f64d015fba01af877233296b401bb0d44b5acb9572ffc3ff6b30e8de88
+  - path: issue-tracker-local.md
+    source_sha256: e0dd9835e3658909132058e9a5fdd851e972220bbadaf78a57e3c6220d470922
+    translation_sha256: e0dd9835e3658909132058e9a5fdd851e972220bbadaf78a57e3c6220d470922
+  - path: triage-labels.md
+    source_sha256: 4f53c9b40ce2651e3611aa090eaedbd6dbc9b71ef8c5f7e65eac0d8263190d0d
+    translation_sha256: 4f53c9b40ce2651e3611aa090eaedbd6dbc9b71ef8c5f7e65eac0d8263190d0d

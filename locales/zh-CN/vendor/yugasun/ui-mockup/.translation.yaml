@@ -1,0 +1,6 @@
+locale: zh-CN
+source_id: vendor/yugasun/ui-mockup
+files:
+  - path: SKILL.md
+    source_sha256: 00b78cbac3d4f7fc40fb7bc25116768ec0ca35aea16175281a0092e0c8269f14
+    translation_sha256: 40cba60b3182ff97da9c3b090b6f5e1c6df9c8b25851365bad61e675b3dc4e43

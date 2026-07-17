@@ -1,0 +1,6 @@
+locale: zh-CN
+source_id: vendor/yugasun/prototype
+files:
+  - path: SKILL.md
+    source_sha256: cea4ce273e52bdb3f635b255254fa1e4435b4d3605c80f7aaeb91bd6fbd758ee
+    translation_sha256: 00ad482138b110ac13aedfb5be836e5f0b9f9a6b55340f3f197c8896b7412273

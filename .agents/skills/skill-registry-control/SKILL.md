@@ -21,6 +21,7 @@ Before changing the registry, inspect:
 - `skill-groups.yaml`
 - the relevant `sources/<source>.yaml`
 - the relevant `projects/<project>.yaml`
+- the relevant `locales/zh-CN/vendor/<source>/<skill>/` mirror
 
 Read [references/registry-operations.md](references/registry-operations.md) when performing registration, same-name merge decisions, project activation, refresh, or audit work.
 
@@ -39,6 +40,8 @@ Read [references/registry-operations.md](references/registry-operations.md) when
    - Use `--source <source>` for an intentional non-default source.
    - Preserve exact IDs when the user provides one.
 5. After registry changes, run focused validation:
+   - Update every changed skill's Chinese documentation mirror, then run `bin/skillctl translation-stamp <skill-id>`.
+   - Run `bin/skillctl translation-audit` before refresh, project audit, or sync.
    - `bin/skillctl refresh-groups` after imports or metadata edits.
    - `bin/skillctl alternatives <skill-name>` for duplicate-name work.
    - `bin/skillctl audit <project> --allow-candidate` for project manifests using candidate skills.
@@ -52,3 +55,4 @@ Read [references/registry-operations.md](references/registry-operations.md) when
 - When multiple sources share the same skill name, explain the difference and recommendation in the final answer.
 - Keep `analysis-only` and `deprecated` skills out of project activation unless explicitly requested.
 - Use `--allow-candidate` only because current registry entries are intentionally still candidates; do not silently promote them to `approved`.
+- Keep Chinese mirrors review-only: translate `SKILL.md` and Markdown/TXT documentation, preserve identifiers and links, and never register or activate files from `locales/`.

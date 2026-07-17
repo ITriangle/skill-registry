@@ -1,0 +1,6 @@
+locale: zh-CN
+source_id: vendor/yugasun/diagnosing-bugs
+files:
+  - path: SKILL.md
+    source_sha256: c776e9280d8d7ef27290391637aeafb53ce0abfb36b6557287ef26a1c84ecc81
+    translation_sha256: 377482a0594aae87ae7bf2699e9a804bccecb14f00f2c1b73368905fb119ec27

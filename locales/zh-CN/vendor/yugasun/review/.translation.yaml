@@ -1,0 +1,6 @@
+locale: zh-CN
+source_id: vendor/yugasun/review
+files:
+  - path: SKILL.md
+    source_sha256: 4a22985296e106009c2a0edf2bb767b7589072600ea45613e22a11897d9ff765
+    translation_sha256: 6a06c73d2dbffa97936d504d7edf0f14cdb577c16c9d54907353690edf2d4d9c

@@ -1,0 +1,6 @@
+locale: zh-CN
+source_id: vendor/mattpocock/personal-obsidian-vault
+files:
+  - path: SKILL.md
+    source_sha256: 7bed1d552aa5e9345e493cd62cb13e65c5d829d153c349afdb2cb91c809fa6c4
+    translation_sha256: 2445132e39f2ede298b7b7b0be537e9803db3587454c3801d92d4bcce1dd2db4

@@ -1,0 +1,6 @@
+locale: zh-CN
+source_id: vendor/mattpocock/engineering-research
+files:
+  - path: SKILL.md
+    source_sha256: af378829f015775a3bcd65ff466826722e99359017ae6bae227ca4c9bd14049c
+    translation_sha256: a87c88eb0d5d11bda77731818f7543db5519fe18a051eb883c9283e37a1804d4

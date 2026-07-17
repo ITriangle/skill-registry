@@ -1,0 +1,9 @@
+locale: zh-CN
+source_id: vendor/yugasun/architect-design
+files:
+  - path: SKILL.md
+    source_sha256: a00ba856d2686e6810a113256aaa290820f453b9a1b7e3442ec3083ddc4a8ccd
+    translation_sha256: 78855e7f7c6bf76c9bbb5b2080d1a424bb403db2124c00c1b6291d223aa508ee
+  - path: design-vocabulary.md
+    source_sha256: 2fa3ed0b5b505914642524cd9518c21a7eb3c9666c26022721bd5f1b8ec23490
+    translation_sha256: 2fa3ed0b5b505914642524cd9518c21a7eb3c9666c26022721bd5f1b8ec23490

@@ -1,0 +1,6 @@
+locale: zh-CN
+source_id: vendor/mattpocock/engineering-ask-matt
+files:
+  - path: SKILL.md
+    source_sha256: b7dbb3249695841cf28f87555acc77dc630dafba0f1d544ecce252ff63b0933e
+    translation_sha256: 204ac3aca9bda03d8e6e7bf5e2aa8c7aa4ed34c545c452afb6c85f02b9138412

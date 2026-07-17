@@ -1,0 +1,6 @@
+locale: zh-CN
+source_id: vendor/mattpocock/deprecated-request-refactor-plan
+files:
+  - path: SKILL.md
+    source_sha256: d59de4ba6cc1fe2dd267e8b9b5a1fd88e3e739e2130bc9dd78061d2a072830b8
+    translation_sha256: cfb1fdcc11efbce42b3a76b3b1739428c0456631c8c1578861c2df13233b8006

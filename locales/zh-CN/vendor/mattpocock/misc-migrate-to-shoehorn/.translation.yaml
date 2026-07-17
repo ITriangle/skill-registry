@@ -1,0 +1,6 @@
+locale: zh-CN
+source_id: vendor/mattpocock/misc-migrate-to-shoehorn
+files:
+  - path: SKILL.md
+    source_sha256: de4da4c11d924fac79c924b2ee3d2db4a5cb98386eb490a599119463d036ae72
+    translation_sha256: 993e36d1efb06bc77111115ac8b3a401b3eeba018d07cf8af9d0fe787627e40c

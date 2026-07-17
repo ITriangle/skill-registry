@@ -1,0 +1,27 @@
+locale: zh-CN
+source_id: vendor/yugasun/aiops-setup
+files:
+  - path: SKILL.md
+    source_sha256: ecc6ccc2d45b329dfda7b861dba35f969d6913415e5652d48b03452f87944f2f
+    translation_sha256: f160955c57a598c510ce102a172b0419b67de3b5ea25326bf0122ba6989274b0
+  - path: aiops-yaml.md
+    source_sha256: faa184ad5ae4503bb39866b5debf9c75023f91a197dc946736210917b9dfef73
+    translation_sha256: faa184ad5ae4503bb39866b5debf9c75023f91a197dc946736210917b9dfef73
+  - path: constitution-template.md
+    source_sha256: c0e3ab534c39b58c892d4395e9ffa83a8f98ee3c6d25990efc8e2caaf3e0d1e3
+    translation_sha256: c0e3ab534c39b58c892d4395e9ffa83a8f98ee3c6d25990efc8e2caaf3e0d1e3
+  - path: domain.md
+    source_sha256: 57b9f0c8395462eb98aeca50751a2ecf218112dd1d429c26593ba79db1a82aca
+    translation_sha256: 57b9f0c8395462eb98aeca50751a2ecf218112dd1d429c26593ba79db1a82aca
+  - path: issue-tracker-github.md
+    source_sha256: 1e7ac76d3dd7f0ce41d6bf86912619a4bac164a70c6e246ae48f6825e222d56d
+    translation_sha256: 1e7ac76d3dd7f0ce41d6bf86912619a4bac164a70c6e246ae48f6825e222d56d
+  - path: issue-tracker-gitlab.md
+    source_sha256: 6282954685bf55b7da7fad9f45dc4226d39e498ebaee1e06372708033fa40a09
+    translation_sha256: 6282954685bf55b7da7fad9f45dc4226d39e498ebaee1e06372708033fa40a09
+  - path: issue-tracker-local.md
+    source_sha256: 9a052f4599525e581721ec24cb2ae3e0296b79053e39f684b540d34d3a4f6528
+    translation_sha256: 9a052f4599525e581721ec24cb2ae3e0296b79053e39f684b540d34d3a4f6528
+  - path: triage-labels.md
+    source_sha256: e856715708ed41e787b34ccca846cc912caf1756c4dc1db9293cb7c6263f9434
+    translation_sha256: e856715708ed41e787b34ccca846cc912caf1756c4dc1db9293cb7c6263f9434

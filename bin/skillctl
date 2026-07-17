@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import hashlib
 import os
 import re
 import shutil
@@ -21,6 +22,8 @@ SOURCES_DIR = ROOT / "sources"
 SKILLS_DIR = ROOT / "skills"
 ANALYSIS_DIR = ROOT / "analysis"
 GROUPS_FILE = ROOT / "skill-groups.yaml"
+LOCALES_DIR = ROOT / "locales"
+DEFAULT_LOCALE = "zh-CN"
 VALID_STATUSES = {"analysis-only", "candidate", "approved", "deprecated"}
 STATUS_RANK = {"approved": 0, "candidate": 1, "analysis-only": 2, "deprecated": 3}
 USAGE_GUIDANCE = {
@@ -235,6 +238,14 @@ class SkillctlError(Exception):
     pass
 
 
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
 def die(message: str, code: int = 1) -> None:
     print(f"error: {message}", file=sys.stderr)
     raise SystemExit(code)
@@ -348,6 +359,207 @@ def skill_path(skill_id: str) -> Path:
     except ValueError as exc:
         raise SkillctlError(f"skill id escapes registry root: {skill_id}") from exc
     return path
+
+
+def locale_root(locale: str) -> Path:
+    if not re.fullmatch(r"[A-Za-z]{2,3}(?:-[A-Za-z0-9]{2,8})*", locale):
+        raise SkillctlError(f"invalid locale: {locale}")
+    return LOCALES_DIR / locale
+
+
+def translated_skill_path(skill_id: str, locale: str) -> Path:
+    clean_id = skill_id.strip("/")
+    if clean_id.startswith("skills/"):
+        clean_id = clean_id.removeprefix("skills/")
+    path = (locale_root(locale) / clean_id).resolve()
+    try:
+        path.relative_to(locale_root(locale).resolve())
+    except ValueError as exc:
+        raise SkillctlError(f"translated skill id escapes locale root: {skill_id}") from exc
+    return path
+
+
+def translatable_files(skill_id: str) -> list[Path]:
+    base = skill_path(skill_id)
+    result = []
+    for path in base.rglob("*"):
+        if not path.is_file() or path.suffix.lower() not in {".md", ".txt"}:
+            continue
+        if path.name.lower().startswith("license"):
+            continue
+        result.append(path.relative_to(base))
+    return sorted(result, key=lambda item: item.as_posix())
+
+
+def translation_manifest_path(skill_id: str, locale: str) -> Path:
+    return translated_skill_path(skill_id, locale) / ".translation.yaml"
+
+
+def translation_manifest_entries(skill_id: str, locale: str) -> tuple[dict[str, str], dict[str, dict[str, str]]]:
+    manifest = translation_manifest_path(skill_id, locale)
+    if not manifest.exists():
+        return {}, {}
+    data = parse_simple_yaml(manifest)
+    entries: dict[str, dict[str, str]] = {}
+    for item in data.get("files", []):
+        if not isinstance(item, dict) or "path" not in item:
+            raise SkillctlError(f"invalid translation entry in {manifest}: {item}")
+        rel = str(item["path"])
+        entries[rel] = {str(key): str(value) for key, value in item.items()}
+    header = {
+        "locale": str(data.get("locale", "")),
+        "source_id": str(data.get("source_id", "")),
+    }
+    return header, entries
+
+
+def markdown_links(text: str) -> set[str]:
+    links: set[str] = set()
+    for target in re.findall(r"(?<!!)\[[^\]]*\]\(([^)]+)\)", text):
+        target = target.strip().split(maxsplit=1)[0].strip("<>")
+        if target and not target.startswith(("#", "/")) and "://" not in target:
+            links.add(target)
+    return links
+
+
+def translation_content_problems(skill_id: str, locale: str) -> list[str]:
+    source_dir = skill_path(skill_id)
+    translated_dir = translated_skill_path(skill_id, locale)
+    expected = {path.as_posix() for path in translatable_files(skill_id)}
+    problems: list[str] = []
+
+    if not translated_dir.exists():
+        return [f"missing translated skill directory: {skill_id} ({locale})"]
+
+    actual = {
+        path.relative_to(translated_dir).as_posix()
+        for path in translated_dir.rglob("*")
+        if path.is_file() and path.suffix.lower() in {".md", ".txt"}
+    }
+    for rel in sorted(expected - actual):
+        problems.append(f"missing translation: {skill_id}:{rel}")
+    for rel in sorted(actual - expected):
+        problems.append(f"orphan translation: {skill_id}:{rel}")
+
+    source_skill = source_dir / "SKILL.md"
+    translated_skill = translated_dir / "SKILL.md"
+    if translated_skill.exists():
+        try:
+            source_meta = parse_front_matter(read_text(source_skill))
+            translated_meta = parse_front_matter(read_text(translated_skill))
+            if translated_meta.get("name") != source_meta.get("name"):
+                problems.append(f"translated skill name changed: {skill_id}")
+            if not re.search(r"[\u3400-\u9fff]", translated_meta.get("description", "")):
+                problems.append(f"translated description is not Chinese: {skill_id}")
+        except SkillctlError as exc:
+            problems.append(f"invalid translated SKILL.md for {skill_id}: {exc}")
+
+    for rel in sorted(expected & actual):
+        source_file = source_dir / rel
+        translated_file = translated_dir / rel
+        if source_file.suffix.lower() != ".md":
+            continue
+        source_links = markdown_links(read_text(source_file))
+        translated_links = markdown_links(read_text(translated_file))
+        for link in sorted(source_links):
+            clean = link.split("#", 1)[0].split("?", 1)[0]
+            if not clean:
+                continue
+            source_target = (source_file.parent / clean).resolve()
+            if source_target.exists() and link not in translated_links:
+                problems.append(f"translated link changed or missing: {skill_id}:{rel} -> {link}")
+                continue
+            target_is_translatable = (
+                source_target.exists()
+                and source_target.is_file()
+                and source_target.suffix.lower() in {".md", ".txt"}
+                and not source_target.name.lower().startswith("license")
+            )
+            if target_is_translatable:
+                translated_target = (translated_file.parent / clean).resolve()
+                if not translated_target.exists():
+                    problems.append(f"broken translated link: {skill_id}:{rel} -> {link}")
+    return problems
+
+
+def translation_problems(skill_id: str, locale: str) -> list[str]:
+    problems = translation_content_problems(skill_id, locale)
+    manifest = translation_manifest_path(skill_id, locale)
+    if not manifest.exists():
+        problems.append(f"missing translation manifest: {skill_id} ({locale})")
+        return problems
+
+    try:
+        header, entries = translation_manifest_entries(skill_id, locale)
+    except SkillctlError as exc:
+        problems.append(str(exc))
+        return problems
+
+    if header.get("locale") != locale:
+        problems.append(f"translation manifest locale mismatch: {skill_id}")
+    if header.get("source_id") != skill_id:
+        problems.append(f"translation manifest source mismatch: {skill_id}")
+
+    expected = {path.as_posix() for path in translatable_files(skill_id)}
+    for rel in sorted(expected - set(entries)):
+        problems.append(f"translation manifest missing file: {skill_id}:{rel}")
+    for rel in sorted(set(entries) - expected):
+        problems.append(f"translation manifest has orphan file: {skill_id}:{rel}")
+    for rel in sorted(expected & set(entries)):
+        source_file = skill_path(skill_id) / rel
+        translated_file = translated_skill_path(skill_id, locale) / rel
+        if not translated_file.exists():
+            continue
+        entry = entries[rel]
+        if entry.get("source_sha256") != sha256_file(source_file):
+            problems.append(f"stale translation source hash: {skill_id}:{rel}")
+        if entry.get("translation_sha256") != sha256_file(translated_file):
+            problems.append(f"unstamped translation change: {skill_id}:{rel}")
+    return problems
+
+
+def dump_translation_manifest(skill_id: str, locale: str) -> str:
+    source_dir = skill_path(skill_id)
+    translated_dir = translated_skill_path(skill_id, locale)
+    lines = [f"locale: {locale}", f"source_id: {skill_id}", "files:"]
+    for rel_path in translatable_files(skill_id):
+        rel = rel_path.as_posix()
+        translated_file = translated_dir / rel_path
+        if not translated_file.exists():
+            raise SkillctlError(f"cannot stamp missing translation: {skill_id}:{rel}")
+        lines.extend(
+            [
+                f"  - path: {rel}",
+                f"    source_sha256: {sha256_file(source_dir / rel_path)}",
+                f"    translation_sha256: {sha256_file(translated_file)}",
+            ]
+        )
+    return "\n".join(lines) + "\n"
+
+
+def all_translation_problems(locale: str) -> list[str]:
+    problems: list[str] = []
+    records = skill_records()
+    expected_ids = {record["id"] for record in records}
+    for record in records:
+        problems.extend(translation_problems(record["id"], locale))
+    vendor_root = locale_root(locale) / "vendor"
+    if vendor_root.exists():
+        for translated_dir in sorted(vendor_root.glob("*/*")):
+            if not translated_dir.is_dir():
+                continue
+            translated_id = translated_dir.relative_to(locale_root(locale)).as_posix()
+            if translated_id not in expected_ids:
+                problems.append(f"orphan translated skill directory: {translated_id} ({locale})")
+    return problems
+
+
+def require_translation_audit(locale: str = DEFAULT_LOCALE) -> None:
+    problems = all_translation_problems(locale)
+    if problems:
+        for problem in problems:
+            print(f"translation problem: {problem}", file=sys.stderr)
+        raise SystemExit(1)
 
 
 def validate_skill_dir(path: Path) -> dict[str, str]:
@@ -702,7 +914,50 @@ def command_list(_: argparse.Namespace) -> None:
         print(f"{record['id']}\t{record['status']}\t{record['name']}")
 
 
+def command_translation_status(args: argparse.Namespace) -> None:
+    if not args.skill:
+        problems = all_translation_problems(args.locale)
+        if problems:
+            for problem in problems:
+                print(f"problem: {problem}")
+            raise SystemExit(1)
+        print(f"ok: {args.locale} ({len(skill_records())} skills)")
+        return
+
+    ids = [resolve_skill_ref(args.skill)]
+    problems: list[str] = []
+    for skill_id in ids:
+        skill_problems = translation_problems(skill_id, args.locale)
+        if skill_problems:
+            problems.extend(skill_problems)
+        else:
+            print(f"ok: {skill_id} ({args.locale})")
+    if problems:
+        for problem in problems:
+            print(f"problem: {problem}")
+        raise SystemExit(1)
+
+
+def command_translation_stamp(args: argparse.Namespace) -> None:
+    skill_id = resolve_skill_ref(args.skill)
+    problems = translation_content_problems(skill_id, args.locale)
+    if problems:
+        for problem in problems:
+            print(f"translation problem: {problem}", file=sys.stderr)
+        raise SystemExit(1)
+    manifest = translation_manifest_path(skill_id, args.locale)
+    manifest.parent.mkdir(parents=True, exist_ok=True)
+    manifest.write_text(dump_translation_manifest(skill_id, args.locale), encoding="utf-8")
+    print(f"stamped: {skill_id} ({args.locale})")
+
+
+def command_translation_audit(args: argparse.Namespace) -> None:
+    require_translation_audit(args.locale)
+    print(f"ok: {args.locale} ({len(skill_records())} skills)")
+
+
 def command_audit(args: argparse.Namespace) -> None:
+    require_translation_audit(DEFAULT_LOCALE)
     data = load_project(args.project)
     project_root = Path(str(data["path"])).expanduser().resolve()
     ids = project_skill_ids(data)
@@ -854,6 +1109,15 @@ def command_import(args: argparse.Namespace) -> None:
         shutil.copytree(upstream_skill, dest, symlinks=True)
     validate_skill_dir(dest)
     update_source_metadata(args)
+    problems = translation_problems(args.skill_id, DEFAULT_LOCALE)
+    if problems:
+        for problem in problems:
+            print(f"translation problem: {problem}", file=sys.stderr)
+        print(
+            f"imported source but translation requires update: {args.skill_id}",
+            file=sys.stderr,
+        )
+        raise SystemExit(1)
     write_skill_groups()
     print(f"imported: {args.skill_id}")
 
@@ -932,6 +1196,7 @@ def command_analyze(args: argparse.Namespace) -> None:
 
 
 def command_refresh_groups(_: argparse.Namespace) -> None:
+    require_translation_audit(DEFAULT_LOCALE)
     write_skill_groups()
     print(f"groups written: {GROUPS_FILE}")
 
@@ -976,6 +1241,20 @@ def build_parser() -> argparse.ArgumentParser:
 
     list_p = sub.add_parser("list", help="List vendored skills")
     list_p.set_defaults(func=command_list)
+
+    translation_status_p = sub.add_parser("translation-status", help="Show translation mirror status")
+    translation_status_p.add_argument("skill", nargs="?")
+    translation_status_p.add_argument("--locale", default=DEFAULT_LOCALE)
+    translation_status_p.set_defaults(func=command_translation_status)
+
+    translation_stamp_p = sub.add_parser("translation-stamp", help="Stamp a reviewed translation mirror")
+    translation_stamp_p.add_argument("skill")
+    translation_stamp_p.add_argument("--locale", default=DEFAULT_LOCALE)
+    translation_stamp_p.set_defaults(func=command_translation_stamp)
+
+    translation_audit_p = sub.add_parser("translation-audit", help="Audit all translation mirrors")
+    translation_audit_p.add_argument("--locale", default=DEFAULT_LOCALE)
+    translation_audit_p.set_defaults(func=command_translation_audit)
 
     audit_p = sub.add_parser("audit", help="Audit a project manifest")
     audit_p.add_argument("project")

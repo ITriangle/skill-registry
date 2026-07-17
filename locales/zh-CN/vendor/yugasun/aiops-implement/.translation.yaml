@@ -1,0 +1,6 @@
+locale: zh-CN
+source_id: vendor/yugasun/aiops-implement
+files:
+  - path: SKILL.md
+    source_sha256: 9e99a34eebd011b4c0873049a0a84b1aaaa7d016a06a1210468b309f850e1c0a
+    translation_sha256: 8ee2bfbdd60f6d443e2e3dccfd9bd9a94cb3fb1cfc7d042bae03f9d0306e8c94

@@ -1,0 +1,9 @@
+locale: zh-CN
+source_id: vendor/mattpocock/engineering-improve-codebase-architecture
+files:
+  - path: HTML-REPORT.md
+    source_sha256: 0b0936104158abeef7246ff6cbabefa4dc055f17589f2833f2d93001421910a1
+    translation_sha256: 0b0936104158abeef7246ff6cbabefa4dc055f17589f2833f2d93001421910a1
+  - path: SKILL.md
+    source_sha256: 0026900866ed2a542af0559cef11dd7ae707633b75cc6f668c2e7c0a33e35032
+    translation_sha256: b0724e1fa874d7706fcfe5a6091c792d10f0b7cc317f0f8deade4cfb28328412

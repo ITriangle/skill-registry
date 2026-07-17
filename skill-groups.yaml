@@ -43,7 +43,7 @@ groups:
     default_id: vendor/mattpocock/engineering-ask-matt
     variants: vendor/mattpocock/engineering-ask-matt
     sources: mattpocock
-    dependencies: code-review,codebase-design,diagnosing-bugs,domain-modeling,grill-me,grill-with-docs,grilling,handoff,implement,improve-codebase-architecture,prototype,research,setup-matt-pocock-skills,tdd,teach,to-issues,to-prd,triage,writing-great-skills
+    dependencies: code-review,codebase-design,diagnosing-bugs,domain-modeling,grill-me,grill-with-docs,grilling,handoff,implement,improve-codebase-architecture,prototype,research,setup-matt-pocock-skills,tdd,teach,to-spec,to-tickets,triage,wayfinder,writing-great-skills
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     use_when: 当用户不确定该使用哪个 Matt Pocock skill 或工程流程，需要先做 skill 路由判断时使用。
@@ -253,6 +253,7 @@ groups:
     default_id: vendor/yugasun-llm-wiki-skills/llm-wiki
     variants: vendor/yugasun-llm-wiki-skills/llm-wiki
     sources: yugasun-llm-wiki-skills
+    dependencies: none
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     use_when: 当用户需求匹配默认 skill 描述时使用：构建并维护由 LLM 维护的个人知识库。触发：摄取来源进 wiki、查询 wiki 知识、lint 质量、'加入 wiki'、'关于 X 我知道什么'，或提到 LLM wiki / Karpathy wiki。
@@ -432,6 +433,7 @@ groups:
     default_id: vendor/mattpocock/engineering-to-spec
     variants: vendor/mattpocock/engineering-to-spec
     sources: mattpocock
+    dependencies: setup-matt-pocock-skills
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     use_when: 当用户需求匹配默认 skill 描述时使用：Turn the current conversation into a spec and publish it to the project issue tracker — no interview, just synthesis of what you've already discussed.
@@ -441,6 +443,7 @@ groups:
     default_id: vendor/mattpocock/engineering-to-tickets
     variants: vendor/mattpocock/engineering-to-tickets
     sources: mattpocock
+    dependencies: implement,setup-matt-pocock-skills
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     use_when: 当用户需求匹配默认 skill 描述时使用：Break a plan, spec, or the current conversation into a set of tracer-bullet tickets, each declaring its blocking edges, published to the configured tracker — edges as text in a local file, or native blocking links on a real tracker.
@@ -480,7 +483,7 @@ groups:
     default_id: vendor/mattpocock/engineering-wayfinder
     variants: vendor/mattpocock/engineering-wayfinder
     sources: mattpocock
-    dependencies: domain-modeling,grilling,prototype
+    dependencies: domain-modeling,grilling,prototype,setup-matt-pocock-skills
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     use_when: 当目标很大、超过单次 agent session，需要先建立调查票据地图并逐步厘清路径时使用。

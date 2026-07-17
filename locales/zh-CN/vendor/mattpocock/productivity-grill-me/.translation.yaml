@@ -1,0 +1,6 @@
+locale: zh-CN
+source_id: vendor/mattpocock/productivity-grill-me
+files:
+  - path: SKILL.md
+    source_sha256: 6189dfceb7304a6e5558f75d87e68fa3bc7fcf7ba120e44f21f8a61fe01eba54
+    translation_sha256: 327469c80de7a2117e275226cee96f40eba9f4194a4277eae60d54d4d825c652

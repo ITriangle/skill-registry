@@ -1,0 +1,12 @@
+locale: zh-CN
+source_id: vendor/yugasun/improve-codebase-architecture
+files:
+  - path: HTML-REPORT.md
+    source_sha256: e884f957928b880ec5f3beb2b55f9fd8e2c247bc2eaa1eac76a372defc87af17
+    translation_sha256: e884f957928b880ec5f3beb2b55f9fd8e2c247bc2eaa1eac76a372defc87af17
+  - path: SKILL.md
+    source_sha256: 13e02cd122c8fb1c6e17cdb46addd6ece3ad83d53eaf343b414f05df54985396
+    translation_sha256: 351c57fdc5b0321d3394fee2a36dc95f9ac4e2304efae4cee5a4bb7216a913c8
+  - path: sweep-patterns.md
+    source_sha256: c6407be0e25ad8216dd59708a8aa1bc46ddfd7c3dcc510535b7c519d82ec9f65
+    translation_sha256: c6407be0e25ad8216dd59708a8aa1bc46ddfd7c3dcc510535b7c519d82ec9f65

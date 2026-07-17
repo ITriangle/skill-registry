@@ -1,0 +1,18 @@
+locale: zh-CN
+source_id: vendor/yugasun/code-graph
+files:
+  - path: SKILL.md
+    source_sha256: 9b4c070265a54594712e8d6823ce2158a16c16edbad03cbefd4af61635da91fa
+    translation_sha256: 1de2cfdbc5e1e306ee1140a1cfd696544fa36f54cf89c76ad341328994f56708
+  - path: build-steps.md
+    source_sha256: 516f1f111dfaf342fc1e98ebc47b438bc2fce03ce7e5be72600d9a08581b1f72
+    translation_sha256: 516f1f111dfaf342fc1e98ebc47b438bc2fce03ce7e5be72600d9a08581b1f72
+  - path: graph-schema.md
+    source_sha256: d1014332916117d2539013ddec30c7df85df27435f07d4fdf58bd80b5fc30290
+    translation_sha256: d1014332916117d2539013ddec30c7df85df27435f07d4fdf58bd80b5fc30290
+  - path: prerequisites.md
+    source_sha256: 52b59afc1856c96b2afb4ef7b713e5923df6d90c6d665813439bc2101878a67d
+    translation_sha256: 52b59afc1856c96b2afb4ef7b713e5923df6d90c6d665813439bc2101878a67d
+  - path: query-patterns.md
+    source_sha256: e4ba9e9d9f47816e955ad2fa5f07dc25891a0dded83d5ad2bcb82d2d38160223
+    translation_sha256: e4ba9e9d9f47816e955ad2fa5f07dc25891a0dded83d5ad2bcb82d2d38160223

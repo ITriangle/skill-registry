@@ -1,0 +1,6 @@
+locale: zh-CN
+source_id: vendor/mattpocock/misc-git-guardrails-claude-code
+files:
+  - path: SKILL.md
+    source_sha256: 03c4de7613c712aea336d64c467ea3ed14be2cbd52345925fe949c75c01c29f7
+    translation_sha256: 66ac77af10e5ce25d57312cb597abac10cbf0059c34294d8c556c5fbabf0efea

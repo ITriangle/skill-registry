@@ -12,6 +12,7 @@ symlinks under that project's `.agents/skills` directory.
 - `sources/<source>.yaml` - upstream provenance and import metadata.
 - `projects/<project-slug>.yaml` - project activation manifests.
 - `analysis/<source>/<skill>.md` - skill review reports.
+- `locales/zh-CN/vendor/<source>/<skill>/` - read-only Chinese documentation mirrors.
 - `skill-groups.yaml` - merged same-name skill index and default source.
 - `bin/skillctl` - import, analyze, audit, enable, disable, and sync command.
 
@@ -52,6 +53,26 @@ symlinks under that project's `.agents/skills` directory.
    ```bash
    bin/skillctl sync noeticai
    ```
+
+## Chinese documentation mirrors
+
+Every registered skill has a Chinese documentation mirror under
+`locales/zh-CN/vendor/<source>/<skill>/`. Mirrors include `SKILL.md` and other
+Markdown/TXT documentation, but exclude licenses, scripts, and code. They are
+review-only artifacts: discovery and project sync continue to use the English
+files under `skills/vendor/`.
+
+After importing or editing a vendored skill, update its mirror and stamp the
+reviewed source/translation hashes:
+
+```bash
+bin/skillctl translation-status vendor/openai/example-skill
+bin/skillctl translation-stamp vendor/openai/example-skill
+bin/skillctl translation-audit
+```
+
+`import`, `refresh-groups`, project `audit`, and `sync` fail while any required
+Chinese mirror is missing or stale.
 
 ## Project manifest
 
@@ -130,5 +151,6 @@ Use `--source` only when the project intentionally wants a non-default source.
 - Only project symlinks under `.agents/skills` activate skills.
 - `sync` only manages symlinks that point back into this registry.
 - `audit` reports project manifests that omit explicit skill dependencies.
+- Translation mirrors never become project symlink targets.
 - By default, `sync` refuses skills that are not marked `approved` in source
   metadata. Use `--allow-candidate` only for explicit experiments.

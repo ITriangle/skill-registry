@@ -1,0 +1,18 @@
+locale: zh-CN
+source_id: vendor/mattpocock/productivity-teach
+files:
+  - path: GLOSSARY-FORMAT.md
+    source_sha256: d177def491519d97873291f2e860d8f1d60ead78feecb82eee022177958069c6
+    translation_sha256: d177def491519d97873291f2e860d8f1d60ead78feecb82eee022177958069c6
+  - path: LEARNING-RECORD-FORMAT.md
+    source_sha256: 855f81017625256584bbf62bd5edb9b0c86605c4cc1139c56acc36b802595d17
+    translation_sha256: 855f81017625256584bbf62bd5edb9b0c86605c4cc1139c56acc36b802595d17
+  - path: MISSION-FORMAT.md
+    source_sha256: 8da6d3ac84eb2eb19f17c260b6acf01c560d3ac7a4501c415eea0e985602f4d7
+    translation_sha256: 8da6d3ac84eb2eb19f17c260b6acf01c560d3ac7a4501c415eea0e985602f4d7
+  - path: RESOURCES-FORMAT.md
+    source_sha256: 2bc634a64b0d0daa10904f9222e7aa0d361420dfacabbf092fbe3a72222edc08
+    translation_sha256: 2bc634a64b0d0daa10904f9222e7aa0d361420dfacabbf092fbe3a72222edc08
+  - path: SKILL.md
+    source_sha256: 6d2dbe5e03084cf26fef66b535127b36cd1bcbe9478e26b0626029cd51dc2259
+    translation_sha256: b9d0c47f4f2270f41ef010daade89009e9358262eb97ea351fbcd0589cd8f303

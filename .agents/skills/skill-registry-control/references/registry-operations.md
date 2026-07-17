@@ -20,6 +20,11 @@
 8. Run `bin/skillctl refresh-groups`.
 9. Validate duplicate-name output with `bin/skillctl alternatives <name>` when applicable.
 
+Before steps 8-9, translate all Markdown/TXT documentation except licenses into
+`locales/zh-CN/<skill-id>/`, run `bin/skillctl translation-stamp <skill-id>`,
+and require `bin/skillctl translation-audit` to pass. An import may update the
+English source and then exit non-zero until this mirror work is complete.
+
 Default status guidance:
 
 - Use `candidate` for newly registered usable skills.
@@ -83,6 +88,9 @@ After sync, verify:
 find <project>/.agents/skills -maxdepth 1 -type l -print | sort
 bin/skillctl audit <project> --allow-candidate
 ```
+
+Both commands enforce a complete, current `zh-CN` mirror before inspecting or
+changing project links. The mirror itself is never linked into a project.
 
 If `audit` reports `missing dependency`, rerun `bin/skillctl enable <project>
 <skill-name>` for the parent skill so the manifest is repaired through normal

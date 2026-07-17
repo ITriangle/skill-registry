@@ -1,0 +1,12 @@
+locale: zh-CN
+source_id: vendor/mattpocock/engineering-triage
+files:
+  - path: AGENT-BRIEF.md
+    source_sha256: 5b78d347cc53f6bcf7b875106005ccf5315055fa4cf75eb28d41e96ee426d27b
+    translation_sha256: 5b78d347cc53f6bcf7b875106005ccf5315055fa4cf75eb28d41e96ee426d27b
+  - path: OUT-OF-SCOPE.md
+    source_sha256: 2526f998fd7ca5e956d3f6f234bcc2431a5971ee769f1148ddc60b92f04d5914
+    translation_sha256: 2526f998fd7ca5e956d3f6f234bcc2431a5971ee769f1148ddc60b92f04d5914
+  - path: SKILL.md
+    source_sha256: d45827c299c021f77b0f146fefa3ee679b13f99e9a2ffdf48e8de2347adeefe1
+    translation_sha256: b4bd43a68e67a4395ae7dfdea036100651653d78cb832c23e28b618a903b580f

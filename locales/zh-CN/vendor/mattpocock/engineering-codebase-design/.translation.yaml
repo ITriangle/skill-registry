@@ -1,0 +1,12 @@
+locale: zh-CN
+source_id: vendor/mattpocock/engineering-codebase-design
+files:
+  - path: DEEPENING.md
+    source_sha256: 125e6b77413ad2bc7cf7a772bc74336d580a50f9e797db2178ed133d62333d06
+    translation_sha256: 125e6b77413ad2bc7cf7a772bc74336d580a50f9e797db2178ed133d62333d06
+  - path: DESIGN-IT-TWICE.md
+    source_sha256: 21c3264953bd30ee87b181a3ccaf0e70649f461e5ffd7dc654acee4ba1788b31
+    translation_sha256: 21c3264953bd30ee87b181a3ccaf0e70649f461e5ffd7dc654acee4ba1788b31
+  - path: SKILL.md
+    source_sha256: a8d50abac5a4018f60e1d911d4b6f4e36454ca14d6c390c0695a578c7de65dad
+    translation_sha256: 1fc916b355200fb3b5e2fb8fc361e6650993e7709686d7b6d87a3fbd32fc5450

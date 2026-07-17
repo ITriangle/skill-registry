@@ -1,0 +1,9 @@
+locale: zh-CN
+source_id: vendor/mattpocock/productivity-writing-great-skills
+files:
+  - path: GLOSSARY.md
+    source_sha256: cccd684c73fb7a06f523497b0121765f92d2b33d6ef9c51602294849233451d6
+    translation_sha256: cccd684c73fb7a06f523497b0121765f92d2b33d6ef9c51602294849233451d6
+  - path: SKILL.md
+    source_sha256: 4d6ccbc3760b1bd4107c495a79872286ea69494003f3b0a719fc95b147457061
+    translation_sha256: 7f108cb055efa88e69284916d410343bb14348fd68bf3b931a0c098f99c4ca5f

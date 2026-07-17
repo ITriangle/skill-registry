@@ -1,0 +1,12 @@
+locale: zh-CN
+source_id: vendor/mattpocock/engineering-prototype
+files:
+  - path: LOGIC.md
+    source_sha256: da91dc92195c00d5dc33863b8c1a030998025a0f8583ebf2babd770825b7f70c
+    translation_sha256: da91dc92195c00d5dc33863b8c1a030998025a0f8583ebf2babd770825b7f70c
+  - path: SKILL.md
+    source_sha256: efa2a92a2f0f8e7d9d0ecb0cfc65ffd5748c73fa3a25fe164e1c8f426938fb52
+    translation_sha256: 8fe78884151d7e1a03e83567ce90c4159d96bc248d591c7bd3f4c262b66f051c
+  - path: UI.md
+    source_sha256: d76d565149ee50456c5ddc5e29c27fec8737637874fe5c37d970db085a200b27
+    translation_sha256: d76d565149ee50456c5ddc5e29c27fec8737637874fe5c37d970db085a200b27

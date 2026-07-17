@@ -1,0 +1,12 @@
+locale: zh-CN
+source_id: vendor/yugasun/domain-modeling
+files:
+  - path: ADR-FORMAT.md
+    source_sha256: f1f36cd3f8d3b6474ddd5855da4e233bfc4ae1a1c5024909ccf11871819a41b2
+    translation_sha256: f1f36cd3f8d3b6474ddd5855da4e233bfc4ae1a1c5024909ccf11871819a41b2
+  - path: CONTEXT-FORMAT.md
+    source_sha256: b8cc318f2a4285b530e908b6bc43901c3c5cd11100362636bbc4216639bef597
+    translation_sha256: b8cc318f2a4285b530e908b6bc43901c3c5cd11100362636bbc4216639bef597
+  - path: SKILL.md
+    source_sha256: b519b496346e064b2db37e26895d6fed7c08e32c2dfd1f5c257111130289ebfe
+    translation_sha256: af953f872a15ade22c4f4ac0d3d00e69e494c929c06ae661ecca3ec059d7ca60

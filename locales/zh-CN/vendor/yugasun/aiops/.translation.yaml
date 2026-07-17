@@ -1,0 +1,12 @@
+locale: zh-CN
+source_id: vendor/yugasun/aiops
+files:
+  - path: SKILL.md
+    source_sha256: 07eba85a6bcf6b0571b03998bf7952359c7666a3bcf6b78f07136eba27d3d77e
+    translation_sha256: 11a70db6ad9878b6b5d7db48280bccfd6ef5a6d33f5e9ba4727917e03d25f183
+  - path: journey.md
+    source_sha256: 66742444386b175821dbb667f418b85d8ce81a5207a16e24ec41910e99fc9315
+    translation_sha256: 66742444386b175821dbb667f418b85d8ce81a5207a16e24ec41910e99fc9315
+  - path: narration.md
+    source_sha256: 568f314456d96d38b1cb50d616efbbd89bcd027caf4fbcf115ed61cdb9eb0eb2
+    translation_sha256: 568f314456d96d38b1cb50d616efbbd89bcd027caf4fbcf115ed61cdb9eb0eb2

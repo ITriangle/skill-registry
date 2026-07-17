@@ -1,0 +1,6 @@
+locale: zh-CN
+source_id: vendor/yugasun/prune
+files:
+  - path: SKILL.md
+    source_sha256: ffb6da6711300740d7b3391b577e6a43b45d74e426307abd9af173e904076402
+    translation_sha256: 9f26068ce2d3149800f3068f54c3464404d4a9959e55e639ce1dc077f59d1169

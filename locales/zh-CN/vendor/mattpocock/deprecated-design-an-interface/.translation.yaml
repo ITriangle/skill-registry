@@ -1,0 +1,6 @@
+locale: zh-CN
+source_id: vendor/mattpocock/deprecated-design-an-interface
+files:
+  - path: SKILL.md
+    source_sha256: a2596e9fa2d50e23ba014f64a5b8f9df4eb56b846a52cad152899ef5eb97b085
+    translation_sha256: 87ed282a87cfcfb8f11827435a205e701bb6ea840d6cf7ab44abc352c3d553e1

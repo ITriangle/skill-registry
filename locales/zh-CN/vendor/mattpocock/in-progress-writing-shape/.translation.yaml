@@ -1,0 +1,6 @@
+locale: zh-CN
+source_id: vendor/mattpocock/in-progress-writing-shape
+files:
+  - path: SKILL.md
+    source_sha256: 67d34422bbe43cfd523dea9fe7b3ec5260791aed8ea52309b5b85f9d76f32745
+    translation_sha256: f7ea234f1029ed708d7ac835d867e7e8c355b46f5db7c8342bcf1e1f86fa7a29
