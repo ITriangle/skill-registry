@@ -539,6 +539,16 @@ groups:
     use_when: 当用户要编写或编辑 Codex skill，并需要 predictable skill 的写作原则和词汇参考时使用。
     avoid_when: 当任务不是 skill 作者工作，或只是在使用已有 skill 时不要用。
     note: 单一已注册变体。
+  - name: writing-plans
+    default_id: vendor/obra/writing-plans
+    variants: vendor/obra/writing-plans
+    sources: obra
+    dependencies: none
+    difference: 单一已注册变体
+    recommendation: 单一来源；无需合并决策
+    use_when: 当已有获批规格或明确需求，需要在动代码前编写包含文件、接口、测试和小步提交的详细实施计划时使用。
+    avoid_when: 当需求仍需澄清、尚未形成获批设计，或用户已经提供可直接执行的完整实施计划时不要用。
+    note: 单一已注册变体。
   - name: writing-shape
     default_id: vendor/mattpocock/in-progress-writing-shape
     variants: vendor/mattpocock/in-progress-writing-shape

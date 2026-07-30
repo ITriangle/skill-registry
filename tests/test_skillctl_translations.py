@@ -149,6 +149,34 @@ class TranslationMirrorTests(unittest.TestCase):
         self.assertEqual(meta["name"], "demo")
         self.assertEqual(meta["description"], "中文第一行， 中文第二行。")
 
+    def test_explicit_dependency_is_included_in_install_order(self) -> None:
+        parent_id = "vendor/acme/parent"
+        dependency_id = "vendor/acme/child"
+        parent = skillctl.skill_path(parent_id)
+        dependency = skillctl.skill_path(dependency_id)
+        parent.mkdir(parents=True)
+        dependency.mkdir(parents=True)
+        (parent / "SKILL.md").write_text(
+            "---\nname: parent\ndescription: Parent skill.\n---\n",
+            encoding="utf-8",
+        )
+        (dependency / "SKILL.md").write_text(
+            "---\nname: child\ndescription: Child skill.\n---\n",
+            encoding="utf-8",
+        )
+        previous = skillctl.EXPLICIT_DEPENDENCIES.get("parent")
+        skillctl.EXPLICIT_DEPENDENCIES["parent"] = ("child",)
+        self.addCleanup(
+            lambda: skillctl.EXPLICIT_DEPENDENCIES.pop("parent", None)
+            if previous is None
+            else skillctl.EXPLICIT_DEPENDENCIES.__setitem__("parent", previous)
+        )
+
+        self.assertEqual(
+            skillctl.skill_with_dependencies(parent_id),
+            [parent_id, dependency_id],
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

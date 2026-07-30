@@ -232,6 +232,10 @@ USAGE_GUIDANCE = {
         "当用户要编写或编辑 Codex skill，并需要 predictable skill 的写作原则和词汇参考时使用。",
         "当任务不是 skill 作者工作，或只是在使用已有 skill 时不要用。",
     ),
+    "writing-plans": (
+        "当已有获批规格或明确需求，需要在动代码前编写包含文件、接口、测试和小步提交的详细实施计划时使用。",
+        "当需求仍需澄清、尚未形成获批设计，或用户已经提供可直接执行的完整实施计划时不要用。",
+    ),
     "writing-shape": (
         "当用户要把已有素材塑造成文章，逐段组织、重写和成稿时使用。",
         "当还处在素材发散、beats 规划，或不是文章写作任务时不要用。",
@@ -674,10 +678,16 @@ def skill_text(skill_id: str) -> str:
 
 
 def skill_dependency_names(skill_id: str) -> list[str]:
-    """Return backticked /skill-name references that resolve to registered skills."""
+    """Return declared skill dependencies that resolve to registered skills."""
     names: list[str] = []
     seen: set[str] = set()
     for name in re.findall(r"`/([A-Za-z0-9][A-Za-z0-9_.-]*)`", skill_text(skill_id)):
+        if name in seen or not records_for_name(name):
+            continue
+        seen.add(name)
+        names.append(name)
+    skill_name = validate_skill_dir(skill_path(skill_id))["name"]
+    for name in EXPLICIT_DEPENDENCIES.get(skill_name, ()):
         if name in seen or not records_for_name(name):
             continue
         seen.add(name)

@@ -1,0 +1,9 @@
+locale: zh-CN
+source_id: vendor/obra/writing-plans
+files:
+  - path: SKILL.md
+    source_sha256: 72190c88b2b5a67a96b91d66aa72b9161913e10e8769da3f28a226f4cc7b99d0
+    translation_sha256: 4f22f93eb1f32ef01ab588b1e02f855c09724613f2a7eac51a3f325abd9a4b70
+  - path: plan-document-reviewer-prompt.md
+    source_sha256: aa728b96aad603c8be28875a4305637f6c984aa81ffcadcb13e743202fa2a0c7
+    translation_sha256: 94b93624ca2a693b9bc2da576b96d6bf86c74b5beb8b1970cffea516ecbf8164
