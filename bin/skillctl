@@ -48,6 +48,10 @@ USAGE_GUIDANCE = {
         "当用户不确定该使用哪个 Matt Pocock skill 或工程流程，需要先做 skill 路由判断时使用。",
         "当用户已经明确点名具体 skill，或任务显然不属于该 skill 集合时不要用。",
     ),
+    "brainstorming": (
+        "当用户准备开展创造性工程工作，例如新增功能、构建组件、扩展能力或改变现有行为，需要先澄清意图、约束并形成获批设计时使用。",
+        "当任务只是读取、解释、审查或执行已经批准的明确方案，且不涉及新的设计决策时不要用。",
+    ),
     "claude-handoff": (
         "当当前对话需要交给新的后台 agent 立即接手并继续工作时使用。",
         "当只是要总结、归档、发给人类阅读，或不需要启动另一个 agent 时不要用。",
@@ -232,6 +236,11 @@ USAGE_GUIDANCE = {
         "当用户要把已有素材塑造成文章，逐段组织、重写和成稿时使用。",
         "当还处在素材发散、beats 规划，或不是文章写作任务时不要用。",
     ),
+}
+
+EXPLICIT_DEPENDENCIES = {
+    # The upstream skill invokes this by name without slash-command syntax.
+    "brainstorming": ("writing-plans",),
 }
 
 
@@ -773,6 +782,7 @@ def dependency_names_for_record(record: dict[str, str], names: set[str]) -> list
         if match in names and match != record["name"]:
             found.add(match)
 
+    found.update(EXPLICIT_DEPENDENCIES.get(record["name"], ()))
     return sorted(found)
 
 

@@ -1,0 +1,9 @@
+source: obra
+repo: git@github.com:obra/superpowers.git
+ref: 44c9b2d6e889982ac18c27d05a19fefe335194e1
+license: MIT
+skills:
+  - id: vendor/obra/brainstorming
+    upstream_path: skills/brainstorming
+    status: candidate
+    imported_at: 2026-07-30T11:16:20Z

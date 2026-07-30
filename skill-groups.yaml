@@ -49,6 +49,16 @@ groups:
     use_when: 当用户不确定该使用哪个 Matt Pocock skill 或工程流程，需要先做 skill 路由判断时使用。
     avoid_when: 当用户已经明确点名具体 skill，或任务显然不属于该 skill 集合时不要用。
     note: 单一已注册变体。
+  - name: brainstorming
+    default_id: vendor/obra/brainstorming
+    variants: vendor/obra/brainstorming
+    sources: obra
+    dependencies: writing-plans
+    difference: 单一已注册变体
+    recommendation: 单一来源；无需合并决策
+    use_when: 当用户准备开展创造性工程工作，例如新增功能、构建组件、扩展能力或改变现有行为，需要先澄清意图、约束并形成获批设计时使用。
+    avoid_when: 当任务只是读取、解释、审查或执行已经批准的明确方案，且不涉及新的设计决策时不要用。
+    note: 单一已注册变体。
   - name: claude-handoff
     default_id: vendor/mattpocock/in-progress-claude-handoff
     variants: vendor/mattpocock/in-progress-claude-handoff
