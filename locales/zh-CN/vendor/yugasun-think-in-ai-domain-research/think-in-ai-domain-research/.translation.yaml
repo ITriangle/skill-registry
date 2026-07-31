@@ -1,0 +1,30 @@
+locale: zh-CN
+source_id: vendor/yugasun-think-in-ai-domain-research/think-in-ai-domain-research
+files:
+  - path: CONTRIBUTING.md
+    source_sha256: 2f9f53fa29cdd53d1c9dfb23883d4b5101a383be705f885a2d234c5c12695a25
+    translation_sha256: 8134e1b2a680bf1f214dc0b3655eea40e33c1804ef3fce42a0cc82208ffa099e
+  - path: README.md
+    source_sha256: b407d458e7435330e12edaee61d46138b05f88c7afb28d9d7f07c8969dac7288
+    translation_sha256: cfda2ec5d11a1cd6170415266ac47e8e1f4b84f9a4031e2e9dbaee9edde1e0d7
+  - path: README_zh.md
+    source_sha256: adc356564587ef936fc9e523dde9269b106b6b3dbcb9aaf4d291261b508f0b8b
+    translation_sha256: adc356564587ef936fc9e523dde9269b106b6b3dbcb9aaf4d291261b508f0b8b
+  - path: SKILL.md
+    source_sha256: e6327c36ea03e2fdda9bb2148a5548d6a984e39eb058cdba5e63f01aa891742a
+    translation_sha256: 3daf6704d3b6929fd8bfc33454137863263f6a524b5145392016f96deeaae1b9
+  - path: examples/product-workflow.md
+    source_sha256: f40ec46e0867d9cc8ee1eca377209a3bfa5802bf2c23f36c4716c2f7175776e0
+    translation_sha256: 60b7e3ce5a3005ba3bca4a5cb4b76ab58b809398a7d53eff9d20e0d8a2af033d
+  - path: examples/sample-output.md
+    source_sha256: cce37c2c304178964065312396955bfc31128bf41ac6ac2ceb94acad6bb9960c
+    translation_sha256: 78b01e861984adc8f89344e41f1b809e2fb4b63bfe5ca0a5f0dbff2aaaad9d9f
+  - path: examples/tech-ecosystem.md
+    source_sha256: 47df2a543f289c0ffa18193dbab34e32bc36216e0001f11d0f0b4ee24f9c8166
+    translation_sha256: 9f1bb8ef301f03b26f9d629c203fc909b26d9b46bc76d15ad4b17829c5a26b1f
+  - path: reference/high-stakes.md
+    source_sha256: 024041085fda31302e92b2b14498968b21c151f950e5436290023611a15e69d1
+    translation_sha256: 627fc46d4aeca6b25f9a3c958cdefe61a3d476cdcf0b8ceadc71ecf3d75ff010
+  - path: reference/principles.md
+    source_sha256: db48df2561a88f630a2d7dcd58994323abb161e81be54f32e83beb0fd20da1dc
+    translation_sha256: 6954dc3be4a8bd3f0a4a7ff69240899cfdba5921b71df9c9dde8864de1571d00

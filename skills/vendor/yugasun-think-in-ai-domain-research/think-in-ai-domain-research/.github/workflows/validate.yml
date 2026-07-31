@@ -1,0 +1,102 @@
+name: Validate Skill
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check SKILL.md exists
+        run: |
+          if [ ! -f "SKILL.md" ]; then
+            echo "❌ SKILL.md not found"
+            exit 1
+          fi
+          echo "✅ SKILL.md found"
+
+      - name: Validate SKILL.md frontmatter
+        run: |
+          # Check that SKILL.md starts with YAML frontmatter
+          if ! head -1 SKILL.md | grep -q "^---$"; then
+            echo "❌ SKILL.md must start with YAML frontmatter (---)"
+            exit 1
+          fi
+
+          # Extract frontmatter and check required fields
+          FRONTMATTER=$(sed -n '/^---$/,/^---$/p' SKILL.md)
+
+          if ! echo "$FRONTMATTER" | grep -q "^name:"; then
+            echo "❌ Missing required field: name"
+            exit 1
+          fi
+
+          if ! echo "$FRONTMATTER" | grep -q "^description:"; then
+            echo "❌ Missing required field: description"
+            exit 1
+          fi
+
+          echo "✅ Frontmatter is valid"
+
+      - name: Check SKILL.md line count
+        run: |
+          LINES=$(wc -l < SKILL.md)
+          echo "SKILL.md has $LINES lines"
+          if [ "$LINES" -gt 500 ]; then
+            echo "⚠️  SKILL.md exceeds 500 lines ($LINES). Consider moving detailed content to reference/ files."
+          else
+            echo "✅ SKILL.md is within 500-line guideline ($LINES lines)"
+          fi
+
+      - name: Validate file references
+        run: |
+          # Check that all referenced files exist
+          MISSING=0
+          for ref in $(grep -oP '\$\{CLAUDE_SKILL_DIR\}/[^\s`)]+' SKILL.md | sed 's/\${CLAUDE_SKILL_DIR}\///'); do
+            if [ ! -f "$ref" ]; then
+              echo "❌ Referenced file not found: $ref"
+              MISSING=$((MISSING + 1))
+            else
+              echo "✅ Found: $ref"
+            fi
+          done
+
+          if [ "$MISSING" -gt 0 ]; then
+            echo "❌ $MISSING referenced file(s) missing"
+            exit 1
+          fi
+
+      - name: Validate evals.json
+        run: |
+          if [ -f "evals/evals.json" ]; then
+            # Check valid JSON
+            if ! python3 -c "import json; json.load(open('evals/evals.json'))" 2>/dev/null; then
+              echo "❌ evals/evals.json is not valid JSON"
+              exit 1
+            fi
+
+            # Check each eval has required fields
+            python3 -c "
+          import json, sys
+          with open('evals/evals.json') as f:
+              data = json.load(f)
+          for i, eval in enumerate(data.get('evals', [])):
+              for field in ['id', 'prompt', 'expected_output']:
+                  if field not in eval:
+                      print(f'❌ Eval {i} missing field: {field}')
+                      sys.exit(1)
+          print(f'✅ evals.json is valid ({len(data[\"evals\"])} evals)')
+          "
+          else
+            echo "⚠️  No evals/evals.json found"
+          fi
+
+      - name: Check directory structure
+        run: |
+          echo "📁 Project structure:"
+          find . -not -path './.git/*' -not -path './.git' | sort | head -50

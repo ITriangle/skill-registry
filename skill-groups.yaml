@@ -419,6 +419,16 @@ groups:
     use_when: 当用户要在当前 workspace 中学习一个概念或技能，需要教学、练习和学习记录时使用。
     avoid_when: 当用户要你代为完成工程任务，或只要简短答案而非教学过程时不要用。
     note: 单一已注册变体。
+  - name: think-in-ai-domain-research
+    default_id: vendor/yugasun-think-in-ai-domain-research/think-in-ai-domain-research
+    variants: vendor/yugasun-think-in-ai-domain-research/think-in-ai-domain-research
+    sources: yugasun-think-in-ai-domain-research
+    dependencies: none
+    difference: 单一已注册变体
+    recommendation: 单一来源；无需合并决策
+    use_when: 当用户提供文档、报告、规格、代码、工单或笔记，希望快速理解陌生领域、建立判断链与边界，并转化为需求、测试或评估产物时使用。
+    avoid_when: 当需求只是简单事实查询、没有源材料的头脑风暴或纯创意写作时不要用。
+    note: 单一已注册变体。
   - name: to-issues
     default_id: vendor/yugasun/to-issues
     variants: vendor/yugasun/to-issues

@@ -1,0 +1,9 @@
+source: yugasun-think-in-ai-domain-research
+repo: https://github.com/yugasun/think-in-ai-domain-research.git
+ref: c643a4f455bd26c70b7fb0921567d4a4e479adfa
+license: MIT
+skills:
+  - id: vendor/yugasun-think-in-ai-domain-research/think-in-ai-domain-research
+    upstream_path: .
+    status: candidate
+    imported_at: 2026-07-31T03:25:33Z

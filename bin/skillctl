@@ -192,6 +192,10 @@ USAGE_GUIDANCE = {
         "当用户要在当前 workspace 中学习一个概念或技能，需要教学、练习和学习记录时使用。",
         "当用户要你代为完成工程任务，或只要简短答案而非教学过程时不要用。",
     ),
+    "think-in-ai-domain-research": (
+        "当用户提供文档、报告、规格、代码、工单或笔记，希望快速理解陌生领域、建立判断链与边界，并转化为需求、测试或评估产物时使用。",
+        "当需求只是简单事实查询、没有源材料的头脑风暴或纯创意写作时不要用。",
+    ),
     "to-issues": (
         "当用户要把计划、spec 或 PRD 拆成可独立领取的垂直切片 issue 时使用。",
         "当还没有足够清晰的计划，或用户要直接实现而不是写 issue 时不要用。",
@@ -1196,7 +1200,12 @@ def command_import(args: argparse.Namespace) -> None:
         if dest.exists():
             shutil.rmtree(dest)
         dest.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copytree(upstream_skill, dest, symlinks=True)
+        shutil.copytree(
+            upstream_skill,
+            dest,
+            symlinks=True,
+            ignore=shutil.ignore_patterns(".git"),
+        )
     validate_skill_dir(dest)
     update_source_metadata(args)
     problems = translation_problems(args.skill_id, DEFAULT_LOCALE)

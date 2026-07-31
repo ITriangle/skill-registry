@@ -1,9 +1,12 @@
 from __future__ import annotations
 
 import importlib.machinery
+import shutil
 import tempfile
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
+from unittest.mock import patch
 
 
 SKILLCTL_PATH = Path(__file__).resolve().parents[1] / "bin" / "skillctl"
@@ -176,6 +179,36 @@ class TranslationMirrorTests(unittest.TestCase):
             skillctl.skill_with_dependencies(parent_id),
             [parent_id, dependency_id],
         )
+
+    def test_root_skill_import_excludes_upstream_git_metadata(self) -> None:
+        upstream = skillctl.ROOT / "fixture-repo"
+        upstream.mkdir()
+        (upstream / "SKILL.md").write_text(
+            "---\nname: root-demo\ndescription: Root demo skill.\n---\n",
+            encoding="utf-8",
+        )
+        (upstream / ".git").mkdir()
+        (upstream / ".git" / "config").write_text("[core]\n", encoding="utf-8")
+
+        def fake_run(command: list[str]) -> None:
+            if command[:2] == ["git", "clone"]:
+                shutil.copytree(upstream, Path(command[3]))
+
+        args = SimpleNamespace(
+            source="acme-root",
+            repo="fixture",
+            ref="abc123",
+            skill_path=".",
+            skill_id="vendor/acme-root/root-demo",
+            force=False,
+        )
+        with patch.object(skillctl, "run", side_effect=fake_run):
+            with self.assertRaises(SystemExit):
+                skillctl.command_import(args)
+
+        imported = skillctl.skill_path(args.skill_id)
+        self.assertTrue((imported / "SKILL.md").exists())
+        self.assertFalse((imported / ".git").exists())
 
 
 if __name__ == "__main__":
