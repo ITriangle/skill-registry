@@ -1,0 +1,6 @@
+locale: zh-CN
+source_id: vendor/mattpocock/productivity-wait-what
+files:
+  - path: SKILL.md
+    source_sha256: 8923f7df1a0d1b138281658e134caa4bf1c618d2876a2323b19acdfdffebc024
+    translation_sha256: 901a8f644f4a6754ff4ed3e196b915b92eb0f633433b98f8a583cac79697de17

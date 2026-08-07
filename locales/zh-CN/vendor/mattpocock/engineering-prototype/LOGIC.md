@@ -1,79 +1,67 @@
-# 逻辑原型
+# Logic Prototype
 
-一个微型交互式终端应用，让用户手动驱动状态模型。当问题涉及**业务逻辑、状态转换或数据形态**时使用——这些内容在纸面看似合理，只有拿真实案例跑过后才会感觉不对。
+单个自包含 HTML 文件——**可分享 demo**——让人通过点击按钮驱动状态模型。用于**业务逻辑、状态转换或数据形状**的问题——纸上合理、推过真实 case 才 feel wrong 的那种。
 
-## 何时适合这种形态
+因单文件无需安装，可交给非开发者——设计师、PM、领域专家——自己感受模型。因此用他们的语言，不是代码的语言。
 
-- “我不确定这个 state machine 能否处理先发生 X、再发生 Y 的边缘情况。”
-- “这个数据模型真的能表示……这种情况吗？”
-- “我想在正式编写 API 前先感受一下它应该是什么样。”
-- 用户想要**按下按钮并观察状态变化**的任何场景。
+## 何时是正确形状
 
-如果问题是“它应该长什么样”——分支选错了。使用 [UI.md](UI.md)。
+- 「我不确定这状态机在 X 然后 Y 的 edge case 怎么处理。」
+- 「这数据模型真能表示……的情况吗？」
+- 「写 API 之前想感受接口应什么样。」
+- 任何人想**按按钮看状态变**的任何事。
+
+若问题是「应该长什么样」——错分支。用 [UI.md](UI.md)。
 
 ## 流程
 
 ### 1. 陈述问题
 
-编写代码前，写下要验证的状态模型和问题。用一段话写在原型 README 中，或写成文件顶部注释。回答错误问题的逻辑原型纯属浪费——明确写出问题，以便之后检查，无论用户正在旁观还是稍后回来查看。
+写代码前，写下正在原型什么状态模型、什么问题。一段，在 demo 顶部可见 intro（不只是 comment）。答错问题的 logic prototype 纯浪费——把问题 explicit，便于用户在场或 AFK 回来检查。
 
-### 2. 选择语言
+### 2. 在可移植 module 中隔离逻辑
 
-使用宿主项目采用的语言。如果项目没有明显 runtime（例如文档仓库），就询问用户。
+把真正答问题的逻辑——放在单个 `<script>`，写成小纯 module，日后可 lift 进真实代码库。周围页面是 throwaway；此 module 不是。
 
-遵循项目现有工具约定——不要只为原型添加新的 package manager 或 runtime。
+形状取决于问题：
 
-### 3. 将逻辑隔离在可移植 Module 中
+- **纯 reducer**——`(state, action) => state`。action 是离散事件、state 是单值时好。
+- **状态机**——显式状态与转换。「此刻哪些 action 合法」是问题一部分时好。
+- **小集纯函数** over plain data type。无隐式当前 state，只有变换时好。
+- **类或 module 带清晰 method surface**，当逻辑真拥有 ongoing internal state。
 
-把真正回答问题的逻辑放在一个小而纯的 interface 后面，使其之后可以直接提取并放入正式代码库。周围 TUI 是抛弃式的；逻辑 module 不应是。
+选*最 fit 问题*的形状，非最易接页面的。保持纯：无 DOM、无 `document`、无 button handler 伸进内部。页面调用它；无反向流。这使原型超出自身寿命有用：问题答完后，validated reducer / machine / 函数集可独自 lift 进真实 module。
 
-正确形态取决于问题：
+### 3. 构建可分享 HTML 文件
 
-- **纯 reducer**——`(state, action) => state`。当 action 是离散事件且 state 是单一值时适用。
-- **State machine**——显式 state 和 transition。当“目前到底允许哪些 action”本身就是问题的一部分时适用。
-- **针对普通数据类型的一小组纯函数**。没有隐含的当前 state、只有转换时适用。
-- **具有清晰 method 表面的 class 或 module**。当逻辑确实拥有持续存在的内部 state 时适用。
+单文件，plain HTML/CSS/JS——无 framework、无 bundler、无 server，全 inline，双击打开、可邮件传。任何人应能打开运行。
 
-选择最适合当前问题的形态，*而不是*最容易接到 TUI 上的形态。保持纯净：无 I/O、无终端代码、不要用 `console.log` 控制流程。TUI 导入并调用它；不得反向流动。
+为非开发者写。每个 label 是**领域语言**，非代码——按钮和 state 读像业务，非 reducer。plain words 解释发生什么。
 
-正因如此，原型才能在自身生命周期结束后继续产生价值。问题得到回答后，经过验证的 reducer / machine / 函数组可以提取到正式 module 中——删除 TUI 外壳。
+自上而下清晰层次：
 
-### 4. 构建能展示状态的最小 TUI
+1. **标题与一行说明**——此 demo 让你探索什么（步骤 1 的问题）。
+2. **当前 state**——完整相关 state，可读 panel（label 字段，非 raw JSON dump），每次点击后 re-render 使变化可见。有助非开发者跟随时，标出刚变什么。
+3. **自由玩按钮**——每 action 一按钮，始终可用，任意顺序 poke。每点击 dispatch action 并 re-render state。
+4. **引导 walkthrough**——一组 **scenario**，每 tab 一个。每 tab 短 plain-language 场景描述——设置的情境与要 watch 什么——其下是该 scenario 的**有序要按的按钮**。每步是真按钮：点击执行 action 并到下一步。开始 walkthrough 重置到已知初始 state，scenario 每次相同。
 
-将其构建为**轻量 TUI**——每个 tick 都清屏（`console.clear()` / `print("\033[2J\033[H")` / 等效方式）并重新渲染整个 frame。用户应始终看到一个稳定视图，而不是不断增长的滚动记录。
+选 scenario 演示别扭 case——happy path、tricky edge、应非法的尝试——纸上难推理的。
 
-每个 frame 按以下顺序包含两部分：
+美观但克制：干净 typography、宽裕 spacing、一 accent 色。无动画、无 gimmick——不与 state 和按钮竞争。
 
-1. **当前 state**，以美观、易于 diff 的方式打印（每行一个 field，或格式化 JSON）。field name 或 section header 使用**粗体**，次要上下文（timestamp、ID、派生值）使用**暗色**。可以直接使用原生 ANSI escape code——`\x1b[1m` 为粗体，`\x1b[2m` 为暗色，`\x1b[0m` 为重置。除非项目已经使用样式库，否则无需为此引入。
-2. **键盘快捷键**，列在底部：`[a] add user  [d] delete user  [t] tick clock  [q] quit`。按键用粗体、说明用暗色，或反过来——以清晰易读为准。
+### 4. 交付
 
-行为：
+发文件或为他们打开。他们会点 walkthrough 和自由玩；有趣时刻是「wait, that shouldn't be possible」或「huh, I assumed X would be different」——那是*想法*里的 bug，正是要点。若要新 action 或 scenario，加它们。原型会演化。
 
-1. **初始化 state**——使用一个内存 object/struct。启动时渲染第一个 frame。
-2. 每次**读取一个按键（或一行）**，并分派给修改 state 的 handler。
-3. 每次 action 后**重新渲染**整个 frame——不要追加，而要替换。
-4. **循环直到退出。**
+### 5. Capture 答案与原型
 
-整个 frame 应能装进一屏。
+原型答完问题后，按 [SKILL](SKILL.md) 描述 capture 答案，再 capture 原型。logic 特有映射：validated reducer / machine / 函数集 lift 进真实 module（决定，吸收）；HTML shell 跟到 throwaway branch 把原型作 primary source——单文件，那里仍 trivial 重跑。
 
-### 5. 用一条命令运行
+## Anti-patterns
 
-向项目现有 task runner（`package.json` scripts、`Makefile`、`justfile`、`pyproject.toml`）添加 script。用户应能运行 `pnpm run <prototype-name>` 或等效命令——绝不需要记住路径。
-
-如果宿主项目没有 task runner，就把命令写在原型 README 顶部。
-
-### 6. 交给用户
-
-向用户提供运行命令。由他们亲自驱动；最有价值的时刻是他们说“等等，这不应该发生”或“咦，我以为 X 会不一样”——这些是*想法*中的 bug，而这正是原型的全部意义。如果用户希望新增 action，就添加。原型会演进。
-
-### 7. 记录答案
-
-原型完成任务后，唯一值得保留的是问题的答案。如果用户在线，询问他们学到了什么。如果不在线，在原型旁留一份 `NOTES.md`，以便删除原型前补入答案（如果你观察过会话，也可以由你填写）。
-
-## 反模式
-
-- **不要添加测试。** 需要测试的原型已经不再是原型。
-- **不要连接真实数据库。** 除非问题专门涉及持久化，否则使用内存存储。
-- **不要泛化。** 不讨论“如果以后想支持 X 怎么办”。原型只回答一个问题。
-- **不要混合逻辑和 TUI。** 如果 reducer / state machine 引用了 `console.log`、prompt 或终端 escape code，它就不再可移植。让 TUI 只是纯 module 上的一层薄壳。
-- **不要把 TUI 外壳发布到生产环境。** 外壳针对人在终端中手工驱动而优化。背后的逻辑 module 才是值得保留的部分。
+- **不要加测试。**需要测试的不再是原型。
+- **不要接真实数据库。**用内存 state，除非问题 specifically 关于持久化。
+- **不要泛化。**无「以后若要支持 X」。原型只答一个问题。
+- **不要把 logic 和 page 糊在一起。**纯 module 引用 DOM、`document` 或 button handler，就不再 liftable。页面作薄 shell over 纯 module。
+- **不要伸手 framework、bundler、server。**收件人双击的单文件；React app 或 dev server  defeat「可分享」。
+- **不要把 HTML shell  ship 进生产。**页面为手点优化。背后 logic module 才是值得留的。

@@ -2,7 +2,7 @@
 
 - Skill 名称：`grilling`
 - 当前状态：`candidate`
-- 描述：Grill the user relentlessly about a plan or design. Use when the user wants to stress-test a plan before building, or uses any 'grill' trigger phrases.
+- 描述：Grill the user relentlessly about a plan, decision, or idea. Use when the user wants to stress-test their thinking, or uses any 'grill' trigger phrases.
 
 ## 触发条件审查
 

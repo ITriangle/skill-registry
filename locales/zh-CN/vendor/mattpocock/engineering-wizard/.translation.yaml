@@ -1,0 +1,6 @@
+locale: zh-CN
+source_id: vendor/mattpocock/engineering-wizard
+files:
+  - path: SKILL.md
+    source_sha256: 7fb2b4ba23870ec028c85c6d7ef1ca573413ca7026bd4d410fe0e6d8dc9d1e92
+    translation_sha256: 6e6515b56c825ec694657601acba1d3c4284cc84129d9f1640a7e7c5d7f2829b

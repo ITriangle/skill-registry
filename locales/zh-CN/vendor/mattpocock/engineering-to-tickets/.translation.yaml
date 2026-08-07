@@ -2,5 +2,5 @@ locale: zh-CN
 source_id: vendor/mattpocock/engineering-to-tickets
 files:
   - path: SKILL.md
-    source_sha256: 918bdefab9313100cb1f7ccb412e2a773fe2f2801dd20d44f6b2acf7a42ca456
-    translation_sha256: 8666dcad1baa1f669e3efda2b3e64a4897466f045908990884ef2b0a1a4793cd
+    source_sha256: 5ecdf1d4df8a360ed39df21a2347f97ba177afd449a577da4f6b6ea8e1ebb808
+    translation_sha256: b241b5e8dc9d7ee81b6913cb834a46f6ea411998794c4b52c6b1a27fb5f48ec6

@@ -2,8 +2,8 @@ locale: zh-CN
 source_id: vendor/mattpocock/engineering-tdd
 files:
   - path: SKILL.md
-    source_sha256: 5363bb2775679fe9311fbb67947f95359169c6e7f1fac77c0f25e190bca6cf2f
-    translation_sha256: a2960e9012491616b8a6a05110f1da2957a88dfee1cc10c379fac8d0d87b1440
+    source_sha256: 5e6b9c16b547113e90afbb946489d1c1384be5c2128f0159bd0bee57251ecf08
+    translation_sha256: f4c97ac0b7da30ae2fd6cec64fddb024379642b462ba287c0829299bded53164
   - path: mocking.md
     source_sha256: 3ceb807fdf4a47d6a93d4d9a891e5ba6d362a6247bd08adc451feebfc17361ef
     translation_sha256: 42d6fbae95986f42e4256437d00d2ac9e66cef6d7355095474cd4ee449ce1e33

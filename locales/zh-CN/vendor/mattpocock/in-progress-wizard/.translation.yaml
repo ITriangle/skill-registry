@@ -1,6 +1,0 @@
-locale: zh-CN
-source_id: vendor/mattpocock/in-progress-wizard
-files:
-  - path: SKILL.md
-    source_sha256: e113612095b14178e680022153f2409fb14ea8b992e55d59ad8ce94071ffaf49
-    translation_sha256: 51b1489e1ff94446f559b44c0f79d60214d4d7350d99ce0d761357a79b0c1794

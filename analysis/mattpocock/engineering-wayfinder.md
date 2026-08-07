@@ -2,7 +2,7 @@
 
 - Skill 名称：`wayfinder`
 - 当前状态：`candidate`
-- 描述：Plan a huge chunk of work — more than one agent session can hold — as a shared map of investigation tickets on your issue tracker, and resolve them one at a time until the way to the destination is clear.
+- 描述：Plan a huge chunk of work — more than one agent session can hold — as a shared map of decision tickets on your issue tracker, and resolve them one at a time until the way to the destination is clear.
 
 ## 触发条件审查
 

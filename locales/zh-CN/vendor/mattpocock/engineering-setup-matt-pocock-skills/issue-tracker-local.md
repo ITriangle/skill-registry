@@ -1,30 +1,30 @@
-# Issue tracker：本地 Markdown
+# Issue tracker: Local Markdown
 
-当前仓库的 issue 和 PRD 以 Markdown 文件形式保存在 `.scratch/` 中。
+本 repo 的 issue 和 spec 是 `.scratch/` 中的 markdown 文件。
 
-## 约定
+## 惯例
 
-- 每个功能使用一个目录：`.scratch/<feature-slug>/`
-- PRD 位于 `.scratch/<feature-slug>/PRD.md`
-- 实现 issue 位于 `.scratch/<feature-slug>/issues/<NN>-<slug>.md`，从 `01` 开始编号
-- 分诊状态记录在每个 issue 文件顶部附近的 `Status:` 行中（角色字符串参见 `triage-labels.md`）
-- 评论和对话历史追加到文件底部的 `## Comments` 标题下
+- 每功能一目录：`.scratch/<feature-slug>/`
+- spec 是 `.scratch/<feature-slug>/spec.md`
+- 实现 issue 是每个 ticket 一个文件：`.scratch/<feature-slug>/issues/<NN>-<slug>.md`，从 `01` 编号——从不是单个合并 tickets 文件
+- triage 状态记录为每个 issue 文件顶部附近的 `Status:` 行（role 字符串见 `triage-labels.md`）
+- 评论与对话历史追加到文件底 `## Comments` 下
 
-## 当技能要求“发布到 issue tracker”时
+## 当 skill 说「publish to the issue tracker」
 
-在 `.scratch/<feature-slug>/` 下创建新文件（必要时创建目录）。
+在 `.scratch/<feature-slug>/` 下建新文件（必要时建目录）。
 
-## 当技能要求“获取相关 ticket”时
+## 当 skill 说「fetch the relevant ticket」
 
-读取引用路径中的文件。用户通常会直接给出路径或 issue 编号。
+读引用路径的文件。用户通常直接传路径或 issue 编号。
 
-## 寻路操作
+## Wayfinding 操作
 
-由 `/wayfinder` 使用。**地图**是一个文件，每个 **child** ticket 对应一个文件。
+由 `/wayfinder` 使用。**地图**是一个文件，每个 ticket 一个**子**文件。
 
-- **地图**：`.scratch/<effort>/map.md`——包含 Notes / Decisions-so-far / Fog 正文。
-- **子 ticket**：`.scratch/<effort>/issues/NN-<slug>.md`，从 `01` 开始编号，正文中写问题。`Type:` 行记录 ticket 类型（`research`/`prototype`/`grilling`/`task`）；`Status:` 行记录 `claimed`/`resolved`。
-- **阻塞关系**：顶部附近的 `Blocked by: NN, NN` 行。列出的每个文件都标为 `resolved` 后，ticket 才解除阻塞。
-- **前沿**：扫描 `.scratch/<effort>/issues/`，查找开放、未阻塞且无人领取的文件；编号最小者优先。
-- **领取**：在开始任何工作前，将 `Status` 设为 `claimed` 并保存。
-- **解决**：在 `## Answer` 标题下追加答案，把 `Status` 设为 `resolved`，再把上下文指针（摘要 + 链接）追加到 `map.md` 的 Decisions-so-far 中。
+- **Map**：`.scratch/<effort>/map.md`——Notes / Decisions-so-far / Fog body。
+- **子 ticket**：`.scratch/<effort>/issues/NN-<slug>.md`，从 `01` 编号，body 含问题。`Type:` 行记 ticket 类型（`research`/`prototype`/`grilling`/`task`）；`Status:` 行记 `claimed`/`resolved`。
+- **Blocking**：顶部附近 `Blocked by: NN, NN`。所列每个文件 `resolved` 则 unblocked。
+- **Frontier**：扫描 `.scratch/<effort>/issues/` 找 open、unblocked、unclaimed 文件；按编号第一个胜出。
+- **Claim**：设 `Status: claimed` 并在任何工作前保存。
+- **Resolve**：在 `## Answer` 下追加答案，设 `Status: resolved`，再把 context pointer（gist + link）追加到 `map.md` 的 Decisions-so-far。

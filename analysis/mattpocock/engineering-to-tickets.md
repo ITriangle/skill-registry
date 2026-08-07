@@ -2,7 +2,7 @@
 
 - Skill 名称：`to-tickets`
 - 当前状态：`candidate`
-- 描述：Break a plan, spec, or the current conversation into a set of tracer-bullet tickets, each declaring its blocking edges, published to the configured tracker — edges as text in a local file, or native blocking links on a real tracker.
+- 描述：Break a plan, spec, or the current conversation into a set of tracer-bullet tickets, each declaring its blocking edges, published to the configured tracker — edges as text in one file per ticket locally, or native blocking links on a real tracker.
 
 ## 触发条件审查
 

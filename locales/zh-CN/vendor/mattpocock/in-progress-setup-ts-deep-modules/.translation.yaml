@@ -1,0 +1,6 @@
+locale: zh-CN
+source_id: vendor/mattpocock/in-progress-setup-ts-deep-modules
+files:
+  - path: SKILL.md
+    source_sha256: 2c6e39ccdd77f85337c13a4877c222d47dcd26e31619157af9688798244192d5
+    translation_sha256: 5807deee7374ef6fdd3b6aab01eb2e42eca87c1a101dc896a05473168a76a1e6

@@ -1,32 +1,32 @@
 ---
 name: loop-me
-description: 围绕我想在此工作区构建的工作流，对其 spec 进行追问。
+description: 在本工作区内，就你想构建的工作流对你进行 grilling。
 disable-model-invocation: true
-argument-hint: "要设计的工作流；也可以不传，以便寻找一个工作流"
+argument-hint: "要设计的工作流，或留空以去找一个"
 ---
 
-运行一次有状态的 `/grilling` 会话，其唯一产出是**工作流** spec。遵循 grilling 的规则——持续追问、每次只问一个问题、每个问题都附上推荐答案——并以如下词汇和目标为焦点。随着追问逐步解决问题，创建、编辑和删除 spec。
+运行有状态的 `/grilling` 会话，唯一产出是**工作流** spec。使用 grilling discipline——relentless、每轮一批问题、每题附推荐答案——瞄准下方词汇与目标。随 grilling 解决而创建、编辑、删除 spec。
 
-## 循环视角
+## Loop lens
 
-**循环（loop）**是用户生活中反复出现的模式：他们的职业生活、每周安排、晨间活动，或某项反复进行的活动。将生活想象成循环嵌套循环，可以揭示其中的活动究竟有多可预测——正因为如此，它们值得被**委派**。使用这一视角找出值得定义 spec 的循环，并提出用户尚未注意到的循环。
+**loop** 是用户生活中 recurring 模式：职业、一周、早晨、单一重复活动。把生活想象成 loop 套 loop，揭示活动多可预测——这正是**委托**值得的原因。用 lens 找值得 spec 的 loop，提议用户没注意到的。
 
-**工作流（workflow）**是某个循环被具体化后的 spec。你在一个循环上运行工作流——循环就是它运行中的实例。工作流存放在 `workflows/*.md` 中，是事实来源。
+**workflow** 是一个 loop 的 spec，具象化。你在 loop 上运行 workflow——loop 是其运行实例。workflow 在 `workflows/*.md`，是真相来源。
 
 ## 词汇
 
-这是一套共享语言，仅在工作流需要时使用——绝不是检查清单。**不要强制任何结构**：除非 grilling 表明有需要，否则工作流不必使用 AI、不必设置 checkpoint，也不必设定 schedule。
+共享语言，仅在 workflow 需要时取用——从不是 checklist。**强制 nothing structural**：workflow 除非 grilling 表明需要，可以没有 AI、没有 checkpoint、没有 schedule。
 
-- **Trigger**——每次运行由什么触发：一个**事件**（一封新邮件、一个新 issue）或一个**日程**（每天早上）。事件触发通常效率更高。
-- **Checkpoint**——human-in-the-loop 节点，在这里请求用户验证或做决定。有些工作流完全没有 checkpoint，可以自主运行；有些工作流根本不使用 AI。
-- **Push right**——尽可能把 checkpoint 向后推。在让人参与之前完成最多的工作，使人只需在较晚阶段被询问一次，而且所需内容都已准备好。
-- **Brief**——checkpoint 展示的内容：一份紧凑、可直接做决策的摘要——说明产出了什么、为什么，以及通往工件本身的链接——绝不能是原始输出。用户阅读的是 brief，不是草稿。审阅速度至关重要。
+- **Trigger**——每次运行由什么触发：**event**（新邮件、新 issue）或 **schedule**（每天早晨）。event 触发通常更高效。
+- **Checkpoint**——人类在 loop 中验证或决定的点。有些 workflow 没有、全 autonomous；有些根本不用 AI。
+- **Push right**——checkpoint 尽可能推迟。在人类介入前做 maximal work，使他们被问一次、晚问、一切已备好。
+- **Brief**——checkpoint 呈现什么：紧凑、可决策的摘要——产出了什么、为何、链到 asset 本身——从不是 raw 输出。用户读 brief，不是 draft。审查速度 imperative。
 
 ## 完成定义
 
-当实现 agent 无需再问任何问题就能构建工作流时，该工作流 spec 才算完成。在此之前持续追问；只要还有问题，就不算完成。
+workflow spec 完成当 implementer agent 可不问任何问题就构建。grill 到那时；仍有 question 则未完成。
 
 ## 工作区
 
-- `workflows/*.md`——每个工作流一份 spec。
-- `NOTES.md`——关于用户世界的原始笔记：他们使用的工具、处理的信息渠道，以及他们对两者采用的术语。如果该文件为空或内容单薄，在定义任何工作流前，先访谈用户以了解他们的世界。遇到含糊术语时，将它们提炼成标准术语并记录在这里。
+- `workflows/*.md`——每个 workflow 一份 spec。
+- `NOTES.md`——用户世界的 raw notes：用的工具、处理的 channel、他们自己的术语。空或薄时，spec 任何东西前先采访他们的世界。模糊术语 surface 时 sharpen 成 canonical 并记录于此。

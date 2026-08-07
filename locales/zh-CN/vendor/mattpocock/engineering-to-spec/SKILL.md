@@ -1,75 +1,75 @@
 ---
 name: to-spec
-description: 将当前对话整理成 spec 并发布到项目 issue tracker——不进行访谈，只综合已经讨论过的内容。
+description: 将当前对话转为 spec 并发布到项目 issue tracker——不采访，只综合已讨论内容。
 disable-model-invocation: true
 ---
 
-此技能使用当前对话上下文和对代码库的理解来生成一份 spec（你也可能将这种文档称为 PRD）。不要访谈用户——只综合已经掌握的信息。
+本 skill 用当前对话上下文与代码库理解产出 spec。**不要**采访用户——只综合已知。
 
-issue tracker 和 triage label 词汇应当已经提供；如果没有，运行 `/setup-matt-pocock-skills`。
+issue tracker 与 triage label 词汇应已提供——否则运行 `/setup-matt-pocock-skills`。
 
 ## 流程
 
-1. 如果尚未探索仓库，先探索以了解代码库当前状态。在整个 spec 中使用项目领域术语表的词汇，并遵守所触及区域内的所有 ADR。
+1. 若尚未探索，探索 repo 理解代码库当前状态。spec 全程用项目领域 glossary 词汇，尊重触及区域 ADR。
 
-2. 勾勒测试此功能所要使用的 seam。优先使用已有 seam，而不是新建 seam。尽可能使用最高层的 seam。如果必须新增 seam，要在能力范围内将它们设在最高层。整个代码库的 seam 越少越好——理想数量是一个。
+2. 勾勒将在哪些 seam 测试该功能。优先现有 seam 于新 seam。尽可能用最高 seam。若需新 seam，在能到的最高点提议。代码库中 seam 越少越好——理想是一个。
 
-与用户确认这些 seam 符合其预期。
+与用户确认这些 seam 符合预期。
 
-3. 使用下方模板编写 spec，然后发布到项目 issue tracker。应用 `ready-for-agent` triage label——无需额外 triage。
+3. 用下方模板写 spec，然后发布到项目 issue tracker。应用 `ready-for-agent` triage label——无需额外 triage。
 
 <spec-template>
 
-## 问题陈述
+## Problem Statement
 
-从用户视角描述其面临的问题。
+用户面临的问题，从用户视角。
 
-## 解决方案
+## Solution
 
-从用户视角描述问题的解决方案。
+问题的解决方案，从用户视角。
 
-## 用户故事
+## User Stories
 
-一份很长的带编号用户故事列表。每条用户故事使用以下格式：
+很长的编号用户故事列表。每条格式：
 
-1. 作为 <角色>，我希望 <功能>，以便 <收益>
+1. As an <actor>, I want a <feature>, so that <benefit>
 
 <user-story-example>
-1. 作为手机银行客户，我希望查看账户余额，以便对自己的支出做出更明智的决策
+1. As a mobile bank customer, I want to see balance on my accounts, so that I can make better informed decisions about my spending
 </user-story-example>
 
-这份用户故事列表必须极其详尽，并覆盖该功能的所有方面。
+列表应极 extensive，覆盖功能各方面。
 
-## 实现决策
+## Implementation Decisions
 
-列出已经做出的实现决策，可以包括：
+已做实现决定列表。可包括：
 
-- 将要构建/修改的模块
-- 将要修改的模块接口
-- 开发者给出的技术澄清
-- 架构决策
+- 将建/改的 module
+- 将改的 interface
+- 开发者的技术澄清
+- 架构决定
 - Schema 变更
-- API contract
+- API 契约
 - 具体交互
 
 不要包含具体文件路径或代码片段。它们可能很快过时。
 
-例外：如果原型生成的片段能比文字更准确地编码某项决策（state machine、reducer、schema、type shape），可将它内联到相关决策中，并简要注明其来自原型。只保留决策信息密集的部分——不要放入可运行 demo，只放重要部分。
+例外：若原型产出比 prose 更精确编码决定的片段（状态机、reducer、schema、type shape），在相关决定内 inline，并简短注明来自原型。trim 到决定丰富部分——不是可运行 demo，只是重要 bits。
 
-## 测试决策
+## Testing Decisions
 
-列出已经做出的测试决策，包括：
+已做测试决定列表。包括：
 
-- 优秀测试的定义（只测试外部行为，不测试实现细节）
-- 要测试哪些模块
-- 测试先例（即代码库中类似类型的测试）
+- 好测试的描述（只测外部行为，非实现细节）
+- 将测哪些 module
+- 测试 prior art（代码库中类似测试）
 
-## 范围之外
+## Out of Scope
 
-说明哪些事项不在此 spec 的范围内。
+本 spec 范围外事项描述。
 
-## 补充说明
+## Further Notes
 
-有关该功能的任何补充说明。
+关于功能的进一步备注。
 
 </spec-template>

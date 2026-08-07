@@ -1,6 +1,0 @@
-locale: zh-CN
-source_id: vendor/mattpocock/deprecated-qa
-files:
-  - path: SKILL.md
-    source_sha256: d9727aac6503981bf69bdd8b37e0d85b32b8fbd353a57528c252dac1337ab761
-    translation_sha256: b4d999d095003d85e757e8647d306e2f8e9ee8a0518cd5c8ff6321682d6450b1

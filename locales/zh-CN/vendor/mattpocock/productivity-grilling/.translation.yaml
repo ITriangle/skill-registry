@@ -2,5 +2,5 @@ locale: zh-CN
 source_id: vendor/mattpocock/productivity-grilling
 files:
   - path: SKILL.md
-    source_sha256: 5a35925d03a391bcfa46940868b649b72dba89ec9c19525e785bbb6bd3a7f478
-    translation_sha256: 0795663c98048cc3edec15f352cef7a6af8256b7d07e9672dfdb5df458b78046
+    source_sha256: fa5c1e5ee76b1c8f1ae56101f52c9e239de75d5c578adc61227b92d10b7e52ef
+    translation_sha256: b7f90b51e2d200fc25de67f3f6d3230d9822eee402fa85a699632d5dcdba7fc4

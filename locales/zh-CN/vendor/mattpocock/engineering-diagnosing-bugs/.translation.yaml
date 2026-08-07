@@ -2,5 +2,5 @@ locale: zh-CN
 source_id: vendor/mattpocock/engineering-diagnosing-bugs
 files:
   - path: SKILL.md
-    source_sha256: 7a0779480f323a66d109404646bcc1a14bf0232b45b3e3ea93b652a035718acb
-    translation_sha256: f8d7f39568f09e837dae57e71489fc7f6355e1857361c68adbbc6fd9b8e0bc4e
+    source_sha256: b9339b09ee3980808d8c5a35c7251b891b8b1e0036ec4ca37812b976ebddf6b6
+    translation_sha256: bad9afd61865ebbd189b37dce1fcf1133d7988f37fd9a2c612ebd5b92c00b1ab

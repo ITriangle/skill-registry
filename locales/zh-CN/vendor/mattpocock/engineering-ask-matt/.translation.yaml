@@ -1,6 +1,9 @@
 locale: zh-CN
 source_id: vendor/mattpocock/engineering-ask-matt
 files:
+  - path: PHASE-BOUNDARIES.md
+    source_sha256: bd0fe4291d25064080a5b880a17d2ebe320e65a63747a2d69a64b04d72a0d03e
+    translation_sha256: 6f881b812bba37b34e7b7c5466407802657fc656b56af05bd20c062c9d415f01
   - path: SKILL.md
-    source_sha256: b7dbb3249695841cf28f87555acc77dc630dafba0f1d544ecce252ff63b0933e
-    translation_sha256: 18afec0ee11715999bb3cc122674c0b58412b93f8343e9f10b9fefabf3e0cbe3
+    source_sha256: 3d38910535f5f01e15bc5fd7f6ca8880d628cd248741f08e6780dd7c1828e832
+    translation_sha256: 4778ad28afa75c1e1810df175604b7d45fb84c4dd459aa69fca3f36089c00223

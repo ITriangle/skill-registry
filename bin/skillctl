@@ -232,9 +232,21 @@ USAGE_GUIDANCE = {
         "当用户要从原始材料中挖掘写作碎片，暂时不建立完整结构时使用。",
         "当已经进入文章成稿、段落润色或 beats 编排阶段时不要用。",
     ),
-    "writing-great-skills": (
-        "当用户要编写或编辑 Codex skill，并需要 predictable skill 的写作原则和词汇参考时使用。",
-        "当任务不是 skill 作者工作，或只是在使用已有 skill 时不要用。",
+    "writing-for-agents": (
+        "当用户要编写或编辑 agent 消费的文档（skill、AGENTS.md、CLAUDE.md 或被指针引用的说明文档）并需要可预测写作原则时使用。",
+        "当任务不是文档作者工作，或只是在使用已有 skill 时不要用。",
+    ),
+    "wait-what": (
+        "当用户表示上一轮回复没听懂、需要 agent 用更直白语言结合 CONTEXT.md 词汇重新解释时使用。",
+        "当对话已对齐、不需要事后纠正理解，或应 upfront 用 /grill-with-docs 建立共享语言时不要用。",
+    ),
+    "to-questionnaire": (
+        "当用户无法独自回答某个决策，需要把问题整理成问卷发给他人异步填写时使用。",
+        "当用户自己能被采访澄清、或不需要向第三方收集信息时不要用。",
+    ),
+    "setup-ts-deep-modules": (
+        "当用户要在 TypeScript 仓库安装 dependency-cruiser，让每个包成为深模块（仅通过入口文件对外暴露）时使用。",
+        "当仓库不是 TypeScript、不需要包边界约束，或已有完整 dependency-cruiser 配置时不要用。",
     ),
     "writing-plans": (
         "当已有获批规格或明确需求，需要在动代码前编写包含文件、接口、测试和小步提交的详细实施计划时使用。",

@@ -1,0 +1,9 @@
+locale: zh-CN
+source_id: vendor/mattpocock/productivity-writing-for-agents
+files:
+  - path: SKILL-MECHANICS.md
+    source_sha256: b4c54a0aaad3f6eddefde6d06770a0e401fbb8fc6a8f49ce18af816bd144d14d
+    translation_sha256: 5b94f151214cc46acc073bc78c717ca199db8d98033322168a9306c19c845126
+  - path: SKILL.md
+    source_sha256: a842323e664e5af104eac5c97ad22fda929ebeb62d81c501161ac1f6f482db58
+    translation_sha256: 5c56b3bd7fba4d74c9139910e998cfa277e96fe2b4f0288b3dfb0365376dc090

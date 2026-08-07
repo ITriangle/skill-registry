@@ -43,7 +43,7 @@ groups:
     default_id: vendor/mattpocock/engineering-ask-matt
     variants: vendor/mattpocock/engineering-ask-matt
     sources: mattpocock
-    dependencies: code-review,codebase-design,diagnosing-bugs,domain-modeling,grill-me,grill-with-docs,grilling,handoff,implement,improve-codebase-architecture,prototype,research,setup-matt-pocock-skills,tdd,teach,to-spec,to-tickets,triage,wayfinder,writing-great-skills
+    dependencies: code-review,codebase-design,diagnosing-bugs,domain-modeling,grill-me,grill-with-docs,grilling,handoff,implement,improve-codebase-architecture,prototype,research,resolving-merge-conflicts,setup-matt-pocock-skills,tdd,teach,to-questionnaire,to-spec,to-tickets,triage,wait-what,wayfinder,wizard,writing-for-agents
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     use_when: 当用户不确定该使用哪个 Matt Pocock skill 或工程流程，需要先做 skill 路由判断时使用。
@@ -99,22 +99,12 @@ groups:
     use_when: 当用户要设计或改进模块接口、寻找 deep module 机会、提升可测性或 AI 可导航性时使用。
     avoid_when: 当需求只是局部实现、格式整理，或不涉及模块边界和接口设计时不要用。
     note: 单一已注册变体。
-  - name: design-an-interface
-    default_id: vendor/mattpocock/deprecated-design-an-interface
-    variants: vendor/mattpocock/deprecated-design-an-interface
-    sources: mattpocock
-    dependencies: none
-    difference: 单一已注册变体
-    recommendation: 单一来源；无需合并决策
-    use_when: 当用户要为模块 API 或接口形态生成多个差异明显的设计方案并比较时使用。
-    avoid_when: 当只需要实现已定方案，或该 deprecated skill 不应进入项目激活时不要用。
-    note: 单一已注册变体。
   - name: diagnosing-bugs
     default_id: vendor/mattpocock/engineering-diagnosing-bugs
     variants: vendor/mattpocock/engineering-diagnosing-bugs,vendor/yugasun/diagnosing-bugs
     sources: mattpocock,yugasun
     dependencies: aiops,code-graph,improve-codebase-architecture
-    difference: 来源：mattpocock,yugasun; 概况：mattpocock=19词/0参考/1脚本,yugasun=18词/0参考/1脚本
+    difference: 来源：mattpocock,yugasun; 概况：mattpocock=19词/1参考/1脚本,yugasun=18词/0参考/1脚本
     recommendation: 推荐 vendor/mattpocock/engineering-diagnosing-bugs 作为未批准变体中的默认项；提升为 approved 前请先审查
     use_when: 当用户报告 hard bug、性能回退、失败、异常、慢请求，或明确要 diagnose/debug 时使用。
     avoid_when: 当用户已经给出明确修复方案只需照做，或问题不是可复现的故障诊断时不要用。
@@ -124,21 +114,11 @@ groups:
     variants: vendor/mattpocock/engineering-domain-modeling,vendor/yugasun/domain-modeling
     sources: mattpocock,yugasun
     dependencies: code-graph
-    difference: 来源：mattpocock,yugasun; 概况：mattpocock=35词/2参考/0脚本,yugasun=21词/2参考/0脚本
+    difference: 来源：mattpocock,yugasun; 概况：mattpocock=35词/3参考/0脚本,yugasun=21词/2参考/0脚本
     recommendation: 推荐 vendor/mattpocock/engineering-domain-modeling 作为未批准变体中的默认项；提升为 approved 前请先审查
     use_when: 当用户要澄清领域术语、建立 ubiquitous language、记录 ADR 或维护项目领域模型时使用。
     avoid_when: 当只是阅读 CONTEXT.md、做纯实现，或不改变领域概念和决策时不要用。
     note: 已合并重复 skill 名称；除非指定 --source，否则使用默认项。
-  - name: edit-article
-    default_id: vendor/mattpocock/personal-edit-article
-    variants: vendor/mattpocock/personal-edit-article
-    sources: mattpocock
-    dependencies: none
-    difference: 单一已注册变体
-    recommendation: 单一来源；无需合并决策
-    use_when: 当用户要编辑、重构、润色或提升文章草稿的清晰度和表达时使用。
-    avoid_when: 当内容不是文章类长文，或用户要做事实研究、代码实现、产品规格而非编辑时不要用。
-    note: 单一已注册变体。
   - name: example-skill
     default_id: vendor/example/example-skill
     variants: vendor/example/example-skill
@@ -204,7 +184,7 @@ groups:
     variants: vendor/mattpocock/engineering-grill-with-docs,vendor/yugasun/grill-with-docs
     sources: mattpocock,yugasun
     dependencies: domain-modeling,grilling
-    difference: 来源：mattpocock,yugasun; 概况：mattpocock=19词/0参考/0脚本,yugasun=14词/0参考/0脚本
+    difference: 来源：mattpocock,yugasun; 概况：mattpocock=19词/1参考/0脚本,yugasun=14词/0参考/0脚本
     recommendation: 推荐 vendor/mattpocock/engineering-grill-with-docs 作为未批准变体中的默认项；提升为 approved 前请先审查
     use_when: 当用户要通过追问打磨计划，同时把落定的决策写入 ADR、glossary 或 CONTEXT.md 等文档时使用。
     avoid_when: 当只需要口头 brainstorm、不应改文档，或用户要直接执行实现时不要用。
@@ -214,7 +194,7 @@ groups:
     variants: vendor/mattpocock/productivity-grilling,vendor/yugasun/grilling
     sources: mattpocock,yugasun
     dependencies: none
-    difference: 来源：mattpocock,yugasun; 概况：mattpocock=26词/0参考/0脚本,yugasun=22词/0参考/0脚本
+    difference: 来源：mattpocock,yugasun; 概况：mattpocock=25词/1参考/0脚本,yugasun=22词/0参考/0脚本
     recommendation: 推荐 vendor/mattpocock/productivity-grilling 作为未批准变体中的默认项；提升为 approved 前请先审查
     use_when: 当用户要在构建前压力测试计划或设计，或使用 grill 相关触发语请求追问时使用。
     avoid_when: 当需求已经清楚且需要动手执行，或用户不希望进入访谈流程时不要用。
@@ -244,7 +224,7 @@ groups:
     variants: vendor/mattpocock/engineering-improve-codebase-architecture,vendor/yugasun/improve-codebase-architecture
     sources: mattpocock,yugasun
     dependencies: code-graph,codebase-design,domain-modeling,grilling
-    difference: 来源：mattpocock,yugasun; 概况：mattpocock=20词/1参考/0脚本,yugasun=37词/2参考/0脚本
+    difference: 来源：mattpocock,yugasun; 概况：mattpocock=20词/2参考/0脚本,yugasun=37词/2参考/0脚本
     recommendation: 推荐 vendor/mattpocock/engineering-improve-codebase-architecture 作为未批准变体中的默认项；提升为 approved 前请先审查
     use_when: 当用户要扫描代码库架构改进机会，并用报告或访谈选择下一步重构方向时使用。
     avoid_when: 当只需要修一个具体 bug、做小范围重构或已有明确实现任务时不要用。
@@ -289,22 +269,12 @@ groups:
     use_when: 当用户要把测试里的 as 类型断言迁移到 @total-typescript/shoehorn，或需要构造 partial test data 时使用。
     avoid_when: 当项目不使用 TypeScript 测试或 shoehorn，或需求不是该专项迁移时不要用。
     note: 单一已注册变体。
-  - name: obsidian-vault
-    default_id: vendor/mattpocock/personal-obsidian-vault
-    variants: vendor/mattpocock/personal-obsidian-vault
-    sources: mattpocock
-    dependencies: none
-    difference: 单一已注册变体
-    recommendation: 单一来源；无需合并决策
-    use_when: 当用户要在 Obsidian vault 中搜索、创建、整理笔记，或维护 wikilinks 和索引笔记时使用。
-    avoid_when: 当内容应写入代码库文档、issue tracker、普通文件，或不涉及 Obsidian 时不要用。
-    note: 单一已注册变体。
   - name: prototype
     default_id: vendor/mattpocock/engineering-prototype
     variants: vendor/mattpocock/engineering-prototype,vendor/yugasun/prototype
     sources: mattpocock,yugasun
     dependencies: aiops-implement
-    difference: 来源：mattpocock,yugasun; 概况：mattpocock=32词/2参考/0脚本,yugasun=17词/0参考/0脚本
+    difference: 来源：mattpocock,yugasun; 概况：mattpocock=32词/3参考/0脚本,yugasun=17词/0参考/0脚本
     recommendation: 推荐 vendor/mattpocock/engineering-prototype 作为未批准变体中的默认项；提升为 approved 前请先审查
     use_when: 当用户要做一次性原型来验证状态模型、业务逻辑手感或 UI 方向时使用。
     avoid_when: 当目标是生产级实现、长期维护代码，或问题无需原型验证时不要用。
@@ -318,26 +288,6 @@ groups:
     recommendation: 单一来源；无需合并决策
     use_when: 当用户要收缩范围、删除多余复杂度、整理未完成计划或把方案削到可交付核心时使用。
     avoid_when: 当用户要新增功能、扩展范围，或尚未有可裁剪的方案和代码时不要用。
-    note: 单一已注册变体。
-  - name: qa
-    default_id: vendor/mattpocock/deprecated-qa
-    variants: vendor/mattpocock/deprecated-qa
-    sources: mattpocock
-    dependencies: none
-    difference: 单一已注册变体
-    recommendation: 单一来源；无需合并决策
-    use_when: 当用户要以对话方式报告 bug、做 QA session，并把发现整理成 GitHub issues 时使用。
-    avoid_when: 当只需要你直接修 bug、运行测试，或该 deprecated skill 不应进入项目激活时不要用。
-    note: 单一已注册变体。
-  - name: request-refactor-plan
-    default_id: vendor/mattpocock/deprecated-request-refactor-plan
-    variants: vendor/mattpocock/deprecated-request-refactor-plan
-    sources: mattpocock
-    dependencies: none
-    difference: 单一已注册变体
-    recommendation: 单一来源；无需合并决策
-    use_when: 当用户要通过访谈生成详细重构计划，并把小步提交方案写成 GitHub issue 时使用。
-    avoid_when: 当用户已经要直接重构，或该 deprecated skill 不应进入项目激活时不要用。
     note: 单一已注册变体。
   - name: research
     default_id: vendor/mattpocock/engineering-research
@@ -383,7 +333,7 @@ groups:
     default_id: vendor/mattpocock/engineering-setup-matt-pocock-skills
     variants: vendor/mattpocock/engineering-setup-matt-pocock-skills
     sources: mattpocock
-    dependencies: triage
+    dependencies: none
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     use_when: 当仓库首次使用 Matt Pocock engineering skills，需要配置 issue tracker、triage 标签和领域文档布局时使用。
@@ -399,12 +349,22 @@ groups:
     use_when: 当用户要配置 Husky、lint-staged、Prettier、typecheck 或测试等 pre-commit hooks 时使用。
     avoid_when: 当项目不使用这些 JS 工具链，或用户要的是 CI、release、普通格式化而非提交前钩子时不要用。
     note: 单一已注册变体。
+  - name: setup-ts-deep-modules
+    default_id: vendor/mattpocock/in-progress-setup-ts-deep-modules
+    variants: vendor/mattpocock/in-progress-setup-ts-deep-modules
+    sources: mattpocock
+    dependencies: codebase-design
+    difference: 单一已注册变体
+    recommendation: 单一来源；无需合并决策
+    use_when: 当用户要在 TypeScript 仓库安装 dependency-cruiser，让每个包成为深模块（仅通过入口文件对外暴露）时使用。
+    avoid_when: 当仓库不是 TypeScript、不需要包边界约束，或已有完整 dependency-cruiser 配置时不要用。
+    note: 单一已注册变体。
   - name: tdd
     default_id: vendor/mattpocock/engineering-tdd
     variants: vendor/mattpocock/engineering-tdd,vendor/yugasun/tdd
     sources: mattpocock,yugasun
-    dependencies: none
-    difference: 来源：mattpocock,yugasun; 概况：mattpocock=20词/2参考/0脚本,yugasun=9词/3参考/0脚本
+    dependencies: codebase-design
+    difference: 来源：mattpocock,yugasun; 概况：mattpocock=20词/3参考/0脚本,yugasun=9词/3参考/0脚本
     recommendation: 推荐 vendor/mattpocock/engineering-tdd 作为未批准变体中的默认项；提升为 approved 前请先审查
     use_when: 当用户要 test-first 构建功能或修 bug，强调 red-green-refactor、集成测试或通过公共接口验证时使用。
     avoid_when: 当没有可测试行为、用户要求先快速探索，或只需要文档和配置修改时不要用。
@@ -449,6 +409,16 @@ groups:
     use_when: 当用户要把当前对话综合成 PRD 并发布到 issue tracker，且不需要额外访谈时使用。
     avoid_when: 当需求仍需大量澄清、用户只要简单总结，或不应写入 issue tracker 时不要用。
     note: 单一已注册变体。
+  - name: to-questionnaire
+    default_id: vendor/mattpocock/productivity-to-questionnaire
+    variants: vendor/mattpocock/productivity-to-questionnaire
+    sources: mattpocock
+    dependencies: none
+    difference: 单一已注册变体
+    recommendation: 单一来源；无需合并决策
+    use_when: 当用户无法独自回答某个决策，需要把问题整理成问卷发给他人异步填写时使用。
+    avoid_when: 当用户自己能被采访澄清、或不需要向第三方收集信息时不要用。
+    note: 单一已注册变体。
   - name: to-spec
     default_id: vendor/mattpocock/engineering-to-spec
     variants: vendor/mattpocock/engineering-to-spec
@@ -463,10 +433,10 @@ groups:
     default_id: vendor/mattpocock/engineering-to-tickets
     variants: vendor/mattpocock/engineering-to-tickets
     sources: mattpocock
-    dependencies: implement,setup-matt-pocock-skills
+    dependencies: setup-matt-pocock-skills
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
-    use_when: 当用户需求匹配默认 skill 描述时使用：Break a plan, spec, or the current conversation into a set of tracer-bullet tickets, each declaring its blocking edges, published to the configured tracker — edges as text in a local file, or native blocking links on a real tracker.
+    use_when: 当用户需求匹配默认 skill 描述时使用：Break a plan, spec, or the current conversation into a set of tracer-bullet tickets, each declaring its blocking edges, published to the configured tracker — edges as text in one file per ticket locally, or native blocking links on a real tracker.
     avoid_when: 当需求不匹配上述描述、只是普通对话，或已有更具体的 skill 覆盖时不要用。
     note: 单一已注册变体。
   - name: triage
@@ -474,21 +444,11 @@ groups:
     variants: vendor/mattpocock/engineering-triage,vendor/yugasun/triage
     sources: mattpocock,yugasun
     dependencies: aiops-setup,domain-modeling,grilling,setup-matt-pocock-skills
-    difference: 来源：mattpocock,yugasun; 概况：mattpocock=22词/2参考/0脚本,yugasun=17词/2参考/0脚本
+    difference: 来源：mattpocock,yugasun; 概况：mattpocock=22词/3参考/0脚本,yugasun=17词/2参考/0脚本
     recommendation: 推荐 vendor/mattpocock/engineering-triage 作为未批准变体中的默认项；提升为 approved 前请先审查
     use_when: 当用户要处理 issue 或外部 PR 的分诊流，完成分类、验证、追问并写 agent-ready brief 时使用。
     avoid_when: 当没有 issue/PR 分诊对象，或用户只是要实现某个已清晰任务时不要用。
     note: 已合并重复 skill 名称；除非指定 --source，否则使用默认项。
-  - name: ubiquitous-language
-    default_id: vendor/mattpocock/deprecated-ubiquitous-language
-    variants: vendor/mattpocock/deprecated-ubiquitous-language
-    sources: mattpocock
-    dependencies: none
-    difference: 单一已注册变体
-    recommendation: 单一来源；无需合并决策
-    use_when: 当用户要从当前对话抽取 DDD ubiquitous language 词汇表、标记歧义并写入 UBIQUITOUS_LANGUAGE.md 时使用。
-    avoid_when: 当只需要普通术语解释，或该 deprecated skill 不应进入项目激活时不要用。
-    note: 单一已注册变体。
   - name: ui-mockup
     default_id: vendor/yugasun/ui-mockup
     variants: vendor/yugasun/ui-mockup
@@ -499,19 +459,29 @@ groups:
     use_when: 当用户要快速产出 UI mockup、页面草图或交互外观方案来对齐视觉方向时使用。
     avoid_when: 当用户要生产级前端实现、后端逻辑或非 UI 任务时不要用。
     note: 单一已注册变体。
+  - name: wait-what
+    default_id: vendor/mattpocock/productivity-wait-what
+    variants: vendor/mattpocock/productivity-wait-what
+    sources: mattpocock
+    dependencies: none
+    difference: 单一已注册变体
+    recommendation: 单一来源；无需合并决策
+    use_when: 当用户表示上一轮回复没听懂、需要 agent 用更直白语言结合 CONTEXT.md 词汇重新解释时使用。
+    avoid_when: 当对话已对齐、不需要事后纠正理解，或应 upfront 用 /grill-with-docs 建立共享语言时不要用。
+    note: 单一已注册变体。
   - name: wayfinder
     default_id: vendor/mattpocock/engineering-wayfinder
     variants: vendor/mattpocock/engineering-wayfinder
     sources: mattpocock
-    dependencies: domain-modeling,grilling,prototype,setup-matt-pocock-skills
+    dependencies: domain-modeling,grilling,prototype,research,setup-matt-pocock-skills
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策
     use_when: 当目标很大、超过单次 agent session，需要先建立调查票据地图并逐步厘清路径时使用。
     avoid_when: 当任务足够小可直接完成，或用户不想使用 issue tracker 管理探索过程时不要用。
     note: 单一已注册变体。
   - name: wizard
-    default_id: vendor/mattpocock/in-progress-wizard
-    variants: vendor/mattpocock/in-progress-wizard
+    default_id: vendor/mattpocock/engineering-wizard
+    variants: vendor/mattpocock/engineering-wizard
     sources: mattpocock
     dependencies: none
     difference: 单一已注册变体
@@ -529,6 +499,16 @@ groups:
     use_when: 当用户要把写作素材组织成有节奏的论述 beats，并保证关键术语先被建立时使用。
     avoid_when: 当还没有素材、需要先挖掘碎片，或用户要最终润色而非 beats 结构时不要用。
     note: 单一已注册变体。
+  - name: writing-for-agents
+    default_id: vendor/mattpocock/productivity-writing-for-agents
+    variants: vendor/mattpocock/productivity-writing-for-agents
+    sources: mattpocock
+    dependencies: none
+    difference: 单一已注册变体
+    recommendation: 单一来源；无需合并决策
+    use_when: 当用户要编写或编辑 agent 消费的文档（skill、AGENTS.md、CLAUDE.md 或被指针引用的说明文档）并需要可预测写作原则时使用。
+    avoid_when: 当任务不是文档作者工作，或只是在使用已有 skill 时不要用。
+    note: 单一已注册变体。
   - name: writing-fragments
     default_id: vendor/mattpocock/in-progress-writing-fragments
     variants: vendor/mattpocock/in-progress-writing-fragments
@@ -538,16 +518,6 @@ groups:
     recommendation: 单一来源；无需合并决策
     use_when: 当用户要从原始材料中挖掘写作碎片，暂时不建立完整结构时使用。
     avoid_when: 当已经进入文章成稿、段落润色或 beats 编排阶段时不要用。
-    note: 单一已注册变体。
-  - name: writing-great-skills
-    default_id: vendor/mattpocock/productivity-writing-great-skills
-    variants: vendor/mattpocock/productivity-writing-great-skills
-    sources: mattpocock
-    dependencies: none
-    difference: 单一已注册变体
-    recommendation: 单一来源；无需合并决策
-    use_when: 当用户要编写或编辑 Codex skill，并需要 predictable skill 的写作原则和词汇参考时使用。
-    avoid_when: 当任务不是 skill 作者工作，或只是在使用已有 skill 时不要用。
     note: 单一已注册变体。
   - name: writing-plans
     default_id: vendor/obra/writing-plans

@@ -2,20 +2,20 @@ locale: zh-CN
 source_id: vendor/mattpocock/engineering-setup-matt-pocock-skills
 files:
   - path: SKILL.md
-    source_sha256: 8cd1fa43ff89492320404e5b18fb06d9488256be5dffc291ff038fc98bb98fb9
-    translation_sha256: ee1990d36770e8a185bcbf6e743689b19ab5ee6c1e51054cceeae3c678dfe4d8
+    source_sha256: 310fb1a73c0467e617e17d7c41d4a2278b5405c4a27f36d7cd22bb4599aee6bb
+    translation_sha256: 39878b8ed81e7d30657f593a88cc7e58e7b3ba3f7a85c794c723cf20158942e0
   - path: domain.md
     source_sha256: 25be404b58798b3cb2d51c93dba2ab052fc3a425632185726ac3f5fcff193b99
     translation_sha256: 54f4f33ce372e129edee681d25746a9c06a9b0dcbdd8e70c717928be89407c57
   - path: issue-tracker-github.md
-    source_sha256: 52e9f9f1ec0f6d47c6785ac500708ac0521f34abb4cc5475b5dc747165dab17e
-    translation_sha256: 501c6d301b8f4d52fa6ed0a2ff9d920ad56e27aca09368f943a251fdf94e9989
+    source_sha256: ec8332bb69e7e79e349989e940be481a0c79b552be3acc613e718278bcc5e03d
+    translation_sha256: 68a3bb86e2766910ffecccf24d0fbbc7cf349e7fb5423863163bd25333d13779
   - path: issue-tracker-gitlab.md
-    source_sha256: 4470f2f64d015fba01af877233296b401bb0d44b5acb9572ffc3ff6b30e8de88
-    translation_sha256: 20dc958df401c822d24f0810cf867df516b97749e72056a2496cf0d9258637d4
+    source_sha256: 16ea4a727803876cbc763e1f6b00992b3b393ba5e0cd394382dccc0f8d83c564
+    translation_sha256: 5ee878a13b9316b494ec657fa0d0bf796392a687c374291e013eb07776981acf
   - path: issue-tracker-local.md
-    source_sha256: e0dd9835e3658909132058e9a5fdd851e972220bbadaf78a57e3c6220d470922
-    translation_sha256: e34947c1d1221af26df30f845c336468759e6f681632023e1b3687929297d5a7
+    source_sha256: 6f38f66f9ffce2fdc26c43608d06b527f60e45c6f43003d0ea77d4e2641c9de3
+    translation_sha256: d2bb624514897594ecb9fd10ee6bcf998c0e07f5b1272814f664ef4056fcdacd
   - path: triage-labels.md
     source_sha256: 4f53c9b40ce2651e3611aa090eaedbd6dbc9b71ef8c5f7e65eac0d8263190d0d
     translation_sha256: 12be26c143b0e66f825fff7afbd4d33d90ca4a3dc981f49d6ce63909c9533675

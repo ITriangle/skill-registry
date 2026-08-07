@@ -13,7 +13,7 @@
 
 - 脚本：scripts/hitl-loop.template.sh
 - 参考资料：未检测到
-- 风险提及：网络, 文件系统, shell
+- 风险提及：网络, 文件系统, shell, 密钥
 
 ## 建议
 

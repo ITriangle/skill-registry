@@ -2,5 +2,5 @@ locale: zh-CN
 source_id: vendor/mattpocock/in-progress-claude-handoff
 files:
   - path: SKILL.md
-    source_sha256: bbb25773158d78f610461e4041ffb56fe871cb297626e1f52b0535a9083b7996
-    translation_sha256: a7a6d87f92c402a9bdd63ce35ab446ba3970004c4d0515081c9077525a3f36fb
+    source_sha256: ef298da8abf31c80e4770e6881cee4973a20d66a3ad74364889c2b388f30184e
+    translation_sha256: c1a0907f944e23c177c68fe6cdace67831df6c41d2480254026601ce5669e7f7

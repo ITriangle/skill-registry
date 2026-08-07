@@ -1,66 +1,71 @@
 ---
 name: improve-codebase-architecture
-description: 扫描代码库寻找深化机会，以可视化 HTML 报告展示，然后针对你选中的候选项进行追问。
+description: 扫描代码库寻找 deepening opportunities，以可视化 HTML 报告呈现，然后对你选的项进行 grilling。
 disable-model-invocation: true
 ---
 
-# 改进代码库架构
+# Improve Codebase Architecture
 
-揭示架构摩擦并提出**深化机会**——把浅 module 重构成深 module。目标是提升可测试性和 AI 可导航性。
+Surface 架构摩擦并提出 **deepening opportunities**——把 shallow module 变成 deep module 的重构。目标是可测试性与 AI 可导航性。
 
-此命令以项目领域模型为依据，并建立在共享设计词汇之上：
+本命令* informed* 于项目领域模型，建立在共享设计词汇上：
 
-- 运行 `/codebase-design` 技能，获取架构词汇（**module**、**interface**、**depth**、**seam**、**adapter**、**leverage**、**locality**）及其原则（删除测试、“interface 就是测试表面”、“一个 adapter = 假设性 seam，两个 = 真实 seam”）。每项建议都必须准确使用这些词——不要漂移到“component”“service”“API”或“boundary”。
-- `CONTEXT.md` 中的领域语言为优质 seam 命名；`docs/adr/` 中的 ADR 记录此命令不应重新争论的决策。
+- 运行 `/codebase-design` skill 获取架构词汇（**module**、**interface**、**depth**、**seam**、**adapter**、**leverage**、**locality**）及其原则（deletion test、「interface 即测试面」、「一个 adapter = 假设 seam，两个 = 真」）。每条建议中精确使用这些术语——不要漂移到「component」「service」「API」或「boundary」。
+- `CONTEXT.md` 中的领域语言给好 seam 命名；`docs/adr/` 中的 ADR 记录本命令不应 re-litigate 的决定。
 
 ## 流程
 
-### 1. 探索
+### 1. Explore
 
-先阅读项目领域术语表（`CONTEXT.md`），以及所触及区域的所有 ADR。
+**扫描前先界定范围——YAGNI。**加深 module 靠让未来变更更容易而 payoff，因此对最近变更的部分加重权重。看之前先决定*看哪*：
 
-然后使用 Agent 工具和 `subagent_type=Explore` 遍历代码库。不要遵循僵硬启发式规则——自然探索，并记录遇到摩擦之处：
+- 若用户指定方向——module、子系统、痛点——采用，跳过下方推断。
+- 否则，回溯足够长的 commit 历史（`git log --oneline`）找 hot spot——反复出现的文件和区域——让路径先吸引注意。若变更分散无清晰 hot spot，扩大范围。
 
-- 理解一个概念是否需要在许多小 module 之间来回跳转？
-- 哪些 module 很**浅**——interface 几乎与 implementation 一样复杂？
-- 是否有纯函数仅为可测试性而被提取，但真正 bug 隐藏在调用方式中（缺少 **locality**）？
-- 哪些紧耦合 module 会跨 seam 泄漏？
-- 哪些代码没有测试，或难以通过当前 interface 测试？
+先读项目领域 glossary（`CONTEXT.md`）及触及区域任何 ADR。
 
-对任何疑似浅 module 应用**删除测试**：删除它会让复杂度集中，还是只会搬家？“会集中”就是你想要的信号。
+然后 spawn sub-agent 遍历代码库。不要 rigid heuristic——有机探索并记录摩擦体验：
 
-### 2. 以 HTML 报告展示候选项
+- 理解一个概念为何要在许多小 module 间 bounce？
+- 哪里 **shallow**——interface 几乎与实现同复杂？
+- 纯函数仅为可测试性抽出，但真 bug 藏在调用方式（无 **locality**）？
+- 紧耦合 module 泄漏过 seam？
+- 哪些部分 untested，或难以通过当前 interface 测试？
 
-将自包含 HTML 文件写到操作系统临时目录，避免任何内容落入仓库。从 `$TMPDIR` 解析临时目录，失败则回退到 `/tmp`（Windows 上为 `%TEMP%`）；写入 `<tmpdir>/architecture-review-<timestamp>.html`，确保每次运行生成新文件。为用户打开它——Linux 使用 `xdg-open <path>`，macOS 使用 `open <path>`，Windows 使用 `start <path>`——并告诉用户绝对路径。
+对怀疑 shallow 的任何东西应用 **deletion test**：删除会集中复杂度，还是只移动？「是，集中」是你要的 signal。
 
-报告使用 CDN 版 **Tailwind** 进行布局和样式设计；当图、流程或时序能可靠表达结构时，使用 CDN 版 **Mermaid**。将 Mermaid 与手工 CSS/SVG 可视化结合：关系呈图形结构时（调用图、依赖、时序）使用 Mermaid；需要更具编辑感的表达（质量图、横截面、折叠动画）时使用手工 div/SVG。每个候选项都提供**之前/之后可视化**。要强调视觉表现。
+### 2. 以 HTML 报告呈现候选
 
-为每个候选项渲染一张卡片，包含：
+写自包含 HTML 到 OS 临时目录，不落 repo。从 `$TMPDIR` 解析 temp dir，回退 `/tmp`（Windows 为 `%TEMP%`），写到 `<tmpdir>/architecture-review-<timestamp>.html`，每次运行新文件。为用户打开——Linux `xdg-open <path>`，macOS `open <path>`，Windows `start <path>`——并告知绝对路径。
 
-- **文件**——涉及哪些文件/module
-- **问题**——当前架构为何造成摩擦
-- **解决方案**——用通俗语言描述会发生什么变化
-- **收益**——以 locality、leverage 和测试改进解释
-- **之前 / 之后图**——并排、自定义绘制，展示浅化现状与深化结果
-- **推荐强度**——`Strong`、`Worth exploring`、`Speculative` 之一，以 badge 展示
+报告用 **Tailwind CDN** 做布局样式，**Mermaid CDN** 做关系图形的 diagram（图/流/序列可靠传达结构时）。Mermaid 与手工 CSS/SVG 混用——关系是图形状时用 Mermaid，要更 editorial（质量图、截面、collapse 动画）时用手工 div/SVG。每个候选有**前后可视化**。要 visual。
 
-报告最后以**首要建议**一节收尾：最先处理哪个候选项，以及原因。
+每个候选一张 card：
 
-**领域部分使用 `CONTEXT.md` 的词汇，架构部分使用 `/codebase-design` 的词汇。** 如果 `CONTEXT.md` 定义了“Order”，就说“Order intake module”——不要说“FooBarHandler”，也不要说“Order service”。
+- **Files**——涉及哪些文件/module
+- **Problem**——当前架构为何造成摩擦
+- **Solution**——将变更什么的 plain English 描述
+- **Benefits**——用 locality 和 leverage 解释，测试如何改善
+- **Before / After diagram**——并排，custom-drawn，illustrate shallowness 与 deepening
+- **Recommendation strength**——`Strong`、`Worth exploring`、`Speculative` 之一，badge 呈现
 
-**ADR 冲突**：如果候选项与现有 ADR 矛盾，只有当摩擦真实到值得重审 ADR 时才展示。务必在卡片中清晰标记（例如 warning callout：*“与 ADR-0007 矛盾——但值得重启讨论，因为……”*）。不要列出 ADR 所禁止的每种理论重构。
+报告末尾 **Top recommendation**：你会先 tackle 哪个及为何。
 
-完整 HTML scaffold、图表模式和样式指南见 [HTML-REPORT.md](HTML-REPORT.md)。
+**领域用 CONTEXT.md 词汇，架构用 `/codebase-design` 词汇。**若 `CONTEXT.md` 定义「Order」，谈「Order intake module」——不是「FooBarHandler」，也不是「Order service」。
 
-此时不要提出 interface。文件写完后，询问用户：“你想探索其中哪一个？”
+**ADR 冲突**：仅当摩擦真值得 reopen ADR 时，才 surface 与现有 ADR 矛盾的候选。在 card 中清楚标记（如 warning callout：_"contradicts ADR-0007 — but worth reopening because…"_）。不要列出 ADR 禁止的每个理论 refactor。
 
-### 3. 追问循环
+见 [HTML-REPORT.md](HTML-REPORT.md) 完整 HTML scaffold、diagram 模式与样式指引。
 
-用户选择候选项后，运行 `/grilling` 技能，与用户一起遍历设计树——约束、依赖、深化后 module 的形态、seam 后包含什么、哪些测试能保留。
+**不要**此时提议 interface。文件写好后问用户：「你想探索哪些？」
 
-随着决策成形，立即执行副作用——运行 `/domain-modeling` 技能，在过程中保持领域模型最新：
+### 3. Grilling loop
 
-- **用 `CONTEXT.md` 中没有的概念命名深化后的 module？** 将该术语加入 `CONTEXT.md`。如果文件不存在，延迟到此时再创建。
-- **对话中澄清了模糊术语？** 当场更新 `CONTEXT.md`。
-- **用户以承重理由拒绝候选项？** 提议建立 ADR：“要我把它记录成 ADR，让未来架构评审不再重复建议吗？”只有未来探索者确实需要该理由才能避免重复建议时才提议；短期理由（“现在不值得”）和不言自明的理由不要记录。
-- **想探索深化后 module 的其他 interface？** 运行 `/codebase-design`，使用其 design-it-twice 并行 sub-agent 模式。
+用户选定候选后，运行 `/grilling` skill 与他们走决策树——约束、依赖、加深 module 形状、seam 后有什么、哪些测试 survive。
+
+副作用 inline 随决定 crystallize——运行 `/domain-modeling` skill 保持领域模型 current：
+
+- **用 CONTEXT.md 没有的概念命名加深 module？**把术语加入 `CONTEXT.md`。不存在则 lazy create。
+- **对话中 sharpen 模糊术语？**当场更新 `CONTEXT.md`。
+- **用户以 load-bearing 理由拒绝候选？**提供 ADR， framing：_"Want me to record this as an ADR so future architecture reviews don't re-suggest it?"_ 仅当理由真能让未来 explorer 避免 re-suggest 时提供——跳过 ephemeral（「现在不值得」）和自明的。
+- **想探索加深 module 的替代 interface？**运行 `/codebase-design` skill 及其 design-it-twice 并行 sub-agent 模式。

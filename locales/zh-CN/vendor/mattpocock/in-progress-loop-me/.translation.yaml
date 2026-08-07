@@ -2,5 +2,5 @@ locale: zh-CN
 source_id: vendor/mattpocock/in-progress-loop-me
 files:
   - path: SKILL.md
-    source_sha256: 2b2c725f8b6e8b8f3f6e6bc2c18f0cf3ab029a270b5ac23132fbebdeb6b443aa
-    translation_sha256: 10aa10bbb994f882cc07d264c61835584e49a4db0acd06219c822fe5174334e2
+    source_sha256: ad7110ecbd419fc312c3e7c62f496bd346a05462cdf1589b12ff7550fce3202a
+    translation_sha256: 6244d160b4a7c13dcbf2e98e51c91834ff65aaf40c7f19a7cab93660de16cf13

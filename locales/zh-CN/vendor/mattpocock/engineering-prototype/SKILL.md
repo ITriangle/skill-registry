@@ -1,30 +1,26 @@
 ---
 name: prototype
-description: 构建一个抛弃式原型来回答设计问题。当用户想快速验证状态模型或逻辑是否合理，或探索 UI 应有的外观时使用。
+description: 构建一次性原型回答设计问题。当用户想 sanity-check 状态模型或逻辑是否 feel right，或探索 UI 应什么样时使用。
 ---
 
-# 原型
+# Prototype
 
-原型是**用来回答一个问题的抛弃式代码**。问题决定原型形态。
+原型是**回答一个问题的一次性代码**。问题决定形状。
 
-## 选择分支
+## 选分支
 
-根据用户 prompt、周边代码，或在用户在线时直接询问，确定要回答哪类问题：
+识别正在回答的问题——来自用户 prompt、周围代码，或用户在时询问：
 
-- **“这套逻辑 / 状态模型合理吗？”** → [LOGIC.md](LOGIC.md)。构建微型交互式终端应用，推动 state machine 经历那些难以在纸面推演的情况。
-- **“它应该长什么样？”** → [UI.md](UI.md)。在单一路由上生成多个截然不同的 UI 变体，可通过 URL search param 和底部浮动栏切换。
+- **「这逻辑 / 状态模型 feel right 吗？」** → [LOGIC.md](LOGIC.md)。构建单个可分享 HTML 文件——自由玩按钮 + 分 tab 引导 walkthrough——把状态机推过纸上难推理的 case，非开发者可驱动。
+- **「这应该长什么样？」** → [UI.md](UI.md)。在单一路由上生成几种 radically different UI 变体，通过 URL search param 和底部浮动 bar 切换。
 
-两个分支会产出非常不同的工件——选错会浪费整个原型。如果问题确实有歧义且无法联系用户，默认选择更符合周边代码的分支（后端 module → 逻辑；page 或 component → UI），并在原型顶部声明假设。
+两分支产出很不同的 artifact——搞错浪费整个原型。问题真模糊且用户 unreachable 时，默认选与周围代码更匹配的分支（backend module → logic；page 或 component → UI），并在原型顶部陈述假设。
 
-## 两个分支都适用的规则
+## 两分支共同规则
 
-1. **从第一天起就是抛弃式代码，并清晰标记。** 将原型代码放在最终会使用结论的位置附近（紧邻所验证的 module 或 page），使上下文明确；但命名必须让普通读者看出它是原型，而非生产代码。抛弃式 UI route 应遵守项目已有路由约定，不要发明新的顶层结构。
-2. **一条命令运行。** 使用项目现有 task runner 支持的方式——`pnpm <name>`、`python <path>`、`bun <path>` 等。用户必须无需思考即可启动。
-3. **默认不持久化。** 状态存于内存。持久化应是原型要*验证*的对象，而非原型的依赖。如果问题明确涉及数据库，使用 scratch DB 或名称清晰标注“PROTOTYPE — wipe me”的本地文件。
-4. **跳过润色。** 不写测试；除了保证原型*能运行*之外不做错误处理；不建抽象。目标是快速学习，然后删除。
-5. **展示状态。** 每次操作（逻辑）后或每次切换变体（UI）时，输出或渲染完整相关状态，让用户看清变化。
-6. **完成后删除或吸收。** 原型回答问题后，要么删除，要么把验证后的决策折叠进正式代码——不要让它在仓库中腐化。
-
-## 完成时
-
-原型中唯一值得保留的是*答案*。将答案及其所回答的问题记录在持久位置（commit message、ADR、issue，或原型旁的 `NOTES.md`）。如果用户在线，通过简短对话完成记录；如果不在线，留下占位符，让用户（或下一轮的你）在删除原型前补上结论。
+1. **从第一天 throwaway，且清楚标记。**把原型代码放在将实际使用处附近（module 或 page 旁）使上下文 obvious——但命名使 casual reader 看出是原型非生产。throwaway UI route 遵守项目已有 routing 惯例；不要发明新顶层结构。
+2. ** trivial 运行。**UI 原型从项目 task runner 一条命令启动——`pnpm <name>`、`python <path>`、`bun <path>` 等。logic demo 是用户双击的单个 HTML。启动无需思考。
+3. **默认无持久化。**状态在内存。持久化是原型在*检查*的东西，不应依赖。若问题明确涉及数据库，打 scratch DB 或本地文件，名带清楚「PROTOTYPE — wipe me」。
+4. **跳过 polish。**无测试、无超出使原型*runnable* 的错误处理、无抽象。目的是快速学东西。
+5. **Surface 状态。**每次动作后（logic）或每次变体切换（UI），打印或渲染完整相关状态，使用户看到变了什么。
+6. **完成时 capture。**把 validated 决定 fold 进真实代码，然后把原型本身 capture 为 **primary source**：commit 到 throwaway branch、main 外，在实现 issue 上留指向该 branch 的 context pointer。也 capture 答案——verdict 及 settled 的问题——在 issue 或 commit。main branch 只留 validated 决定。

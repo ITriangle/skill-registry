@@ -5,8 +5,8 @@ files:
     source_sha256: 125e6b77413ad2bc7cf7a772bc74336d580a50f9e797db2178ed133d62333d06
     translation_sha256: 7474f783c04b3828e21d2de7db87110b5125f2c7c4d1047e3c22607c0f72abdc
   - path: DESIGN-IT-TWICE.md
-    source_sha256: 21c3264953bd30ee87b181a3ccaf0e70649f461e5ffd7dc654acee4ba1788b31
-    translation_sha256: 87fe1808f868bce9152de844d6d4dea483ad951b9cbe7c6243d7d6f85cac0044
+    source_sha256: 09f9948ea7636a4d3704c5ab909762e876c0b39849eefb14d2e03a398cc9c7e7
+    translation_sha256: 9a18719c8d4280d40f642e30130a72ae97b43ca704ecf55ce505fc05a433ce2a
   - path: SKILL.md
     source_sha256: a8d50abac5a4018f60e1d911d4b6f4e36454ca14d6c390c0695a578c7de65dad
     translation_sha256: 1ce972db0966a2f1cdee15d3ae41eac13d6376bb4d37a7f3fff2a7be8143c8a9

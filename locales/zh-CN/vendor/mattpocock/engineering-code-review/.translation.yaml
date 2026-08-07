@@ -2,5 +2,5 @@ locale: zh-CN
 source_id: vendor/mattpocock/engineering-code-review
 files:
   - path: SKILL.md
-    source_sha256: 6a65cc61114f96db07ec41e3920e67c9c5bf70dd6e0901eb9460ebcb2bdc209f
-    translation_sha256: 78e31d662c3fe75f79ac53d970afce03a520947b6e641d41c2902c86d2b09133
+    source_sha256: 9cf46653dd9c710ea1e6c22423caf31a794c88773bc94bdaa23140277f470442
+    translation_sha256: aa88910469c77772e09f4eefd6a0313c271941e5f17ae8a54540ff4e4c120288

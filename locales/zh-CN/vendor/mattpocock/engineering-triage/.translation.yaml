@@ -8,5 +8,5 @@ files:
     source_sha256: 2526f998fd7ca5e956d3f6f234bcc2431a5971ee769f1148ddc60b92f04d5914
     translation_sha256: 4a2d64cc6b64bbbc97bb4c3903b55784c30d83c104369698dc3b3ff202ed4ccf
   - path: SKILL.md
-    source_sha256: d45827c299c021f77b0f146fefa3ee679b13f99e9a2ffdf48e8de2347adeefe1
-    translation_sha256: 060c53fe981d927603284aa9bbe9acf8bb867ec4a4e2c1717a90fce95cdcdc2c
+    source_sha256: 91e2817ecb688c4df4e2444eab472d1d79d2a0a57abf9f6726967664c460ff2e
+    translation_sha256: 7ccfce0fb08436e87206fdc835bb4df19db0f10a46ba4ee350b8fbbf2a954bcc
