@@ -258,10 +258,18 @@ USAGE_GUIDANCE = {
     ),
 }
 
-EXPLICIT_DEPENDENCIES = {
-    # The upstream skill invokes this by name without slash-command syntax.
-    "brainstorming": ("writing-plans",),
+EXPLICIT_DEPENDENCIES = {}
+
+# Per-skill overrides when upstream invokes dependencies by name without slash-command syntax.
+EXPLICIT_DEPENDENCIES_BY_ID = {
+    "vendor/obra/brainstorming": ("writing-plans",),
 }
+
+
+def explicit_dependency_names(skill_id: str, skill_name: str) -> tuple[str, ...]:
+    if skill_id in EXPLICIT_DEPENDENCIES_BY_ID:
+        return EXPLICIT_DEPENDENCIES_BY_ID[skill_id]
+    return EXPLICIT_DEPENDENCIES.get(skill_name, ())
 
 
 class SkillctlError(Exception):
@@ -703,7 +711,7 @@ def skill_dependency_names(skill_id: str) -> list[str]:
         seen.add(name)
         names.append(name)
     skill_name = validate_skill_dir(skill_path(skill_id))["name"]
-    for name in EXPLICIT_DEPENDENCIES.get(skill_name, ()):
+    for name in explicit_dependency_names(skill_id, skill_name):
         if name in seen or not records_for_name(name):
             continue
         seen.add(name)
@@ -808,7 +816,7 @@ def dependency_names_for_record(record: dict[str, str], names: set[str]) -> list
         if match in names and match != record["name"]:
             found.add(match)
 
-    found.update(EXPLICIT_DEPENDENCIES.get(record["name"], ()))
+    found.update(explicit_dependency_names(record["id"], record["name"]))
     return sorted(found)
 
 

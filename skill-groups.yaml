@@ -51,14 +51,14 @@ groups:
     note: 单一已注册变体。
   - name: brainstorming
     default_id: vendor/obra/brainstorming
-    variants: vendor/obra/brainstorming
-    sources: obra
+    variants: vendor/obra/brainstorming,vendor/obra-custom/brainstorming
+    sources: obra,obra-custom
     dependencies: writing-plans
-    difference: 单一已注册变体
-    recommendation: 单一来源；无需合并决策
+    difference: 来源：obra,obra-custom; 描述相同
+    recommendation: 推荐 vendor/obra/brainstorming 作为未批准变体中的默认项；提升为 approved 前请先审查
     use_when: 当用户准备开展创造性工程工作，例如新增功能、构建组件、扩展能力或改变现有行为，需要先澄清意图、约束并形成获批设计时使用。
     avoid_when: 当任务只是读取、解释、审查或执行已经批准的明确方案，且不涉及新的设计决策时不要用。
-    note: 单一已注册变体。
+    note: 已合并重复 skill 名称；除非指定 --source，否则使用默认项。
   - name: claude-handoff
     default_id: vendor/mattpocock/in-progress-claude-handoff
     variants: vendor/mattpocock/in-progress-claude-handoff

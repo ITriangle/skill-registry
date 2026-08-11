@@ -1,0 +1,12 @@
+locale: zh-CN
+source_id: vendor/obra-custom/brainstorming
+files:
+  - path: SKILL.md
+    source_sha256: 3abaaeea1da380c5344ae477802573cde92d570cb2772bbbd0ba7e03fe8d9095
+    translation_sha256: 34a2c5cb5fc57e9b5dccd4b5e1f92c83ec1643f2b1e01bf8470bf1f20f5690a0
+  - path: spec-document-reviewer-prompt.md
+    source_sha256: 95a0a195de9d984be2fffa95bab16fc8c563bc296a9cfc5e9c29cb3ece0d7457
+    translation_sha256: bf55ef80fca77b71d55be5b618dca67ae04f9765966ac78e5dbc54674ddf53b2
+  - path: visual-companion.md
+    source_sha256: 60cbad29b9dd7eaf08da020e301c498a72230b2e13c1813fa967a135ffcc1d71
+    translation_sha256: 72336b801d1318aebf78f3299d5d363dddefefc0fcb5956ee3283f8e6f1cc6b8

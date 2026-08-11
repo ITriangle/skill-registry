@@ -1,0 +1,10 @@
+source: obra-custom
+repo: git@github.com:obra/superpowers.git
+ref: 44c9b2d6e889982ac18c27d05a19fefe335194e1
+license: MIT
+note: Derived from obra/superpowers brainstorming; replaces writing-plans handoff with host agent native planning.
+skills:
+  - id: vendor/obra-custom/brainstorming
+    upstream_path: skills/brainstorming
+    status: candidate
+    imported_at: 2026-08-11T07:10:00Z
