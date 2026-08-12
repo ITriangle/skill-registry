@@ -1,23 +1,32 @@
 ---
 name: brainstorming
-description: "You MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Explores user intent, requirements and design before implementation."
+description: "Use before open-ended feature design or major behavior changes when requirements, trade-offs, or acceptance criteria need exploration. Do not use for mechanical edits, formatting conversions, copy changes, typo fixes, small configuration changes, or direct implementation of an already approved design."
 ---
 
 # Brainstorming Ideas Into Designs
 
-Help turn ideas into fully formed designs and specs through natural collaborative dialogue.
+Help turn open-ended ideas and consequential behavior changes into fully formed designs and specs through natural collaborative dialogue.
 
-Start by understanding the current project context, then ask questions one at a time to refine the idea. Once you understand what you're building, present the design and get user approval.
+First decide whether the request contains genuine design uncertainty. If the requested change and acceptance criteria are already clear, proceed directly without invoking this workflow. When exploration is needed, understand the current project context, ask questions one at a time, present the design, and get user approval.
 
 <HARD-GATE>
-Do NOT invoke any implementation skill, write any code, scaffold any project, or take any implementation action until you have presented a design and the user has approved it. This applies to EVERY project regardless of perceived simplicity.
+Once a task qualifies for this skill, do NOT invoke any implementation skill, write code, scaffold a project, or take implementation action until you have presented a design and the user has approved it. This gate applies only to tasks within the scope defined above.
 </HARD-GATE>
 
-## Anti-Pattern: "This Is Too Simple To Need A Design"
+## Scope Gate: Design Uncertainty, Not Task Size
 
-Every project goes through this process. A todo list, a single-function utility, a config change — all of them. "Simple" projects are where unexamined assumptions cause the most wasted work. The design can be short (a few sentences for truly simple projects), but you MUST present it and get approval.
+Use this skill when the task has unresolved decisions about user experience, architecture, interfaces, data flow, scope, or meaningful trade-offs, or when it introduces a major externally visible behavior change.
 
-## Checklist
+Do not use this skill when the user has already specified the exact change and acceptance criteria and execution is mechanical or local. Examples include formatting or representation conversions, copy edits, typo fixes, direct replacements, small configuration changes, and implementation of an already approved design.
+
+A small task may still need brainstorming when it contains a real design decision. A coding task does not automatically need brainstorming. Judge by uncertainty and impact, not by whether files will be edited. If the user explicitly asks to proceed directly or skip brainstorming and no unresolved major design decision remains, proceed with the task.
+
+## Choose Workflow Depth
+
+- **Lightweight design:** When only one bounded design decision remains, inspect the relevant context, ask only necessary questions, present a short design, and get approval. Do not require a separate spec or commit unless the user asks for one or the risk warrants it.
+- **Full design:** For open-ended features, multiple consequential decisions, cross-component changes, or major behavior changes, use the full checklist below.
+
+## Full-Design Checklist
 
 You MUST create a task for each of these items and complete them in order:
 
@@ -31,7 +40,7 @@ You MUST create a task for each of these items and complete them in order:
 8. **User reviews written spec** — ask user to review the spec file before proceeding
 9. **Transition to implementation** — create an implementation plan using the host agent's native planning capability
 
-## Process Flow
+## Full-Design Process Flow
 
 ```dot
 digraph brainstorming {
@@ -58,7 +67,7 @@ digraph brainstorming {
 }
 ```
 
-**The terminal state is creating an implementation plan via the host agent's native planning capability.** Do NOT invoke frontend-design, mcp-builder, writing-plans, or any other implementation skill. Do NOT write code yet — only produce the plan and get user approval.
+**For the full-design path, the terminal state is creating an implementation plan via the host agent's native planning capability.** Do NOT invoke frontend-design, mcp-builder, writing-plans, or any other implementation skill. Do NOT write code yet — only produce the plan and get user approval.
 
 ## The Process
 
@@ -100,11 +109,11 @@ digraph brainstorming {
 - Where existing code has problems that affect the work (e.g., a file that's grown too large, unclear boundaries, tangled responsibilities), include targeted improvements as part of the design - the way a good developer improves code they're working in.
 - Don't propose unrelated refactoring. Stay focused on what serves the current goal.
 
-## After the Design
+## After a Full Design
 
 **Documentation:**
 
-- Write the validated design (spec) to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md`
+- For the full-design path, write the validated design (spec) to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md`
   - (User preferences for spec location override this default)
 - Use elements-of-style:writing-clearly-and-concisely skill if available
 - Commit the design document to git
