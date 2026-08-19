@@ -54,7 +54,7 @@ groups:
     variants: vendor/obra/brainstorming,vendor/obra-custom/brainstorming
     sources: obra,obra-custom
     dependencies: writing-plans
-    difference: 来源：obra,obra-custom; 描述相同
+    difference: 来源：obra,obra-custom; 概况：obra-custom=40词/2参考/5脚本,obra=26词/2参考/5脚本
     recommendation: 推荐 vendor/obra/brainstorming 作为未批准变体中的默认项；提升为 approved 前请先审查
     use_when: 当用户准备开展创造性工程工作，例如新增功能、构建组件、扩展能力或改变现有行为，需要先澄清意图、约束并形成获批设计时使用。
     avoid_when: 当任务只是读取、解释、审查或执行已经批准的明确方案，且不涉及新的设计决策时不要用。
@@ -158,6 +158,16 @@ groups:
     recommendation: 单一来源；无需合并决策
     use_when: 当用户要为 Claude Code 配置 hooks，阻止危险 git 命令如 push、reset --hard、clean 或 branch -D 时使用。
     avoid_when: 当用户只是要普通 git 操作、分支管理，或不在 Claude Code hooks 场景中时不要用。
+    note: 单一已注册变体。
+  - name: github-code-review
+    default_id: vendor/itriangle/github-code-review
+    variants: vendor/itriangle/github-code-review
+    sources: itriangle
+    dependencies: none
+    difference: 单一已注册变体
+    recommendation: 单一来源；无需合并决策
+    use_when: 当用户要对 GitHub PR、本地分支、提交区间或工作区改动执行严格只读代码审查，并要求先通过代码规范、命名和文件长度门禁时使用。
+    avoid_when: 当用户要直接修复问题、发布 GitHub review，或需要 Standards + Spec 双轴子代理评审时不要用。
     note: 单一已注册变体。
   - name: gitops
     default_id: vendor/yugasun/gitops

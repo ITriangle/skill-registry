@@ -1,0 +1,9 @@
+source: itriangle
+repo: git@github.com:ITriangle/skill-registry.git
+ref: local-authored
+note: Original personal skill informed by the MIT-licensed NousResearch/hermes-agent github-code-review workflow; no upstream files are vendored.
+skills:
+  - id: vendor/itriangle/github-code-review
+    upstream_path: skills/vendor/itriangle/github-code-review
+    status: candidate
+    imported_at: 2026-08-19T06:26:42Z

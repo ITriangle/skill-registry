@@ -1,0 +1,9 @@
+locale: zh-CN
+source_id: vendor/itriangle/github-code-review
+files:
+  - path: SKILL.md
+    source_sha256: 3a5271ceb056716540a62b5c357bd71530e3de3c9b2525d0f8c1e45f25b62330
+    translation_sha256: cf9ce22ebb4862539136c71239c0693a25d072f004849ef806ed90f168a8b763
+  - path: references/review-rubric.md
+    source_sha256: 38d9168f0bc16959c79d7642d0ddc437df20c51148e0417b816f254ee22457eb
+    translation_sha256: 9cb08797387f6fdbbc2df799370ec527c63d3df82ba6e037f84ac24437c441ac
