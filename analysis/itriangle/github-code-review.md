@@ -2,7 +2,7 @@
 
 - Skill 名称：`github-code-review`
 - 当前状态：`candidate`
-- 描述：Perform a read-only, gated review of a GitHub pull request or local Git changes. Use for PR URLs or numbers, branches, commit ranges, staged or unstaged changes, pre-push reviews, and requests such as code review, review this PR, 审 PR, 代码审查, or 检查提交前改动. Do not use to implement fixes or publish a GitHub review.
+- 描述：对 GitHub 拉取请求或本地 Git 变更执行只读门禁式审查。适用于 PR URL 或编号、分支、提交区间、暂存或未暂存改动、推送前审查，以及 code review、review this PR、审 PR、代码审查、检查提交前改动等请求。不用于直接实现修复或向 GitHub 发布 review。
 
 ## 触发条件审查
 
@@ -13,7 +13,7 @@
 
 - 脚本：未检测到
 - 参考资料：references/review-rubric.md
-- 风险提及：网络, 文件系统, shell, 密钥
+- 风险提及：网络, 密钥
 
 ## 建议
 

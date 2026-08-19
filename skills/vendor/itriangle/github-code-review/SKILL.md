@@ -1,138 +1,138 @@
 ---
 name: github-code-review
-description: Perform a read-only, gated review of a GitHub pull request or local Git changes. Use for PR URLs or numbers, branches, commit ranges, staged or unstaged changes, pre-push reviews, and requests such as code review, review this PR, 审 PR, 代码审查, or 检查提交前改动. Do not use to implement fixes or publish a GitHub review.
+description: 对 GitHub 拉取请求或本地 Git 变更执行只读门禁式审查。适用于 PR URL 或编号、分支、提交区间、暂存或未暂存改动、推送前审查，以及 code review、review this PR、审 PR、代码审查、检查提交前改动等请求。不用于直接实现修复或向 GitHub 发布 review。
 ---
 
-# GitHub Code Review
+# GitHub 代码审查
 
-Review changes without changing the repository or GitHub. Apply the repository's own rules first, then use the personal baseline in [references/review-rubric.md](references/review-rubric.md).
+审查变更，但不改变仓库或 GitHub。优先应用目标仓库自身规则，再使用 [references/review-rubric.md](references/review-rubric.md) 中的个人基线。
 
-Use two strict stages:
+严格分成两个阶段：
 
-1. Gate on code standards, naming, and file length.
-2. Only after the gate passes, review behavior and broader quality.
+1. 对代码规范、命名和文件长度执行门禁检查。
+2. 只有门禁通过后，才审查行为和更广泛的质量问题。
 
-If stage 1 fails or cannot be completed reliably, stop. Do not perform stage 2.
+如果第一阶段失败或无法可靠完成，立即停止，不执行第二阶段。
 
-## Preserve Read-Only Operation
+## 保持只读操作
 
-- Do not post comments, submit reviews, approve, request changes, label, merge, close, or otherwise mutate GitHub.
-- Do not edit files, run fix-mode formatters, update snapshots, push, fetch, checkout, create or delete branches, or change repository state.
-- Permit tests and check-mode tooling only when they are expected not to modify tracked files. Note any transient cache or build output.
-- Check repository status before and after validation. If a command changes tracked files, stop and report it; do not revert user work.
-- Do not inspect token values, credential files, or authentication environment variables. Use a host-provided read-only GitHub connector when available; otherwise use authenticated `gh` read commands. Use `gh auth status` only to diagnose authentication.
-- If PR context cannot be read safely, ask for a patch or review a locally available diff. State the missing context instead of claiming a complete PR review.
+- 不发布评论、不提交 review、不批准、不请求修改、不加标签、不合并、不关闭，也不以其他方式改变 GitHub。
+- 不编辑文件、不运行修复模式格式化工具、不更新快照、不 push、不 fetch、不 checkout、不创建或删除分支，也不改变仓库状态。
+- 只有在预期不会修改受版本控制文件时，才允许运行测试和检查模式工具；记录其产生的临时缓存或构建输出。
+- 验证前后都检查仓库状态。如果命令改变了受版本控制文件，立即停止并报告；不要回滚用户的工作。
+- 不检查 token 值、凭证文件或认证环境变量。优先使用宿主提供的只读 GitHub connector，否则使用已经认证的 `gh` 读取命令。仅用 `gh auth status` 诊断认证状态。
+- 如果无法安全读取 PR 上下文，请用户提供 patch，或审查本地已有 diff。明确说明缺失的上下文，不得声称完成了完整 PR 审查。
 
-## Resolve the Review Target
+## 确定审查目标
 
-Identify one mode and keep its comparison fixed throughout the review.
+确定一种模式，并在整个审查期间固定其比较范围。
 
-### GitHub pull request
+### GitHub 拉取请求
 
-For a PR URL or number, collect read-only metadata: title, body, author, base and head refs, head SHA, draft state, changed files, diff, and check results. Read existing discussion when it affects intent or prevents duplicate findings.
+对于 PR URL 或编号，只读收集标题、正文、作者、base/head ref、head SHA、草稿状态、变更文件、diff 和 checks。已有讨论会影响意图判断或帮助避免重复 finding 时，也要读取。
 
-Use the PR base ref as the comparison base. Do not check out or fetch the PR. If full files are already available in the local repository, use them for context; otherwise rely on the PR diff and read-only GitHub content and disclose the limitation.
+使用 PR 的 base ref 作为比较基准。不要 checkout 或 fetch PR。如果本地仓库已经包含完整文件，就用它们补充上下文；否则依赖 PR diff 和 GitHub 只读内容，并披露局限。
 
-### Local changes
+### 本地变更
 
-Use the user's stated scope exactly:
+严格使用用户指定的范围：
 
-- Staged changes: `git diff --cached`.
-- Unstaged changes: `git diff`.
-- All tracked worktree changes against `HEAD`: `git diff HEAD`.
-- Branch, tag, or commit baseline: validate it with `git rev-parse --verify`, then use `git diff <base>...HEAD` and `git log <base>..HEAD --oneline`.
+- 暂存变更：`git diff --cached`。
+- 未暂存变更：`git diff`。
+- 相对 `HEAD` 的全部受跟踪工作区变更：`git diff HEAD`。
+- 分支、tag 或 commit 基准：先用 `git rev-parse --verify` 验证，再运行 `git diff <base>...HEAD` 和 `git log <base>..HEAD --oneline`。
 
-When a branch review has no explicit base, prefer the repository's resolved remote default branch, then an existing `main`, then an existing `master`. Ask for the base if none resolves or more than one interpretation remains plausible. Do not silently assume `main`.
+审查分支但用户没有明确 base 时，优先使用仓库可解析的远端默认分支，其次是已存在的 `main`，再其次是已存在的 `master`。如果都无法解析或仍有多种合理解释，询问 base。不要静默假定 `main`。
 
-Fail early on an invalid ref or empty diff. Record the exact target, base, head, and changed-file list in the final coverage section.
+无效 ref 或空 diff 应尽早失败。在最终覆盖范围中记录确切目标、base、head 和变更文件列表。
 
-## Gather Governing Context
+## 收集约束上下文
 
-Before judging the diff, inspect the rules that govern each changed file:
+判断 diff 之前，检查约束每个变更文件的规则：
 
-1. The nearest applicable `AGENTS.md` or equivalent agent instructions.
-2. `CONTRIBUTING.md`, coding standards, architecture rules, and repository documentation.
-3. Formatter, linter, type-checker, test, and file-length configuration.
-4. The PR body, linked issue, specification, or commit messages describing intent.
-5. Established conventions in adjacent code when no explicit rule exists.
+1. 最近且适用的 `AGENTS.md` 或同类 agent 指令。
+2. `CONTRIBUTING.md`、编码规范、架构规则和仓库文档。
+3. formatter、linter、type-checker、测试和文件长度配置。
+4. 描述意图的 PR 正文、关联 issue、规格或提交消息。
+5. 没有显式规则时，参考相邻代码中已经形成的惯例。
 
-An explicit repository rule overrides the personal baseline. Treat tool-enforced rules as tool results rather than restating every possible violation manually.
+仓库显式规则覆盖个人基线。已经由工具强制的规则应作为工具结果呈现，不要手工重复罗列每一种潜在违规。
 
-## Stage 1: Basic Quality Gate
+## 第一阶段：基础质量门禁
 
-Check these categories in order. Collect all reliable findings within stage 1, then stop the review if any exist.
+按顺序检查以下类别。收集第一阶段内全部可靠 finding；只要存在任何 finding，就停止整个审查。
 
-### 1. Code standards
+### 1. 代码规范
 
-Run the repository's configured formatter, linter, type-checker, or policy checks in check-only mode when safe. Prefer commands scoped to changed files. Never invent a command or run a formatter that may rewrite files.
+在安全时，以只检查模式运行仓库配置的 formatter、linter、type-checker 或策略检查。尽可能把命令限制到变更文件。不要臆造命令，也不要运行可能重写文件的 formatter。
 
-Report only violations supported by an applicable rule, configuration, check result, or clear established convention. Separate environment/tooling failures from code violations.
+只报告有适用规则、配置、检查结果或明确既有惯例支持的违规。区分环境/工具故障和代码违规。
 
-### 2. Naming
+### 2. 命名
 
-Check changed identifiers, files, modules, tests, configuration keys, and public API names. Require evidence from repository rules, language conventions, or consistent adjacent code. Do not fail the gate for subjective taste, unfamiliar vocabulary, or an abbreviation that is already established in the domain.
+检查变更的标识符、文件、模块、测试、配置键和公共 API 名称。必须以仓库规则、语言惯例或一致的相邻代码为证据。不要因为主观喜好、陌生术语或领域中已经确立的缩写而让门禁失败。
 
-### 3. File length
+### 3. 文件长度
 
-Use a repository-configured maximum when one exists. Otherwise, set the maximum to **500 physical lines**.
+仓库配置了最大值时使用该值，否则最大值为 **500 个物理行**。
 
-Fail the gate when any changed, non-deleted code file is currently over the applicable maximum, even if it was already over the limit before this change. Include tests as code. Exclude only files demonstrably belonging to one of these classes:
+任何本次触及、未删除且当前超过适用上限的代码文件都会使门禁失败，即使本次变更之前它就已超限。测试文件也属于代码。只有能够明确证明属于以下类别时才排除：
 
-- generated code;
-- vendored or third-party code;
-- lockfiles;
-- migrations;
-- snapshots;
-- pure data files;
-- binary files.
+- 生成代码；
+- vendored 或第三方代码；
+- lockfile；
+- migration；
+- snapshot；
+- 纯数据文件；
+- 二进制文件。
 
-Do not infer that a file is generated merely because it is long. Use a generated marker, repository configuration, documented path, or established project convention.
+不要仅凭文件很长就推断它是生成文件。必须有生成标记、仓库配置、已记录路径或既有项目惯例作为依据。
 
-### Gate decision
+### 门禁结论
 
-- **PASS:** all three checks completed and no reliable findings exist. Continue to stage 2.
-- **FAIL:** at least one reliable finding exists. Report stage 1 findings and stop.
-- **INCONCLUSIVE:** missing context or an unavailable check prevents a reliable gate decision. Report what is missing and stop.
+- **PASS：** 三项检查全部完成，并且没有可靠 finding。继续第二阶段。
+- **FAIL：** 至少存在一个可靠 finding。报告第一阶段 finding，然后停止。
+- **INCONCLUSIVE：** 缺失上下文或检查不可用，无法形成可靠门禁结论。报告缺失内容，然后停止。
 
-## Stage 2: Deep Review
+## 第二阶段：深度审查
 
-Read [references/review-rubric.md](references/review-rubric.md) in full only after stage 1 passes.
+只有第一阶段通过后，才完整读取 [references/review-rubric.md](references/review-rubric.md)。
 
-For each suspected issue:
+对每个疑似问题：
 
-1. Read enough surrounding code, callers, contracts, and tests to trace the affected behavior.
-2. Confirm that the change introduces, exposes, or materially worsens the issue. Do not report unrelated pre-existing problems.
-3. Run the narrowest safe test or check that can validate the claim when practical.
-4. Discard speculative findings that lack a concrete trigger, impact, or violated requirement.
+1. 阅读足够的周边代码、调用方、契约和测试，追踪受影响行为。
+2. 确认本次变更引入、暴露或实质性加剧了问题。不要报告无关的历史遗留问题。
+3. 可行时，运行能够验证判断的最小安全测试或检查。
+4. 丢弃缺少具体触发条件、影响或被违反要求的推测性 finding。
 
-Prefer a small set of well-supported findings over a long checklist of possibilities.
+宁可只保留少量证据充分的 finding，也不要罗列大量可能性检查表。
 
-## Severity
+## 严重级别
 
-- **P0:** stop-ship issue with immediate, widespread impact such as destructive data loss or critical compromise.
-- **P1:** high-impact correctness, security, availability, or compatibility defect likely to affect users or production.
-- **P2:** actionable defect or substantial quality risk that should be fixed, but is not an emergency.
-- **P3:** non-blocking improvement to tests, design, maintainability, naming, or documentation.
+- **P0：** 必须阻断，具有即时且广泛影响，例如破坏性数据丢失或关键系统失陷。
+- **P1：** 很可能影响用户或生产环境的高影响正确性、安全、可用性或兼容性缺陷。
+- **P2：** 应当修复，但并非紧急事件的可操作缺陷或重大质量风险。
+- **P3：** 对测试、设计、可维护性、命名或文档的非阻塞改进。
 
-Stage 1 fails on any supported finding regardless of its P-level. Severity communicates impact; it does not override the gate.
+第一阶段只要出现有证据支持的 finding 就失败，不受 P 级别影响。严重级别只表示影响，不能覆盖门禁规则。
 
-## Report Findings First
+## Findings 优先报告
 
-Write in the user's language; default to Chinese when no preference is visible. Preserve code identifiers and commands verbatim.
+使用用户的语言；看不出偏好时默认中文。代码标识符和命令保持原样。
 
-For every finding, provide:
+每条 finding 都要提供：
 
-- `[P0-P3]` plus a concise, specific title;
-- file and tight line location when available;
-- the rule or evidence;
-- the concrete impact or failure scenario;
-- a bounded repair direction, without implementing it.
+- `[P0-P3]` 加简洁、具体的标题；
+- 可用时给出文件和紧凑行定位；
+- 规则或证据；
+- 具体影响或失败场景；
+- 有边界的修复方向，但不直接实现。
 
-Then report:
+随后报告：
 
-- `基础门禁`: PASS, FAIL, or INCONCLUSIVE;
-- `深度审查`: completed, not run because the gate failed, or not run because the gate was inconclusive;
-- the reviewed target, base/head, files, and commands/checks used;
-- residual risk and anything not verified.
+- `基础门禁`：PASS、FAIL 或 INCONCLUSIVE；
+- `深度审查`：已完成、因门禁失败未运行，或因门禁无结论未运行；
+- 审查目标、base/head、文件和使用的命令/检查；
+- 残余风险和任何未验证内容。
 
-If stage 2 completes with no reliable findings, say `未发现可靠问题`; do not claim the change is proven correct. Do not add praise merely to fill the report.
+如果第二阶段完成后没有可靠 finding，写明 `未发现可靠问题`；不要声称变更已经被证明完全正确，也不要为了填充报告而添加表扬。
