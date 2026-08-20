@@ -160,9 +160,9 @@ groups:
     avoid_when: 当用户只是要普通 git 操作、分支管理，或不在 Claude Code hooks 场景中时不要用。
     note: 单一已注册变体。
   - name: github-code-review
-    default_id: vendor/itriangle/github-code-review
-    variants: vendor/itriangle/github-code-review
-    sources: itriangle
+    default_id: vendor/tsoul/github-code-review
+    variants: vendor/tsoul/github-code-review
+    sources: tsoul
     dependencies: none
     difference: 单一已注册变体
     recommendation: 单一来源；无需合并决策

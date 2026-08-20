@@ -1,4 +1,4 @@
-# vendor/itriangle/github-code-review
+# vendor/tsoul/github-code-review
 
 - Skill 名称：`github-code-review`
 - 当前状态：`candidate`

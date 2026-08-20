@@ -1,9 +1,9 @@
-source: itriangle
+source: tsoul
 repo: git@github.com:ITriangle/skill-registry.git
 ref: local-authored
 note: 个人原创 skill，参考 MIT 许可的 NousResearch/hermes-agent github-code-review 工作流；未直接 vendor 上游文件。
 skills:
-  - id: vendor/itriangle/github-code-review
-    upstream_path: skills/vendor/itriangle/github-code-review
+  - id: vendor/tsoul/github-code-review
+    upstream_path: skills/vendor/tsoul/github-code-review
     status: candidate
     imported_at: 2026-08-19T06:26:42Z

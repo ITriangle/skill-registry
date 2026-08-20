@@ -1,0 +1,9 @@
+locale: zh-CN
+source_id: vendor/tsoul/github-code-review
+files:
+  - path: SKILL.md
+    source_sha256: 45df5f6a5fd9909f05a5f172349b0026b90fc316e0a55974786dfeccf7000e16
+    translation_sha256: 45df5f6a5fd9909f05a5f172349b0026b90fc316e0a55974786dfeccf7000e16
+  - path: references/review-rubric.md
+    source_sha256: c4f33a49af89c714330ffe6d4387a21f55750f9a7534b187317ecb809e237f7c
+    translation_sha256: c4f33a49af89c714330ffe6d4387a21f55750f9a7534b187317ecb809e237f7c

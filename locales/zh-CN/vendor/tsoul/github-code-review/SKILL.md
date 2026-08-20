@@ -3,7 +3,7 @@ name: github-code-review
 description: 对 GitHub 拉取请求或本地 Git 变更执行只读门禁式审查。适用于 PR URL 或编号、分支、提交区间、暂存或未暂存改动、推送前审查，以及 code review、review this PR、审 PR、代码审查、检查提交前改动等请求。不用于直接实现修复或向 GitHub 发布 review。
 ---
 
-# GitHub 代码审查
+# GitHub 代码审查 Skill
 
 审查变更，但不改变仓库或 GitHub。优先应用目标仓库自身规则，再使用 [references/review-rubric.md](references/review-rubric.md) 中的个人基线。
 
