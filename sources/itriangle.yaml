@@ -1,7 +1,7 @@
 source: itriangle
 repo: git@github.com:ITriangle/skill-registry.git
 ref: local-authored
-note: Original personal skill informed by the MIT-licensed NousResearch/hermes-agent github-code-review workflow; no upstream files are vendored.
+note: 个人原创 skill，参考 MIT 许可的 NousResearch/hermes-agent github-code-review 工作流；未直接 vendor 上游文件。
 skills:
   - id: vendor/itriangle/github-code-review
     upstream_path: skills/vendor/itriangle/github-code-review

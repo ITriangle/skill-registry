@@ -1,82 +1,82 @@
-# Deep Review Rubric
+# 深度审查基线
 
-Read this reference only after the basic quality gate in `SKILL.md` passes. Apply the repository's documented behavior and constraints before this baseline.
+只有 `SKILL.md` 中的基础质量门禁通过后，才读取此参考。始终优先应用仓库已经记录的行为和约束，再使用本基线。
 
-## Correctness and Requirements
+## 正确性与需求
 
-- Compare behavior with the PR description, linked issue, specification, public contract, and existing tests.
-- Trace changed conditions, state transitions, data transformations, boundary values, empty inputs, nullability, partial failures, retries, and cleanup paths.
-- Check whether success and error results reach callers with the promised meaning.
-- Look for off-by-one errors, inverted conditions, stale state, unreachable branches, accidental fallthrough, and incorrect default behavior.
-- Confirm that a fix addresses the actual failure path rather than only the demonstrated example.
+- 将行为与 PR 描述、关联 issue、规格、公共契约和现有测试对照。
+- 追踪变更条件、状态转换、数据转换、边界值、空输入、可空性、部分失败、重试和清理路径。
+- 检查成功和错误结果是否以承诺的语义到达调用方。
+- 查找 off-by-one、条件取反、陈旧状态、不可达分支、意外 fallthrough 和错误默认行为。
+- 确认修复覆盖真实失败路径，而不只是演示用例。
 
-## Security and Privacy
+## 安全与隐私
 
-- Check authentication and authorization at the operation and object level.
-- Trace untrusted input through queries, templates, shell commands, paths, redirects, parsers, and deserialization.
-- Check secret handling, sensitive logging, data exposure, insecure defaults, and privilege expansion.
-- Verify that validation occurs at a trusted boundary and cannot be bypassed through an alternate path.
-- Report a security finding only with a concrete source, sink, missing control, or violated policy.
+- 在操作级和对象级检查认证与授权。
+- 追踪不可信输入经过查询、模板、shell 命令、路径、重定向、解析器和反序列化的过程。
+- 检查密钥处理、敏感日志、数据暴露、不安全默认值和权限扩大。
+- 验证校验发生在可信边界，并且不能从其他路径绕过。
+- 只有存在具体 source、sink、缺失控制或被违反策略时，才报告安全 finding。
 
-## Data Integrity, State, and Concurrency
+## 数据完整性、状态与并发
 
-- Check transaction boundaries, atomicity, idempotency, duplicate delivery, ordering, lost updates, and retry behavior.
-- Verify that partial failure cannot leave externally visible state inconsistent.
-- Examine caches, background jobs, event handlers, async tasks, locks, and shared mutable state for races or stale reads.
-- Check schema, serialization, and persistence changes for forward/backward readability and safe defaults.
+- 检查事务边界、原子性、幂等性、重复投递、顺序、丢失更新和重试行为。
+- 验证部分失败不会让外部可见状态不一致。
+- 检查 cache、后台任务、事件处理器、异步任务、锁和共享可变状态中的竞争或陈旧读取。
+- 检查 schema、序列化和持久化变更能否被新旧版本读取，以及是否有安全默认值。
 
-## Compatibility and Interfaces
+## 兼容性与接口
 
-- Check public APIs, CLI flags, configuration, events, schemas, stored data, and exported types for breaking changes.
-- Verify callers and consumers, including cases outside the changed file.
-- Check migration, rollout, downgrade, and mixed-version behavior when the change crosses a deployment boundary.
-- Distinguish intentional contract changes from accidental incompatibility.
+- 检查公共 API、CLI flag、配置、事件、schema、存储数据和导出类型是否发生破坏性变更。
+- 验证调用方和消费者，包括变更文件之外的使用者。
+- 当变更跨越部署边界时，检查 migration、rollout、downgrade 和混合版本行为。
+- 区分有意契约变更和意外不兼容。
 
-## Performance and Resource Use
+## 性能与资源使用
 
-- Look for unbounded work, N+1 access, repeated parsing or allocation, full scans, excessive network calls, and blocking operations in asynchronous paths.
-- Check memory, file descriptors, connections, goroutines/threads/tasks, and cleanup on both success and failure.
-- Require a realistic input size or execution path before reporting a performance problem.
-- Treat optimization ideas without demonstrated risk as P3 at most.
+- 查找无界工作、N+1 访问、重复解析或分配、全量扫描、过量网络请求和异步路径中的阻塞操作。
+- 检查内存、文件描述符、连接、goroutine/thread/task，以及成功和失败两条路径中的清理。
+- 报告性能问题之前，必须给出现实的输入规模或执行路径。
+- 没有明确风险的优化想法最高只能标记为 P3。
 
-## Tests and Verification
+## 测试与验证
 
-- Map each changed behavior and failure path to existing or added tests.
-- Check boundary, negative, permission, concurrency, retry, and regression coverage where relevant.
-- Ensure tests exercise the public behavior rather than merely mirroring implementation details.
-- Look for assertions that can pass without proving the intended result, flaky timing assumptions, and mocks that bypass the changed integration.
-- Do not require tests for comments, mechanical metadata, or behavior already proven at the appropriate lower layer.
+- 把每项变更行为和失败路径映射到已有或新增测试。
+- 在相关时检查边界、负向、权限、并发、重试和回归覆盖。
+- 确保测试验证公共行为，而不只是复刻实现细节。
+- 查找没有证明预期结果也能通过的断言、不稳定的时间假设，以及绕过变更集成点的 mock。
+- 不要要求为注释、机械元数据，或已经在适当下层得到证明的行为补测试。
 
-## Design and Maintainability
+## 设计与可维护性
 
-- Check whether responsibilities remain cohesive and whether the change creates avoidable coupling, duplication, hidden global state, or divergent sources of truth.
-- Examine abstractions only when they obscure behavior, duplicate an existing seam, or add scope not required by the change.
-- Check that control flow, error ownership, and lifecycle are understandable from the relevant module interface.
-- Keep subjective refactoring preferences non-blocking unless they create a concrete defect or violate a repository rule.
+- 检查职责是否仍然内聚，以及变更是否造成可避免的耦合、重复、隐藏全局状态或多个事实来源。
+- 只有当抽象遮蔽行为、重复已有 seam，或增加需求之外的范围时才提出问题。
+- 检查控制流、错误所有权和生命周期能否从相关 module interface 理解。
+- 主观重构偏好保持非阻塞，除非它造成具体缺陷或违反仓库规则。
 
-## Error Handling and Observability
+## 错误处理与可观测性
 
-- Verify that errors are preserved, classified, retried, surfaced, or translated at the correct boundary.
-- Check timeouts, cancellation, fallback behavior, and cleanup.
-- Ensure logs, metrics, traces, and alerts provide useful signals without exposing secrets or creating excessive noise.
-- Check that operators can distinguish expected user errors from system failures when operational behavior changes.
+- 验证错误是否在正确边界被保留、分类、重试、呈现或转换。
+- 检查 timeout、cancellation、fallback 行为和清理。
+- 确保日志、指标、trace 和告警提供有效信号，同时不暴露密钥或制造过量噪声。
+- 当运维行为变化时，检查运维人员能否区分预期用户错误和系统故障。
 
-## Documentation and Delivery
+## 文档与交付
 
-- Check user-facing, API, configuration, migration, and operational documentation when the change alters those contracts.
-- Verify comments explain non-obvious reasons rather than restating code.
-- Check feature flags, environment variables, deployment order, and rollback assumptions when applicable.
-- Report missing documentation only when a concrete consumer or operator would otherwise be misled.
+- 当变更影响用户、API、配置、迁移或运维契约时，检查对应文档。
+- 验证注释解释不明显的原因，而不是复述代码。
+- 在相关时检查 feature flag、环境变量、部署顺序和回滚假设。
+- 只有具体消费者或运维人员会因此被误导时，才报告缺失文档。
 
-## Finding Quality Filter
+## Finding 质量过滤器
 
-Keep a finding only when all applicable answers are clear:
+只有以下适用问题都有清晰答案时，才保留 finding：
 
-1. What changed behavior or rule is involved?
-2. Where is the tightest useful location?
-3. Under what concrete input, state, or call path does it matter?
-4. What observable impact follows?
-5. Is the issue introduced, exposed, or materially worsened by this change?
-6. What bounded repair direction would address it?
+1. 涉及哪个变更行为或规则？
+2. 最紧凑且有用的位置在哪里？
+3. 在什么具体输入、状态或调用路径下会发生？
+4. 会产生什么可观测影响？
+5. 该问题是否由本次变更引入、暴露或实质性加剧？
+6. 什么有边界的修复方向能够解决它？
 
-If the answer depends on unknown external behavior, inspect the owning code or authoritative contract. If it remains unknown, record it as residual risk rather than a finding.
+如果答案依赖未知外部行为，检查其所有者代码或权威契约。如果仍然未知，把它记录为残余风险，而不是 finding。

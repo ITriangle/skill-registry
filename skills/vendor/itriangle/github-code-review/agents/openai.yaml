@@ -1,4 +1,4 @@
 interface:
-  display_name: "GitHub Code Review"
+  display_name: "GitHub 代码审查"
   short_description: "只读审查 GitHub PR、本地分支与工作区代码变更并输出分级发现"
-  default_prompt: "Use $github-code-review to perform a read-only gated review of this PR or local diff."
+  default_prompt: "使用 $github-code-review 对这个 PR 或本地 diff 执行只读门禁式代码审查。"
