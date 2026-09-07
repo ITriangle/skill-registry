@@ -7,3 +7,11 @@ skills:
     upstream_path: skills/vendor/tsoul/github-code-review
     status: candidate
     imported_at: 2026-08-19T06:26:42Z
+  - id: vendor/tsoul/feishu-doc-writing
+    upstream_path: skills/vendor/tsoul/feishu-doc-writing
+    status: candidate
+    imported_at: 2026-09-04T03:13:00Z
+  - id: vendor/tsoul/doc-eval
+    upstream_path: skills/vendor/tsoul/doc-eval
+    status: candidate
+    imported_at: 2026-09-04T11:17:19Z

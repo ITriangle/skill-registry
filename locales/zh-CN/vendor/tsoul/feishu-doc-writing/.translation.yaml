@@ -1,0 +1,9 @@
+locale: zh-CN
+source_id: vendor/tsoul/feishu-doc-writing
+files:
+  - path: SKILL.md
+    source_sha256: e394c893350be29bd6d5d53fa74fb7334398c03fcf6f243e883eaf88d713e09f
+    translation_sha256: e394c893350be29bd6d5d53fa74fb7334398c03fcf6f243e883eaf88d713e09f
+  - path: references/house-style.md
+    source_sha256: 81897d5e019868fb740ae93f4bcf80130cb0864086246a0640985f49f38c12f5
+    translation_sha256: 81897d5e019868fb740ae93f4bcf80130cb0864086246a0640985f49f38c12f5

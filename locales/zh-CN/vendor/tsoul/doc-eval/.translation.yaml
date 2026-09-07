@@ -1,0 +1,15 @@
+locale: zh-CN
+source_id: vendor/tsoul/doc-eval
+files:
+  - path: SKILL.md
+    source_sha256: 95a4f3f68a7f83d14e12f45a1bb351684e6f5b40034456f5833e9b4dd689bcfa
+    translation_sha256: 95a4f3f68a7f83d14e12f45a1bb351684e6f5b40034456f5833e9b4dd689bcfa
+  - path: references/example-feedback-closed-loop.md
+    source_sha256: e1ec056ea06b39b4ea326c1635f4892a09cbb8cef3f029e7081e3c93dfeff4f3
+    translation_sha256: e1ec056ea06b39b4ea326c1635f4892a09cbb8cef3f029e7081e3c93dfeff4f3
+  - path: references/plain-language.md
+    source_sha256: 50e4738c5fad1964300f3ad4af59c7ecb9958577af3dac6441146f90c7f91c6c
+    translation_sha256: 50e4738c5fad1964300f3ad4af59c7ecb9958577af3dac6441146f90c7f91c6c
+  - path: references/rubric.md
+    source_sha256: 4cf0e0c49e32847ae65a49d48df736f7e3114ea8110b6fc469de174c253ad192
+    translation_sha256: 4cf0e0c49e32847ae65a49d48df736f7e3114ea8110b6fc469de174c253ad192

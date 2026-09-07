@@ -109,6 +109,16 @@ groups:
     use_when: 当用户报告 hard bug、性能回退、失败、异常、慢请求，或明确要 diagnose/debug 时使用。
     avoid_when: 当用户已经给出明确修复方案只需照做，或问题不是可复现的故障诊断时不要用。
     note: 已合并重复 skill 名称；除非指定 --source，否则使用默认项。
+  - name: doc-eval
+    default_id: vendor/tsoul/doc-eval
+    variants: vendor/tsoul/doc-eval
+    sources: tsoul
+    dependencies: none
+    difference: 单一已注册变体
+    recommendation: 单一来源；无需合并决策
+    use_when: 当用户要审稿、评价文档、完善后再评产研文档，并要求按定位只标执行缺口时使用。
+    avoid_when: 当用户要写飞书文、创建技能、跑业务评测题，或改 UI 用户文案时不要用。
+    note: 单一已注册变体。
   - name: domain-modeling
     default_id: vendor/mattpocock/engineering-domain-modeling
     variants: vendor/mattpocock/engineering-domain-modeling,vendor/yugasun/domain-modeling
@@ -138,6 +148,16 @@ groups:
     recommendation: 单一来源；无需合并决策
     use_when: 当用户要自由讨论想法、比较选项、梳理权衡，且不希望提交文件产物时使用。
     avoid_when: 当用户已经要求实现、写文件、提交改动或运行严格流程时不要用。
+    note: 单一已注册变体。
+  - name: feishu-doc-writing
+    default_id: vendor/tsoul/feishu-doc-writing
+    variants: vendor/tsoul/feishu-doc-writing
+    sources: tsoul
+    dependencies: none
+    difference: 单一已注册变体
+    recommendation: 单一来源；无需合并决策
+    use_when: 当用户要把规格、对照稿或架构说明写成专业、易读、美观的飞书文档，或要求对齐稿、规格同步、美化飞书文档时使用。
+    avoid_when: 当用户只要下载、改权限、管评论，或要求原样导入 Markdown、沿用已给样例风格，或只需 lark-doc CLI 而不写正文时不要用。
     note: 单一已注册变体。
   - name: file-refactor
     default_id: vendor/yugasun/file-refactor

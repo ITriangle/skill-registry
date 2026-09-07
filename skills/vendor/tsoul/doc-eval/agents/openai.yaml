@@ -1,0 +1,4 @@
+interface:
+  display_name: "产研文档评价"
+  short_description: "按文档定位审稿，只标执行缺口，不把 SLA/指标当必写章节"
+  default_prompt: "请使用 $doc-eval 评价这份产研文档。"

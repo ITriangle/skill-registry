@@ -1,0 +1,4 @@
+interface:
+  display_name: "飞书文档写作"
+  short_description: "把规格与对照稿写成专业、易读、美观的飞书文档"
+  default_prompt: "请使用 $feishu-doc-writing 把这份源稿写成专业、易读、美观的飞书文档。"
