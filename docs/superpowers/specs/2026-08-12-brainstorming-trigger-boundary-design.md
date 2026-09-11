@@ -59,13 +59,13 @@
    - “我们要重构权限系统，有 RBAC 和 ABAC 两个方向，帮我确定方案。”
    - “给现有产品增加离线模式，先梳理用户体验和数据同步策略。”
 3. 英文真源与中文说明语义一致。
-4. `bin/skillctl translation-audit` 通过。
+4. `bin/regctl translation-audit` 通过。
 5. Skill 文本不再同时出现“仅重大/开放式任务触发”和“所有简单任务都必须触发”的矛盾规则。
 
 ## 验证方式
 
 - 人工检查触发描述、硬门禁和简单任务边界的一致性；
 - 使用上述正反例进行触发边界检查；
-- 运行 `bin/skillctl translation-stamp vendor/obra-custom/brainstorming`；
-- 运行 `bin/skillctl translation-audit`；
+- 运行 `bin/regctl translation-stamp vendor/obra-custom/brainstorming`；
+- 运行 `bin/regctl translation-audit`；
 - 运行 `git diff --check`。

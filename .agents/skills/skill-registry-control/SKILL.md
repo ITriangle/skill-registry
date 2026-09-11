@@ -1,6 +1,6 @@
 ---
 name: skill-registry-control
-description: Manage the central Codex skill registry workflows. Use when registering GitHub skill repositories, importing or refreshing vendored skills, comparing same-name skills, choosing or overriding default sources, enabling/disabling skills for a project, syncing project .agents/skills symlinks, auditing registry state, or updating skill-groups.yaml.
+description: Manage the central registry for skills and always-on rules. Use when registering GitHub skill repositories, importing or refreshing vendored skills, comparing same-name skills, enabling/disabling skills or rules, syncing project links and global prompts, auditing registry state, or updating skill-groups.yaml.
 ---
 
 # Skill Registry Control
@@ -17,34 +17,36 @@ Before changing the registry, inspect:
 
 - `AGENTS.md`
 - `README.md`
-- `bin/skillctl`
+- `bin/regctl`
 - `skill-groups.yaml`
+- `globals.yaml`
+- `rules/`
 - the relevant `sources/<source>.yaml`
 - the relevant `projects/<project>.yaml`
-- the relevant `locales/zh-CN/vendor/<source>/<skill>/` mirror
+- the relevant `locales/zh-CN/vendor/<source>/<skill-or-rule>/` mirror
 
 Read [references/registry-operations.md](references/registry-operations.md) when performing registration, same-name merge decisions, project activation, refresh, or audit work.
 
 ## Workflow
 
 1. Check `git status --short --branch` in the registry before changes.
-2. Prefer `bin/skillctl` over ad hoc filesystem edits.
+2. Prefer `bin/regctl` over ad hoc filesystem edits.
 3. Keep central storage and project activation separate:
    - Registering or importing a skill must not activate it in any project.
    - Project activation must be represented in `projects/<project>.yaml`.
    - `sync` should create or remove only registry-managed symlinks.
-   - Use `bin/skillctl enable` for activation so explicit `/skill-name` dependencies are added to the same project manifest.
+   - Use `bin/regctl enable` for activation so explicit `/skill-name` dependencies are added to the same project manifest. Pass `--kind rule` when enabling an always-on rule.
 4. For same-name skills, compare variants before enabling:
-   - Run `bin/skillctl alternatives <skill-name>`.
+   - Run `bin/regctl alternatives <skill-name>`.
    - Use the merged default unless the user names a source or exact ID.
    - Use `--source <source>` for an intentional non-default source.
    - Preserve exact IDs when the user provides one.
 5. After registry changes, run focused validation:
-   - Update every changed skill's Chinese documentation mirror, then run `bin/skillctl translation-stamp <skill-id>`.
-   - Run `bin/skillctl translation-audit` before refresh, project audit, or sync.
-   - `bin/skillctl refresh-groups` after imports or metadata edits.
-   - `bin/skillctl alternatives <skill-name>` for duplicate-name work.
-   - `bin/skillctl audit <project> --allow-candidate` for project manifests using candidate skills.
+   - Update every changed skill's Chinese documentation mirror, then run `bin/regctl translation-stamp <skill-id>`.
+   - Run `bin/regctl translation-audit` before refresh, project audit, or sync.
+   - `bin/regctl refresh-groups` after imports or metadata edits.
+   - `bin/regctl alternatives <skill-name>` for duplicate-name work.
+   - `bin/regctl audit <project> --allow-candidate` for project manifests using candidate skills.
 6. Commit registry changes with a concise message unless the user says not to commit.
 
 ## Decision Rules
@@ -55,5 +57,7 @@ Read [references/registry-operations.md](references/registry-operations.md) when
 - When multiple sources share the same skill name, explain the difference and recommendation in the final answer.
 - Keep `analysis-only` and `deprecated` skills out of project activation unless explicitly requested.
 - Use `--allow-candidate` only because current registry entries are intentionally still candidates; do not silently promote them to `approved`.
-- Keep Chinese mirrors review-only: translate `SKILL.md` and Markdown/TXT documentation, preserve identifiers and links, and never register or activate files from `locales/`.
+- Keep Chinese mirrors review-only: translate `SKILL.md` / `RULE.mdc` and Markdown/TXT documentation, preserve identifiers and links, and never register or activate files from `locales/`.
 - Do not treat a Chinese summary plus copied English prose as a translation. `translation-audit` must reject placeholders, English-only files, and near-copies of the source prose.
+- Always-on rules live in `rules/` and may only be enabled on `user-home` with global adapters. Never write repository `AGENTS.md`, `CLAUDE.md`, or `.cursor/rules`.
+- The control command is `bin/regctl`. Do not recreate `bin/skillctl`.

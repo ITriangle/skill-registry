@@ -16,13 +16,13 @@
    - `skills[].upstream_path`
    - `skills[].status`
    - `skills[].imported_at`
-7. Run `bin/skillctl analyze <skill-id>` for each imported skill.
-8. Run `bin/skillctl refresh-groups`.
-9. Validate duplicate-name output with `bin/skillctl alternatives <name>` when applicable.
+7. Run `bin/regctl analyze <skill-id>` for each imported skill.
+8. Run `bin/regctl refresh-groups`.
+9. Validate duplicate-name output with `bin/regctl alternatives <name>` when applicable.
 
 Before steps 8-9, translate all Markdown/TXT documentation except licenses into
-`locales/zh-CN/<skill-id>/`, run `bin/skillctl translation-stamp <skill-id>`,
-and require `bin/skillctl translation-audit` to pass. An import may update the
+`locales/zh-CN/<skill-id>/`, run `bin/regctl translation-stamp <skill-id>`,
+and require `bin/regctl translation-audit` to pass. An import may update the
 English source and then exit non-zero until this mirror work is complete.
 Translate the full natural-language content; do not retain an English body under
 a Chinese guide or stamp an untranslated copy.
@@ -45,12 +45,12 @@ For each duplicate group:
 - Prefer an existing default when it still exists.
 - Prefer `approved` over `candidate`, `candidate` over `analysis-only`, and `analysis-only` over `deprecated`.
 - Among equal statuses, prefer the variant with a clearer trigger description and useful references.
-- Preserve source override with `bin/skillctl enable <project> <skill-name> --source <source>`.
+- Preserve source override with `bin/regctl enable <project> <skill-name> --source <source>`.
 
 Use:
 
 ```bash
-bin/skillctl alternatives <skill-name>
+bin/regctl alternatives <skill-name>
 ```
 
 to show the difference and recommendation before enabling a duplicate-name skill.
@@ -60,8 +60,8 @@ to show the difference and recommendation before enabling a duplicate-name skill
 Prefer installing by skill name:
 
 ```bash
-bin/skillctl enable <project> <skill-name>
-bin/skillctl sync <project> --allow-candidate
+bin/regctl enable <project> <skill-name>
+bin/regctl sync <project> --allow-candidate
 ```
 
 `enable` expands explicit skill dependencies found in `SKILL.md`, such as
@@ -73,30 +73,46 @@ not, it falls back to the merged default in `skill-groups.yaml`.
 Use source override only when requested:
 
 ```bash
-bin/skillctl enable <project> <skill-name> --source <source>
-bin/skillctl sync <project> --allow-candidate
+bin/regctl enable <project> <skill-name> --source <source>
+bin/regctl sync <project> --allow-candidate
 ```
 
 Use exact IDs only when the user gives one or a manifest must be fully explicit:
 
 ```bash
-bin/skillctl enable <project> vendor/<source>/<skill>
-bin/skillctl sync <project> --allow-candidate
+bin/regctl enable <project> vendor/<source>/<skill>
+bin/regctl sync <project> --allow-candidate
 ```
 
 After sync, verify:
 
 ```bash
 find <project>/.agents/skills -maxdepth 1 -type l -print | sort
-bin/skillctl audit <project> --allow-candidate
+bin/regctl audit <project> --allow-candidate
 ```
 
 Both commands enforce a complete, current `zh-CN` mirror before inspecting or
 changing project links. The mirror itself is never linked into a project.
 
-If `audit` reports `missing dependency`, rerun `bin/skillctl enable <project>
+If `audit` reports `missing dependency`, rerun `bin/regctl enable <project>
 <skill-name>` for the parent skill so the manifest is repaired through normal
 resolution rules.
+
+## Enable A Rule For User-Home
+
+Always-on rules are not skills. Enable them only on a project that defines
+global adapters (`cursor_rules`, `codex_agents`, `claude_agents`), currently
+`user-home`:
+
+```bash
+bin/regctl enable user-home coding-lenses --kind rule
+bin/regctl sync user-home --allow-candidate
+```
+
+`sync` links `~/.cursor/rules/<name>.mdc` to `rules/.../RULE.mdc`, points
+`~/.codex/AGENTS.md` at `publish/codex/AGENTS.md`, and writes a managed HTML
+block into `~/.claude/CLAUDE.md`. Rules with `alwaysApply: false` go to Cursor
+only. Never write a git repository's `AGENTS.md`.
 
 ## Final Response Checklist
 

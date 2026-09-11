@@ -1,0 +1,123 @@
+locale: zh-CN
+source_id: vendor/yugasun-slides-skills/slides
+files:
+  - path: README.md
+    source_sha256: 197a4c30e3e5521224e444c6dd026581dee4dad9365b6deafd3ed23aab7a3069
+    translation_sha256: 8ac201cf189d25700f686cdfe1d12884703ff890c1bd07b026de7a33002fcd64
+  - path: SKILL.md
+    source_sha256: 75056e9b36f12572e5a641bd0810b025d5ce481468a08f15ca002ef7ae87b1d7
+    translation_sha256: dac15f5d240e4de2da3b37f8aa7c88b47b81b806d441782d097c8396d23aa039
+  - path: beautiful-html-templates/AGENTS.md
+    source_sha256: ed619bb7d956303024872f170b96e5270672a03cf40bdf7ce0abc3d8018c9d77
+    translation_sha256: 6ee0639dedfbbdff6626304562c61a32a2d99ac29cfb32a09d9e456c4d886885
+  - path: beautiful-html-templates/README.md
+    source_sha256: 4f11b4d0b679731e9cd4d59974bdc97a345def0cdd7ecdd981a5b3e119027614
+    translation_sha256: b25e5e1c3e3619cbb7df6d09eafaeb836ef52410255c88c900b4e09895d8a919
+  - path: beautiful-html-templates/templates/8-bit-orbit/design.md
+    source_sha256: 898e4425dc8f27af3899408b7c73ba033911a558f644d2975a2280d2c3d0175b
+    translation_sha256: a0302bc868b8dfc4c6b21061c59ba29257dc9b6c40cc65747f9a3477c6550fb3
+  - path: beautiful-html-templates/templates/biennale-yellow/design.md
+    source_sha256: 0944600974f19f8fccd3e8366ca6b9e98921fcac872059904aa75fe6ad100d59
+    translation_sha256: fe98801d178201cf2c60588400ca0b2de47339e3a4ba497f0b93d399727a9c3d
+  - path: beautiful-html-templates/templates/block-frame/design.md
+    source_sha256: 4b25f9184298e50ef9af4a2c1e2a77f013ce5cd4d9d31c35d0e41af334295efa
+    translation_sha256: c819ce4a61eb0f29c292bd5c7285e51480ca27431c4732304fddb9a0fda82716
+  - path: beautiful-html-templates/templates/blue-professional/design.md
+    source_sha256: 3a79c3e02e22ea964a19143afee9270b5865768a7f8a6daeb99b5946248e2b77
+    translation_sha256: cbf058361ff0d027f921182659c9c55e3ee136e29d10852d79244c19f6eb4877
+  - path: beautiful-html-templates/templates/bold-poster/design.md
+    source_sha256: 1865389ce2a8a49e827a42f9f97e14ed78966cbc9a8da5d5952782b76261a038
+    translation_sha256: 453c2945813b9c2ac882d0d16a6f6c02b62e89b4bbaa43fbe54930087a335677
+  - path: beautiful-html-templates/templates/broadside/design.md
+    source_sha256: 604522ab01ae5271e6b2351491a5e279f1b46e55039e123503c491147da25f2d
+    translation_sha256: 2a45705377495f9a68f7a938a153a37a57d7a4e08f805bd9a7a2ab2e0a7b5707
+  - path: beautiful-html-templates/templates/capsule/design.md
+    source_sha256: b956356b881f69330d224c69eb629301fa83afb305d9149d8173085f73039744
+    translation_sha256: be959f9f912441670582082e0907cca576c7ac1ebe7bd393ce79a15782697540
+  - path: beautiful-html-templates/templates/cartesian/design.md
+    source_sha256: a1a76546829983abf0ecc1d84e237b7daab30c42bca0d06fdd2c0a208d7b8714
+    translation_sha256: 714a4066ce2a6541f693b7a0b92531c327380d60cd567e87a73e35e0dfc3bebd
+  - path: beautiful-html-templates/templates/cobalt-grid/design.md
+    source_sha256: 43402e4e95a4520f94ed7f8f910583920490564e4660aae69f571b8b963f5fea
+    translation_sha256: f0fb06815ca3ba16842f035c51de7cb21469a1f0467c79316e8207cbb2241607
+  - path: beautiful-html-templates/templates/coral/design.md
+    source_sha256: 4109ead11446fb9c8f3112c3e8b6837b24a798d233fde3ae7f9ac740a96f2b66
+    translation_sha256: a0c89c20ae8dd0a879bcc97409e3f5250c4dd6447ec35deb7eda35243b335295
+  - path: beautiful-html-templates/templates/creative-mode/design.md
+    source_sha256: 387edd7d297ce5660d6a4a3dfcba527237194473a98011de7c50e6bee6779d6a
+    translation_sha256: 6dc66f421270a981d9143af6efbfacd548d73bd0c40070da448197a82438d3fa
+  - path: beautiful-html-templates/templates/daisy-days/design.md
+    source_sha256: d9f2fe98b6894db891502108b6b0964f141765142c41bb47a0c66d66b6d5204b
+    translation_sha256: 52b4a1df03c09433065fbed90c93107e41a3efde612a50d53328da56747864f1
+  - path: beautiful-html-templates/templates/editorial-forest/design.md
+    source_sha256: fd1ad2900a23142583c98c65a16b19a0a46ee691dbaeec1f5db3509e5daecf3b
+    translation_sha256: b390f0f9b393313fa4e304a93cf505194720b45b0fcc2b2915a130c9227f61cd
+  - path: beautiful-html-templates/templates/editorial-tri-tone/design.md
+    source_sha256: fdeb4520f0f624e4c9803448aa358429e5292b03ed4dc433898cd1920654cb3b
+    translation_sha256: 6ba82fdd65a644beb793d57bb52e8b77ba0c0d5d62bceec4c28e4e529cba0317
+  - path: beautiful-html-templates/templates/emerald-editorial/design.md
+    source_sha256: 15c5886ddbf65d17cc0cadf6616f47b0f8b77a32f820c2fe45c68b525d1fbd14
+    translation_sha256: 311263afa5203294f655f7359d641dca17691d0978c8c477374ab2524555d2a2
+  - path: beautiful-html-templates/templates/grove/design.md
+    source_sha256: ed512813748410c9733f29a1c88c738b19e6aa2d41f24979dade083471b1b934
+    translation_sha256: 2cffd86b600c333ab7edb3140c0c63b936179bc867f0e255912185757bd6bab3
+  - path: beautiful-html-templates/templates/long-table/design.md
+    source_sha256: cb2950d02e779248d24d51070f99eefcc9d65193a0ea37323b9ebb141987cb2b
+    translation_sha256: 708713c6d4d00d03b668cc1c528831e09b60e8a0bde080cfee559ad4fea3f733
+  - path: beautiful-html-templates/templates/mat/design.md
+    source_sha256: 33b75dd188433518ec791475d2225b4bd1a7f4259fdde1364668abe33297868e
+    translation_sha256: 8c4f1866f931bde67a67f29c6e9c16d447789382d7a8c8c752927635cdc98114
+  - path: beautiful-html-templates/templates/monochrome/design.md
+    source_sha256: c8cdb9e8e657ab4207f99b1312db63dc2bf25f546c9d0ac9990aebe7527d4ae7
+    translation_sha256: c93791ea8a5432a5ae2f0d22bb928e65d5b3fd30fd78c72fb21793fef13a7e1a
+  - path: beautiful-html-templates/templates/neo-grid-bold/design.md
+    source_sha256: 7c316440ecd8fc823a1d31158b5d714fb8faf1989c81853d6fe7360dcb1579c4
+    translation_sha256: c57eb6c231964fcf0eb281b86ebb100bb3d3154247fbf06407e6f606a1c6f6a9
+  - path: beautiful-html-templates/templates/peoples-platform/design.md
+    source_sha256: 05b89852a61732dcad78991647ca6d66fc0835a2280b6e1955acd349b714b1ed
+    translation_sha256: e27be762bb4bd4f204c1366349b9ae8802ad763b10476b10bdddf2bcbc700340
+  - path: beautiful-html-templates/templates/pin-and-paper/design.md
+    source_sha256: ab9b25a6fcad52ac009ab1b535240f015f9ee4d9e539f89ea053bfa03054ede9
+    translation_sha256: e2ac2bb14009d81892bdc9cc63646b900846a7125e218589e576b6317bb3a307
+  - path: beautiful-html-templates/templates/pink-script/design.md
+    source_sha256: 934adb9d973431dd99bf7b05f292eb10f204d02bc6bde4a7ca7df4f8186eb218
+    translation_sha256: 51059820a41824624ede6b3462f14a1895750184a7acfca8ec2dc2492125fbbb
+  - path: beautiful-html-templates/templates/playful/design.md
+    source_sha256: 0dd24e428b1d1e6b1eae9e93a2258fc1b47259b420abc2e8a4b398b58655f385
+    translation_sha256: 9d193deea0d332ac9422b2c5498bec4fa2b8bcc44648d846843bd9d7883de525
+  - path: beautiful-html-templates/templates/raw-grid/design.md
+    source_sha256: a1a74d26ef9793288d9b9e40b120223a2391d6b28847353b2ef6178111d3c80e
+    translation_sha256: dc42deb1043da6b9a4cdb8f6e9fe491196cde84248ae3329d0bd7ad797e6ffb2
+  - path: beautiful-html-templates/templates/retro-windows/design.md
+    source_sha256: 38b9f0133adf0b39d62ba25917378c2eded139bae733ebfd75d3a364f34122e2
+    translation_sha256: d223d535183e3e08aef7b4adfd4b510894c8e15ea2d917330b4400b6b8f913dc
+  - path: beautiful-html-templates/templates/retro-zine/design.md
+    source_sha256: 12cb6b3813f4606b2ac4956e1a140c46e3b368006dd0d41e3629a5afdc8a630c
+    translation_sha256: 4534bd9fd24a636a4e4395bd4555abb77b0454532cacbfa208dcc04367b5a60d
+  - path: beautiful-html-templates/templates/sakura-chroma/design.md
+    source_sha256: 5f597b13691b6c8ec64e620b4201bf5665b56c9beb20a4d5b91c2ed47dfab80d
+    translation_sha256: 24d9856433bb437fa34757025a6411576f443515b0613fc5091323d550c2ee33
+  - path: beautiful-html-templates/templates/scatterbrain/design.md
+    source_sha256: a45573ea7212fd4f6c8278c49dc441aea3c8d8283a818d25df45b50b2744ee7d
+    translation_sha256: e5446f8731c92e8d3b2a2bbf37e5a635ecd52b854b999e184dbb58e47e6f300a
+  - path: beautiful-html-templates/templates/signal/design.md
+    source_sha256: 939971af147637a79cec34f05f4bb47e0bc2fcd8079911b64750e38fa74657ab
+    translation_sha256: 9765cef5cf921e00be215424807bb4504955c35fbf500ac3a5954f82d8d90201
+  - path: beautiful-html-templates/templates/soft-editorial/design.md
+    source_sha256: 1f4314f07975e4046b26636dec4a3b15918759f232cd7c6520a58ab763ec84f5
+    translation_sha256: 1fc063f8e739bc9020328b6b80111e4ab231300e75f3d6a386bf77bb894c9d74
+  - path: beautiful-html-templates/templates/stencil-tablet/design.md
+    source_sha256: be7acc5e60505f8471e754c2a5405ab931782d2f0e9ce6e872ba8f60e49309bb
+    translation_sha256: 867aa31b2128855c022b5eff4776c16018bbca64eac35cc44fa4a660790d8578
+  - path: beautiful-html-templates/templates/studio/design.md
+    source_sha256: 5a8cab3c4265342af1dc5ce3b6217142b4f72ecfdafb69ce6cfcd1937cbb1fc0
+    translation_sha256: 5cda2c3a5acaa473a37484312f5339c4a541fe4e026c9f99dc98e3e407a6498f
+  - path: beautiful-html-templates/templates/vellum/design.md
+    source_sha256: e75955e226afa77ad855086b4b9da24c6ad3a7eefea88bba0b9dc99b8dc29eef
+    translation_sha256: a22d80b08414bf64b441711dd926be714c39846575a1e8552f2e07014a88aca3
+  - path: templates/layouts.md
+    source_sha256: 3150e283e9457089ad5e1d3d9afe80571c4efb77a3c33f31bbf91a89f8484e50
+    translation_sha256: 926e2cf96f29040848463093bdc3ab0397a59566b582c89d3894be25ddda5c23
+  - path: themes/README.md
+    source_sha256: a215dfba24d089337fbc51e48d1821d655b0b448fd7da939c25faca4f6a83ac8
+    translation_sha256: c702e29ae577363da469bc012966c34b3523e7f49a7b3d3d104c77eaec087384

@@ -2,26 +2,30 @@
 
 Central Git-managed registry for Codex skills.
 
-This repository stores and reviews skills, but it is not a Codex discovery
-location. Skills only become active in a project when `skillctl sync` creates
-symlinks under that project's `.agents/skills` directory.
+This repository stores and reviews skills and always-on rules, but it is not a
+Codex discovery location. Skills become active when `regctl sync` creates
+symlinks under a project's `.agents/skills` directory. Global prompts for
+Cursor, Codex, and Claude are published only from the `user-home` project.
 
 ## Layout
 
 - `skills/vendor/<source>/<skill>/` - vendored approved or candidate skills.
+- `rules/vendor/<source>/<rule>/RULE.mdc` - always-on rules (not skills).
+- `publish/codex/AGENTS.md` - Codex global AGENTS.md source (symlink target).
+- `globals.yaml` - registered global prompt files.
 - `sources/<source>.yaml` - upstream provenance and import metadata.
-- `projects/<project-slug>.yaml` - project activation manifests.
+- `projects/<project-slug>.yaml` - project activation manifests (local, not committed).
 - `analysis/<source>/<skill>.md` - skill review reports.
 - `locales/zh-CN/vendor/<source>/<skill>/` - read-only Chinese documentation mirrors.
 - `skill-groups.yaml` - merged same-name skill index and default source.
-- `bin/skillctl` - import, analyze, audit, enable, disable, and sync command.
+- `bin/regctl` - import, analyze, audit, enable, disable, and sync command.
 
 ## Basic workflow
 
 1. Import a skill from a pinned upstream ref:
 
    ```bash
-   bin/skillctl import \
+   bin/regctl import \
      --source openai \
      --repo https://github.com/openai/skills.git \
      --ref main \
@@ -32,7 +36,7 @@ symlinks under that project's `.agents/skills` directory.
 2. Analyze the skill:
 
    ```bash
-   bin/skillctl analyze vendor/openai/example-skill
+   bin/regctl analyze vendor/openai/example-skill
    ```
 
 3. Mark it approved in `sources/<source>.yaml` after review.
@@ -40,7 +44,7 @@ symlinks under that project's `.agents/skills` directory.
 4. Add it to a project:
 
    ```bash
-   bin/skillctl enable noeticai example-skill
+   bin/regctl enable noeticai example-skill
    ```
 
    `enable` also installs explicit skill dependencies referenced from
@@ -51,7 +55,7 @@ symlinks under that project's `.agents/skills` directory.
 5. Synchronize symlinks into the target project:
 
    ```bash
-   bin/skillctl sync noeticai
+   bin/regctl sync noeticai
    ```
 
 ## Chinese documentation mirrors
@@ -66,9 +70,9 @@ After importing or editing a vendored skill, update its mirror and stamp the
 reviewed source/translation hashes:
 
 ```bash
-bin/skillctl translation-status vendor/openai/example-skill
-bin/skillctl translation-stamp vendor/openai/example-skill
-bin/skillctl translation-audit
+bin/regctl translation-status vendor/openai/example-skill
+bin/regctl translation-stamp vendor/openai/example-skill
+bin/regctl translation-audit
 ```
 
 `import`, `refresh-groups`, project `audit`, and `sync` fail while any required
@@ -79,6 +83,25 @@ the English prose; a matching hash alone is not considered a completed translati
 ## Project manifest
 
 Project manifests live in `projects/<project-slug>.yaml`:
+
+```yaml
+project: user-home
+path: /Users/you
+adapters:
+  skills: ~/.agents/skills
+  cursor_rules: ~/.cursor/rules
+  codex_agents: ~/.codex/AGENTS.md
+  claude_agents: ~/.claude/CLAUDE.md
+skills:
+  - id: vendor/openai/example-skill
+rules:
+  - id: vendor/tsoul/coding-lenses
+```
+
+`enable` accepts `--kind skill|rule`. Rules can only be enabled on a project that
+defines global adapters. `sync` links Cursor `.mdc` files, points
+`~/.codex/AGENTS.md` at `publish/codex/AGENTS.md`, and writes a managed block
+into `~/.claude/CLAUDE.md`. It does not write repository `AGENTS.md` files.
 
 ```yaml
 project: noeticai
@@ -110,38 +133,38 @@ project. `skill-groups.yaml` records:
 Show the available variants and their differences:
 
 ```bash
-bin/skillctl alternatives grilling
+bin/regctl alternatives grilling
 ```
 
 Install the default variant:
 
 ```bash
-bin/skillctl enable project-1 grilling
+bin/regctl enable project-1 grilling
 ```
 
 Install a variant from a specific source:
 
 ```bash
-bin/skillctl enable project-1 grilling --source yugasun
+bin/regctl enable project-1 grilling --source yugasun
 ```
 
 Exact IDs still work when you need a fully explicit manifest:
 
 ```bash
-bin/skillctl enable project-1 vendor/yugasun/grilling
+bin/regctl enable project-1 vendor/yugasun/grilling
 ```
 
 After importing or manually vendoring skills, refresh the merge index:
 
 ```bash
-bin/skillctl refresh-groups
+bin/regctl refresh-groups
 ```
 
 When adding a same-name skill to a project, prefer the skill name first so the
 merged default is used:
 
 ```bash
-bin/skillctl enable project-1 grilling
+bin/regctl enable project-1 grilling
 ```
 
 Use `--source` only when the project intentionally wants a non-default source.
@@ -152,6 +175,8 @@ Use `--source` only when the project intentionally wants a non-default source.
   make it visible to Codex.
 - Only project symlinks under `.agents/skills` activate skills.
 - `sync` only manages symlinks that point back into this registry.
+- Rules publish only through `user-home` global adapters; `sync` does not write
+  repository `AGENTS.md`, `CLAUDE.md`, or `.cursor/rules`.
 - `audit` reports project manifests that omit explicit skill dependencies.
 - Translation mirrors never become project symlink targets.
 - By default, `sync` refuses skills that are not marked `approved` in source

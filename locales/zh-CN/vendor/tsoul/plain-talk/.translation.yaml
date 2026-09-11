@@ -1,0 +1,6 @@
+locale: zh-CN
+source_id: vendor/tsoul/plain-talk
+files:
+  - path: RULE.mdc
+    source_sha256: c4b8e7e1d2cb50f76fec04867b6ec8b65a4d5fb3ef012a886480cffc4ad66ea3
+    translation_sha256: c4b8e7e1d2cb50f76fec04867b6ec8b65a4d5fb3ef012a886480cffc4ad66ea3

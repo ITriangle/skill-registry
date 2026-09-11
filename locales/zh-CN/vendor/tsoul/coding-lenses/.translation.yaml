@@ -1,0 +1,6 @@
+locale: zh-CN
+source_id: vendor/tsoul/coding-lenses
+files:
+  - path: RULE.mdc
+    source_sha256: f860c91037cda289a6c318c13025e3ed33c567ceb894cb7562ade9f963f1f7f3
+    translation_sha256: f860c91037cda289a6c318c13025e3ed33c567ceb894cb7562ade9f963f1f7f3

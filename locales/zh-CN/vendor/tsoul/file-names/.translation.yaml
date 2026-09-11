@@ -1,0 +1,6 @@
+locale: zh-CN
+source_id: vendor/tsoul/file-names
+files:
+  - path: RULE.mdc
+    source_sha256: ac2a20f07915e0d914c027596c589f9009cfb54342414e78e31317235d4d675d
+    translation_sha256: ac2a20f07915e0d914c027596c589f9009cfb54342414e78e31317235d4d675d

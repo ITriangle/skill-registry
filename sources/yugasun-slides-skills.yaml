@@ -1,0 +1,9 @@
+source: yugasun-slides-skills
+repo: https://github.com/yugasun/slides-skills.git
+ref: 5c0db58508469f7973e212e7d261ed2d1c0ceb03
+license: MIT
+skills:
+  - id: vendor/yugasun-slides-skills/slides
+    upstream_path: skills/slides
+    status: candidate
+    imported_at: 2026-09-11T01:33:16Z

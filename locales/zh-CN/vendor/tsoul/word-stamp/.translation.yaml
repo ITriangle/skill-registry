@@ -1,0 +1,6 @@
+locale: zh-CN
+source_id: vendor/tsoul/word-stamp
+files:
+  - path: SKILL.md
+    source_sha256: 833a532d91f7db97e39d0e5dee2ceaeec6a9b0e9ae6edfcfb9ea951d14760d40
+    translation_sha256: 833a532d91f7db97e39d0e5dee2ceaeec6a9b0e9ae6edfcfb9ea951d14760d40

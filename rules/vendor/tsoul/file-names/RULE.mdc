@@ -1,0 +1,18 @@
+---
+description: 写或改代码时使用。新源文件用能力包加短名，不要把产品名、端名、角色拼进文件名。
+alwaysApply: false
+---
+
+# 源文件命名
+
+新建或重命名源文件时：用能力目录收口，文件名只表示在这个能力里干什么。不要把产品名、端名、角色拼进文件名。
+
+- 包名 = 能力（`eval_runtime`），不要叫产品或语言内置名（不要 `eval`、不要 `nuonuo_eval`）
+- 模块名 = 包内一件事（`prepare`、`entry`、`plugins`）
+- 不要 `nuonuo_`、`desktop_eval_` 这类前缀，也不要 `产品_功能_动作.py` 三截拼接
+- 已有公开命令、环境变量、用户可见应用名不在此列；不为这条规则去改它们
+
+```text
+❌ nuonuo_eval_prepare.py  nuonuo_eval_entry.py
+✅ eval_runtime/prepare.py  eval_runtime/entry.py
+```

@@ -1,0 +1,5 @@
+globals:
+  - id: codex-agents
+    kind: agents-md
+    agent: codex
+    path: publish/codex/AGENTS.md

@@ -9,7 +9,7 @@ from types import SimpleNamespace
 from unittest.mock import patch
 
 
-SKILLCTL_PATH = Path(__file__).resolve().parents[1] / "bin" / "skillctl"
+SKILLCTL_PATH = Path(__file__).resolve().parents[1] / "bin" / "regctl"
 skillctl = importlib.machinery.SourceFileLoader("skillctl_test_module", str(SKILLCTL_PATH)).load_module()
 
 
@@ -21,9 +21,12 @@ class TranslationMirrorTests(unittest.TestCase):
         skillctl.PROJECTS_DIR = root / "projects"
         skillctl.SOURCES_DIR = root / "sources"
         skillctl.SKILLS_DIR = root / "skills"
+        skillctl.RULES_DIR = root / "rules"
         skillctl.ANALYSIS_DIR = root / "analysis"
         skillctl.GROUPS_FILE = root / "skill-groups.yaml"
+        skillctl.GLOBALS_FILE = root / "globals.yaml"
         skillctl.LOCALES_DIR = root / "locales"
+        (root / "rules").mkdir()
 
         self.skill_id = "vendor/acme/demo"
         self.source = root / "skills" / "vendor" / "acme" / "demo"

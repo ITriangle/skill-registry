@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Manage a central Codex skill registry with project-level symlinks."""
+"""Manage a central agent-asset registry: skills, rules, and global prompts."""
 
 from __future__ import annotations
 
@@ -21,8 +21,12 @@ ROOT = Path(__file__).resolve().parents[1]
 PROJECTS_DIR = ROOT / "projects"
 SOURCES_DIR = ROOT / "sources"
 SKILLS_DIR = ROOT / "skills"
+RULES_DIR = ROOT / "rules"
 ANALYSIS_DIR = ROOT / "analysis"
 GROUPS_FILE = ROOT / "skill-groups.yaml"
+GLOBALS_FILE = ROOT / "globals.yaml"
+RULE_BLOCK_START = "<!-- skill-registry:rules:start -->"
+RULE_BLOCK_END = "<!-- skill-registry:rules:end -->"
 LOCALES_DIR = ROOT / "locales"
 DEFAULT_LOCALE = "zh-CN"
 VALID_STATUSES = {"analysis-only", "candidate", "approved", "deprecated"}
@@ -236,6 +240,10 @@ USAGE_GUIDANCE = {
         "当用户要生成交互式 bash wizard，引导人工完成第三方设置、迁移或状态转换并记录配置时使用。",
         "当流程可完全自动化、不是 shell 向导，或不需要人工逐步确认时不要用。",
     ),
+    "word-stamp": (
+        "当用户要把公章或合同专用章照片做成 Word 可用的透明底 PNG 电子图章，或提到公章去底、印章透明、Word 盖章时使用。",
+        "当用户要做法定 CA 电子签章，或处理蓝章、黑章、普通裁切压缩，或只要 WPS 印章插件格式时不要用。",
+    ),
     "writing-beats": (
         "当用户要把写作素材组织成有节奏的论述 beats，并保证关键术语先被建立时使用。",
         "当还没有素材、需要先挖掘碎片，或用户要最终润色而非 beats 结构时不要用。",
@@ -284,7 +292,7 @@ def explicit_dependency_names(skill_id: str, skill_name: str) -> tuple[str, ...]
     return EXPLICIT_DEPENDENCIES.get(skill_name, ())
 
 
-class SkillctlError(Exception):
+class RegistryError(Exception):
     pass
 
 
@@ -305,7 +313,7 @@ def read_text(path: Path) -> str:
     try:
         return path.read_text(encoding="utf-8")
     except FileNotFoundError as exc:
-        raise SkillctlError(f"missing file: {path}") from exc
+        raise RegistryError(f"missing file: {path}") from exc
 
 
 def parse_simple_yaml(path: Path) -> dict:
@@ -322,7 +330,7 @@ def parse_simple_yaml(path: Path) -> dict:
 
         if not line.startswith(" "):
             if ":" not in stripped:
-                raise SkillctlError(f"invalid line in {path}: {raw_line}")
+                raise RegistryError(f"invalid line in {path}: {raw_line}")
             key, value = stripped.split(":", 1)
             key = key.strip()
             value = value.strip()
@@ -330,18 +338,21 @@ def parse_simple_yaml(path: Path) -> dict:
                 data[key] = strip_quotes(value)
                 current_key = None
             else:
-                data[key] = []
+                data[key] = None
                 current_key = key
             current_item = None
             continue
 
         if current_key is None:
-            raise SkillctlError(f"indented line without list key in {path}: {raw_line}")
+            raise RegistryError(f"indented line without list key in {path}: {raw_line}")
+
+        if data[current_key] is None:
+            data[current_key] = [] if stripped.startswith("- ") else {}
 
         if stripped.startswith("- "):
             item_text = stripped[2:].strip()
             if not isinstance(data[current_key], list):
-                raise SkillctlError(f"{current_key} is not a list in {path}")
+                raise RegistryError(f"{current_key} is not a list in {path}")
             if ":" in item_text:
                 item_key, item_value = item_text.split(":", 1)
                 current_item = {item_key.strip(): strip_quotes(item_value.strip())}
@@ -351,10 +362,20 @@ def parse_simple_yaml(path: Path) -> dict:
                 data[current_key].append(current_item)
             continue
 
+        if isinstance(data[current_key], dict) and ":" in stripped:
+            item_key, item_value = stripped.split(":", 1)
+            data[current_key][item_key.strip()] = strip_quotes(item_value.strip())
+            current_item = None
+            continue
+
         if current_item is None or ":" not in stripped:
-            raise SkillctlError(f"unsupported nested YAML in {path}: {raw_line}")
+            raise RegistryError(f"unsupported nested YAML in {path}: {raw_line}")
         item_key, item_value = stripped.split(":", 1)
         current_item[item_key.strip()] = strip_quotes(item_value.strip())
+
+    for key, value in list(data.items()):
+        if value is None:
+            data[key] = []
 
     return data
 
@@ -365,10 +386,29 @@ def strip_quotes(value: str) -> str:
     return value
 
 
-def dump_project_manifest(project: str, path: str, skills: list[str]) -> str:
-    lines = [f"project: {project}", f"path: {path}", "skills:"]
+def dump_project_manifest(
+    project: str,
+    path: str,
+    skills: list[str],
+    rules: list[str] | None = None,
+    adapters: dict[str, str] | None = None,
+) -> str:
+    lines = [f"project: {project}", f"path: {path}"]
+    if adapters:
+        lines.append("adapters:")
+        for key in ("skills", "cursor_rules", "codex_agents", "claude_agents"):
+            if key in adapters:
+                lines.append(f"  {key}: {adapters[key]}")
+        for key, value in adapters.items():
+            if key not in {"skills", "cursor_rules", "codex_agents", "claude_agents"}:
+                lines.append(f"  {key}: {value}")
+    lines.append("skills:")
     for skill_id in skills:
         lines.append(f"  - id: {skill_id}")
+    if rules is not None:
+        lines.append("rules:")
+        for rule_id in rules:
+            lines.append(f"  - id: {rule_id}")
     return "\n".join(lines) + "\n"
 
 
@@ -380,21 +420,45 @@ def load_project(project: str) -> dict:
     manifest = project_manifest(project)
     data = parse_simple_yaml(manifest)
     if "path" not in data:
-        raise SkillctlError(f"project manifest missing path: {manifest}")
+        raise RegistryError(f"project manifest missing path: {manifest}")
     data.setdefault("skills", [])
+    data.setdefault("rules", [])
+    adapters = data.get("adapters")
+    if adapters is None:
+        data["adapters"] = {}
+    elif isinstance(adapters, list):
+        raise RegistryError(f"adapters must be a mapping in {manifest}")
     return data
 
 
-def project_skill_ids(data: dict) -> list[str]:
+def project_id_list(data: dict, key: str) -> list[str]:
     result: list[str] = []
-    for item in data.get("skills", []):
+    for item in data.get(key, []) or []:
         if isinstance(item, dict) and "id" in item:
             result.append(str(item["id"]))
         elif isinstance(item, dict) and "value" in item:
             result.append(str(item["value"]))
         else:
-            raise SkillctlError(f"invalid skill entry: {item}")
+            raise RegistryError(f"invalid {key} entry: {item}")
     return result
+
+
+def project_skill_ids(data: dict) -> list[str]:
+    return project_id_list(data, "skills")
+
+
+def project_rule_ids(data: dict) -> list[str]:
+    return project_id_list(data, "rules")
+
+
+def project_adapters(data: dict) -> dict[str, str]:
+    adapters = data.get("adapters") or {}
+    return {str(key): str(value) for key, value in adapters.items()}
+
+
+def project_allows_rules(data: dict) -> bool:
+    adapters = project_adapters(data)
+    return any(adapters.get(key) for key in ("cursor_rules", "codex_agents", "claude_agents"))
 
 
 def skill_path(skill_id: str) -> Path:
@@ -407,13 +471,34 @@ def skill_path(skill_id: str) -> Path:
     try:
         path.relative_to(ROOT.resolve())
     except ValueError as exc:
-        raise SkillctlError(f"skill id escapes registry root: {skill_id}") from exc
+        raise RegistryError(f"skill id escapes registry root: {skill_id}") from exc
     return path
+
+
+def rule_path(rule_id: str) -> Path:
+    clean_id = rule_id.strip("/")
+    if clean_id.startswith("rules/"):
+        rel = clean_id
+    else:
+        rel = f"rules/{clean_id}"
+    path = (ROOT / rel).resolve()
+    try:
+        path.relative_to(ROOT.resolve())
+    except ValueError as exc:
+        raise RegistryError(f"rule id escapes registry root: {rule_id}") from exc
+    return path
+
+
+def asset_dir(asset_id: str) -> Path:
+    candidate = rule_path(asset_id)
+    if (candidate / "RULE.mdc").is_file():
+        return candidate
+    return skill_path(asset_id)
 
 
 def locale_root(locale: str) -> Path:
     if not re.fullmatch(r"[A-Za-z]{2,3}(?:-[A-Za-z0-9]{2,8})*", locale):
-        raise SkillctlError(f"invalid locale: {locale}")
+        raise RegistryError(f"invalid locale: {locale}")
     return LOCALES_DIR / locale
 
 
@@ -425,15 +510,15 @@ def translated_skill_path(skill_id: str, locale: str) -> Path:
     try:
         path.relative_to(locale_root(locale).resolve())
     except ValueError as exc:
-        raise SkillctlError(f"translated skill id escapes locale root: {skill_id}") from exc
+        raise RegistryError(f"translated skill id escapes locale root: {skill_id}") from exc
     return path
 
 
 def translatable_files(skill_id: str) -> list[Path]:
-    base = skill_path(skill_id)
+    base = asset_dir(skill_id)
     result = []
     for path in base.rglob("*"):
-        if not path.is_file() or path.suffix.lower() not in {".md", ".txt"}:
+        if not path.is_file() or path.suffix.lower() not in {".md", ".txt", ".mdc"}:
             continue
         if path.name.lower().startswith("license"):
             continue
@@ -453,7 +538,7 @@ def translation_manifest_entries(skill_id: str, locale: str) -> tuple[dict[str, 
     entries: dict[str, dict[str, str]] = {}
     for item in data.get("files", []):
         if not isinstance(item, dict) or "path" not in item:
-            raise SkillctlError(f"invalid translation entry in {manifest}: {item}")
+            raise RegistryError(f"invalid translation entry in {manifest}: {item}")
         rel = str(item["path"])
         entries[rel] = {str(key): str(value) for key, value in item.items()}
     header = {
@@ -519,7 +604,7 @@ def semantic_translation_problems(source_text: str, translated_text: str, label:
 
 
 def translation_content_problems(skill_id: str, locale: str) -> list[str]:
-    source_dir = skill_path(skill_id)
+    source_dir = asset_dir(skill_id)
     translated_dir = translated_skill_path(skill_id, locale)
     expected = {path.as_posix() for path in translatable_files(skill_id)}
     problems: list[str] = []
@@ -530,7 +615,7 @@ def translation_content_problems(skill_id: str, locale: str) -> list[str]:
     actual = {
         path.relative_to(translated_dir).as_posix()
         for path in translated_dir.rglob("*")
-        if path.is_file() and path.suffix.lower() in {".md", ".txt"}
+        if path.is_file() and path.suffix.lower() in {".md", ".txt", ".mdc"}
     }
     for rel in sorted(expected - actual):
         problems.append(f"missing translation: {skill_id}:{rel}")
@@ -547,8 +632,18 @@ def translation_content_problems(skill_id: str, locale: str) -> list[str]:
                 problems.append(f"translated skill name changed: {skill_id}")
             if not re.search(r"[\u3400-\u9fff]", translated_meta.get("description", "")):
                 problems.append(f"translated description is not Chinese: {skill_id}")
-        except SkillctlError as exc:
+        except RegistryError as exc:
             problems.append(f"invalid translated SKILL.md for {skill_id}: {exc}")
+
+    source_rule = source_dir / "RULE.mdc"
+    translated_rule = translated_dir / "RULE.mdc"
+    if translated_rule.exists() and source_rule.exists():
+        try:
+            translated_meta = parse_front_matter(read_text(translated_rule))
+            if not re.search(r"[\u3400-\u9fff]", translated_meta.get("description", "")):
+                problems.append(f"translated description is not Chinese: {skill_id}")
+        except RegistryError as exc:
+            problems.append(f"invalid translated RULE.mdc for {skill_id}: {exc}")
 
     for rel in sorted(expected & actual):
         source_file = source_dir / rel
@@ -594,7 +689,7 @@ def translation_problems(skill_id: str, locale: str) -> list[str]:
 
     try:
         header, entries = translation_manifest_entries(skill_id, locale)
-    except SkillctlError as exc:
+    except RegistryError as exc:
         problems.append(str(exc))
         return problems
 
@@ -609,7 +704,7 @@ def translation_problems(skill_id: str, locale: str) -> list[str]:
     for rel in sorted(set(entries) - expected):
         problems.append(f"translation manifest has orphan file: {skill_id}:{rel}")
     for rel in sorted(expected & set(entries)):
-        source_file = skill_path(skill_id) / rel
+        source_file = asset_dir(skill_id) / rel
         translated_file = translated_skill_path(skill_id, locale) / rel
         if not translated_file.exists():
             continue
@@ -622,14 +717,14 @@ def translation_problems(skill_id: str, locale: str) -> list[str]:
 
 
 def dump_translation_manifest(skill_id: str, locale: str) -> str:
-    source_dir = skill_path(skill_id)
+    source_dir = asset_dir(skill_id)
     translated_dir = translated_skill_path(skill_id, locale)
     lines = [f"locale: {locale}", f"source_id: {skill_id}", "files:"]
     for rel_path in translatable_files(skill_id):
         rel = rel_path.as_posix()
         translated_file = translated_dir / rel_path
         if not translated_file.exists():
-            raise SkillctlError(f"cannot stamp missing translation: {skill_id}:{rel}")
+            raise RegistryError(f"cannot stamp missing translation: {skill_id}:{rel}")
         lines.extend(
             [
                 f"  - path: {rel}",
@@ -644,7 +739,10 @@ def all_translation_problems(locale: str) -> list[str]:
     problems: list[str] = []
     records = skill_records()
     expected_ids = {record["id"] for record in records}
+    expected_ids.update(record["id"] for record in rule_records())
     for record in records:
+        problems.extend(translation_problems(record["id"], locale))
+    for record in rule_records():
         problems.extend(translation_problems(record["id"], locale))
     vendor_root = locale_root(locale) / "vendor"
     if vendor_root.exists():
@@ -671,16 +769,40 @@ def validate_skill_dir(path: Path) -> dict[str, str]:
     meta = parse_front_matter(text)
     missing = [key for key in ("name", "description") if not meta.get(key)]
     if missing:
-        raise SkillctlError(f"{skill_md} missing metadata: {', '.join(missing)}")
+        raise RegistryError(f"{skill_md} missing metadata: {', '.join(missing)}")
     return meta
+
+
+def validate_rule_dir(path: Path) -> dict[str, str]:
+    rule_mdc = path / "RULE.mdc"
+    text = read_text(rule_mdc)
+    meta = parse_front_matter(text)
+    if not meta.get("description"):
+        raise RegistryError(f"{rule_mdc} missing metadata: description")
+    meta.setdefault("name", path.name)
+    meta.setdefault("alwaysApply", "false")
+    return meta
+
+
+def always_apply(meta: dict[str, str]) -> bool:
+    return str(meta.get("alwaysApply", "false")).strip().lower() in {"true", "yes", "1"}
+
+
+def strip_front_matter_body(text: str) -> str:
+    if not text.startswith("---\n"):
+        return text
+    end = text.find("\n---", 4)
+    if end == -1:
+        return text
+    return text[end + 4 :].lstrip("\n")
 
 
 def parse_front_matter(text: str) -> dict[str, str]:
     if not text.startswith("---\n"):
-        raise SkillctlError("SKILL.md must start with YAML front matter")
+        raise RegistryError("document must start with YAML front matter")
     end = text.find("\n---", 4)
     if end == -1:
-        raise SkillctlError("SKILL.md front matter is not closed")
+        raise RegistryError("front matter is not closed")
     meta: dict[str, str] = {}
     lines = text[4:end].splitlines()
     index = 0
@@ -752,7 +874,7 @@ def skill_with_dependencies(skill_id: str) -> list[str]:
         if current_id in seen:
             return
         if current_id in visiting:
-            raise SkillctlError(f"cyclic skill dependency detected at {current_id}")
+            raise RegistryError(f"cyclic skill dependency detected at {current_id}")
         visiting.add(current_id)
         validate_skill_dir(skill_path(current_id))
         if current_id not in ordered:
@@ -779,6 +901,14 @@ def skill_status(skill_id: str) -> str:
     for source in all_source_metadata():
         for item in source.get("skills", []):
             if isinstance(item, dict) and item.get("id") == skill_id:
+                return str(item.get("status", "candidate"))
+    return "candidate"
+
+
+def rule_status(rule_id: str) -> str:
+    for source in all_source_metadata():
+        for item in source.get("rules", []) or []:
+            if isinstance(item, dict) and item.get("id") == rule_id:
                 return str(item.get("status", "candidate"))
     return "candidate"
 
@@ -810,6 +940,48 @@ def skill_records() -> list[dict[str, str]]:
             }
         )
     return sorted(records, key=lambda r: (r["name"], r["source"], r["id"]))
+
+
+def rule_records() -> list[dict[str, str]]:
+    records = []
+    for rule_mdc in sorted(RULES_DIR.glob("vendor/*/*/RULE.mdc")):
+        rule_dir = rule_mdc.parent
+        rel = str(rule_dir.relative_to(RULES_DIR))
+        rule_id = f"vendor/{rel.split('vendor/', 1)[-1]}" if "vendor/" in rel else rel
+        meta = validate_rule_dir(rule_dir)
+        records.append(
+            {
+                "id": rule_id,
+                "name": meta["name"],
+                "description": meta["description"],
+                "source": source_from_id(rule_id),
+                "status": rule_status(rule_id),
+                "alwaysApply": "true" if always_apply(meta) else "false",
+            }
+        )
+    return sorted(records, key=lambda r: (r["name"], r["source"], r["id"]))
+
+
+def records_for_rule_name(name: str) -> list[dict[str, str]]:
+    return [record for record in rule_records() if record["name"] == name]
+
+
+def load_globals() -> list[dict[str, str]]:
+    if not GLOBALS_FILE.exists():
+        return []
+    data = parse_simple_yaml(GLOBALS_FILE)
+    result: list[dict[str, str]] = []
+    for item in data.get("globals", []) or []:
+        if isinstance(item, dict) and "id" in item:
+            result.append({str(key): str(value) for key, value in item.items()})
+    return result
+
+
+def global_by_id(global_id: str) -> dict[str, str]:
+    for item in load_globals():
+        if item.get("id") == global_id:
+            return item
+    raise RegistryError(f"unknown global: {global_id}")
 
 
 def known_skill_names() -> set[str]:
@@ -980,21 +1152,21 @@ def records_for_name(name: str) -> list[dict[str, str]]:
 def resolve_skill_ref(skill_ref: str, source: str | None = None) -> str:
     if skill_ref.startswith("vendor/") or skill_ref.startswith("skills/"):
         if source and source_from_id(skill_ref) != source:
-            raise SkillctlError(f"{skill_ref} is not from source '{source}'")
+            raise RegistryError(f"{skill_ref} is not from source '{source}'")
         validate_skill_dir(skill_path(skill_ref))
         return skill_ref
 
     records = records_for_name(skill_ref)
     if not records:
-        raise SkillctlError(f"unknown skill name: {skill_ref}")
+        raise RegistryError(f"unknown skill name: {skill_ref}")
 
     if source:
         matching = [record for record in records if record["source"] == source]
         if not matching:
             sources = ", ".join(sorted({record["source"] for record in records}))
-            raise SkillctlError(f"skill '{skill_ref}' has no source '{source}' (available: {sources})")
+            raise RegistryError(f"skill '{skill_ref}' has no source '{source}' (available: {sources})")
         if len(matching) > 1:
-            raise SkillctlError(f"source '{source}' has multiple variants for '{skill_ref}'; use an exact id")
+            raise RegistryError(f"source '{source}' has multiple variants for '{skill_ref}'; use an exact id")
         return matching[0]["id"]
 
     groups = load_skill_groups()
@@ -1002,10 +1174,62 @@ def resolve_skill_ref(skill_ref: str, source: str | None = None) -> str:
     return choose_default(records, default_id)
 
 
+def resolve_rule_ref(rule_ref: str, source: str | None = None) -> str:
+    if rule_ref.startswith("vendor/") or rule_ref.startswith("rules/"):
+        if source and source_from_id(rule_ref) != source:
+            raise RegistryError(f"{rule_ref} is not from source '{source}'")
+        validate_rule_dir(rule_path(rule_ref))
+        return rule_ref
+
+    records = records_for_rule_name(rule_ref)
+    if not records:
+        raise RegistryError(f"unknown rule name: {rule_ref}")
+    if source:
+        matching = [record for record in records if record["source"] == source]
+        if not matching:
+            sources = ", ".join(sorted({record["source"] for record in records}))
+            raise RegistryError(f"rule '{rule_ref}' has no source '{source}' (available: {sources})")
+        if len(matching) > 1:
+            raise RegistryError(f"source '{source}' has multiple variants for '{rule_ref}'; use an exact id")
+        return matching[0]["id"]
+    if len(records) > 1:
+        raise RegistryError(f"rule '{rule_ref}' has multiple variants; use --source or an exact id")
+    return records[0]["id"]
+
+
+def resolve_asset_ref(asset_ref: str, source: str | None = None, kind: str | None = None) -> tuple[str, str]:
+    if kind == "skill":
+        return "skill", resolve_skill_ref(asset_ref, source)
+    if kind == "rule":
+        return "rule", resolve_rule_ref(asset_ref, source)
+
+    skill_id = None
+    rule_id = None
+    skill_error = None
+    rule_error = None
+    try:
+        skill_id = resolve_skill_ref(asset_ref, source)
+    except RegistryError as exc:
+        skill_error = exc
+    try:
+        rule_id = resolve_rule_ref(asset_ref, source)
+    except RegistryError as exc:
+        rule_error = exc
+    if skill_id and rule_id:
+        raise RegistryError(
+            f"'{asset_ref}' matches both a skill and a rule; pass --kind skill|rule"
+        )
+    if skill_id:
+        return "skill", skill_id
+    if rule_id:
+        return "rule", rule_id
+    raise RegistryError(str(skill_error or rule_error))
+
+
 def print_alternatives(skill_name: str) -> None:
     records = records_for_name(skill_name)
     if not records:
-        raise SkillctlError(f"unknown skill name: {skill_name}")
+        raise RegistryError(f"unknown skill name: {skill_name}")
     default_id = resolve_skill_ref(skill_name)
     difference, recommendation = group_analysis(skill_name, records, default_id)
     dependencies = dependency_names_for_records(records, known_skill_names())
@@ -1035,9 +1259,231 @@ def managed_link_target(path: Path) -> bool:
         return False
 
 
-def command_list(_: argparse.Namespace) -> None:
-    for record in skill_records():
-        print(f"{record['id']}\t{record['status']}\t{record['name']}")
+def expand_dest(value: str) -> Path:
+    return Path(value).expanduser()
+
+
+def identical_or_empty_file(path: Path, target: Path) -> bool:
+    if not path.is_file() or path.is_symlink() or not target.is_file():
+        return False
+    if path.stat().st_size == 0:
+        return True
+    return sha256_file(path) == sha256_file(target)
+
+
+def replace_with_symlink(link: Path, target: Path, *, target_is_directory: bool, dry_run: bool) -> None:
+    target = target.resolve()
+    if link.is_symlink():
+        try:
+            if link.resolve() == target:
+                return
+        except FileNotFoundError:
+            pass
+        if not managed_link_target(link):
+            raise RegistryError(f"refusing to replace unmanaged path: {link}")
+        if dry_run:
+            print(f"would replace managed link: {link}")
+            return
+        link.unlink()
+    elif link.exists():
+        if identical_or_empty_file(link, target):
+            if dry_run:
+                print(f"would replace identical file with link: {link}")
+                return
+            link.unlink()
+        else:
+            raise RegistryError(f"refusing to replace unmanaged path: {link}")
+    if dry_run:
+        print(f"would link: {link} -> {target}")
+        return
+    link.parent.mkdir(parents=True, exist_ok=True)
+    link.symlink_to(target, target_is_directory=target_is_directory)
+    print(f"linked: {link} -> {target}")
+
+
+def write_loaded_project(project: str, data: dict, skills: list[str], rules: list[str]) -> None:
+    project_manifest(project).write_text(
+        dump_project_manifest(
+            project,
+            str(data["path"]),
+            skills,
+            rules,
+            project_adapters(data),
+        ),
+        encoding="utf-8",
+    )
+
+
+def sync_skill_links(data: dict, skill_ids: list[str], dry_run: bool) -> None:
+    adapters = project_adapters(data)
+    project_root = Path(str(data["path"])).expanduser().resolve()
+    active_dir = expand_dest(adapters["skills"]) if adapters.get("skills") else project_root / ".agents" / "skills"
+    desired: dict[str, Path] = {}
+    for skill_id in skill_ids:
+        spath = skill_path(skill_id)
+        desired[spath.name] = spath
+    if dry_run:
+        print(f"would ensure directory: {active_dir}")
+    else:
+        active_dir.mkdir(parents=True, exist_ok=True)
+    for name, target in desired.items():
+        replace_with_symlink(active_dir / name, target, target_is_directory=True, dry_run=dry_run)
+    if active_dir.exists():
+        for entry in active_dir.iterdir():
+            if managed_link_target(entry) and entry.name not in desired:
+                if dry_run:
+                    print(f"would remove stale link: {entry}")
+                else:
+                    entry.unlink()
+                    print(f"removed stale link: {entry}")
+
+
+def sync_cursor_rules(data: dict, rule_ids: list[str], dry_run: bool) -> None:
+    dest = project_adapters(data).get("cursor_rules")
+    if not dest:
+        return
+    rules_dir = expand_dest(dest)
+    desired: dict[str, Path] = {}
+    for rule_id in rule_ids:
+        rpath = rule_path(rule_id) / "RULE.mdc"
+        desired[f"{rule_path(rule_id).name}.mdc"] = rpath
+    if dry_run:
+        print(f"would ensure directory: {rules_dir}")
+    else:
+        rules_dir.mkdir(parents=True, exist_ok=True)
+    for name, target in desired.items():
+        replace_with_symlink(rules_dir / name, target, target_is_directory=False, dry_run=dry_run)
+    if rules_dir.exists():
+        for entry in rules_dir.iterdir():
+            if managed_link_target(entry) and entry.name not in desired:
+                if dry_run:
+                    print(f"would remove stale link: {entry}")
+                else:
+                    entry.unlink()
+                    print(f"removed stale link: {entry}")
+
+
+def sync_codex_agents(data: dict, dry_run: bool) -> None:
+    dest = project_adapters(data).get("codex_agents")
+    if not dest:
+        return
+    record = global_by_id("codex-agents")
+    source = (ROOT / record["path"]).resolve()
+    if not source.is_file():
+        raise RegistryError(f"missing global file: {source}")
+    link = expand_dest(dest)
+    override = link.with_name("AGENTS.override.md")
+    if override.exists():
+        print(f"warning: Codex override present, base AGENTS.md ignored: {override}", file=sys.stderr)
+    replace_with_symlink(link, source, target_is_directory=False, dry_run=dry_run)
+
+
+def claude_rules_block(rule_ids: list[str]) -> str:
+    parts = [RULE_BLOCK_START]
+    for rule_id in rule_ids:
+        meta = validate_rule_dir(rule_path(rule_id))
+        if not always_apply(meta):
+            continue
+        body = strip_front_matter_body(read_text(rule_path(rule_id) / "RULE.mdc")).rstrip()
+        parts.append(f"\n## {meta['name']}\n\n{body}\n")
+    parts.append(RULE_BLOCK_END)
+    return "\n".join(parts) + "\n"
+
+
+def upsert_managed_block(path: Path, block: str, dry_run: bool) -> None:
+    if path.exists() and path.is_symlink():
+        raise RegistryError(f"refusing to edit symlink: {path}")
+    existing = path.read_text(encoding="utf-8") if path.exists() else ""
+    if RULE_BLOCK_START in existing and RULE_BLOCK_END in existing:
+        start = existing.index(RULE_BLOCK_START)
+        end = existing.index(RULE_BLOCK_END) + len(RULE_BLOCK_END)
+        new_text = existing[:start] + block.rstrip("\n") + existing[end:]
+        if not new_text.endswith("\n"):
+            new_text += "\n"
+    elif existing.strip():
+        new_text = existing.rstrip() + "\n\n" + block
+    else:
+        new_text = block
+    if dry_run:
+        print(f"would update managed block: {path}")
+        return
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(new_text, encoding="utf-8")
+    print(f"updated managed block: {path}")
+
+
+def sync_claude_agents(data: dict, rule_ids: list[str], dry_run: bool) -> None:
+    dest = project_adapters(data).get("claude_agents")
+    if not dest:
+        return
+    upsert_managed_block(expand_dest(dest), claude_rules_block(rule_ids), dry_run)
+
+
+def extract_managed_block(text: str) -> str | None:
+    if RULE_BLOCK_START not in text or RULE_BLOCK_END not in text:
+        return None
+    start = text.index(RULE_BLOCK_START)
+    end = text.index(RULE_BLOCK_END) + len(RULE_BLOCK_END)
+    block = text[start:end].strip() + "\n"
+    return block
+
+
+def audit_cursor_rule_links(data: dict, rule_ids: list[str], problems: list[str]) -> None:
+    dest = project_adapters(data).get("cursor_rules")
+    if not dest:
+        return
+    rules_dir = expand_dest(dest)
+    desired: dict[str, Path] = {}
+    for rule_id in rule_ids:
+        target = (rule_path(rule_id) / "RULE.mdc").resolve()
+        desired[f"{rule_path(rule_id).name}.mdc"] = target
+    if not rules_dir.exists():
+        return
+    for name, target in desired.items():
+        entry = rules_dir / name
+        if entry.is_symlink():
+            if not entry.exists():
+                problems.append(f"broken symlink: {entry}")
+            elif entry.resolve() != target:
+                problems.append(f"cursor rule link does not point at registry file: {entry}")
+        elif entry.exists() and not identical_or_empty_file(entry, target):
+            problems.append(f"unmanaged cursor rule: {entry}")
+    for entry in rules_dir.iterdir():
+        if managed_link_target(entry) and entry.name not in desired:
+            print(f"stale managed link: {entry}")
+        elif entry.is_symlink() and not entry.exists():
+            problems.append(f"broken symlink: {entry}")
+
+
+def audit_claude_block(data: dict, rule_ids: list[str], problems: list[str]) -> None:
+    dest = project_adapters(data).get("claude_agents")
+    if not dest:
+        return
+    path = expand_dest(dest)
+    if not path.exists():
+        return
+    if path.is_symlink():
+        problems.append(f"refusing to treat symlink as Claude agents file: {path}")
+        return
+    text = path.read_text(encoding="utf-8")
+    current = extract_managed_block(text)
+    expected = claude_rules_block(rule_ids)
+    if current is None:
+        if any(always_apply(validate_rule_dir(rule_path(rule_id))) for rule_id in rule_ids):
+            problems.append(f"missing managed rules block: {path}")
+        return
+    if current != expected:
+        problems.append(f"managed rules block does not match manifest: {path}")
+
+
+def command_list(args: argparse.Namespace) -> None:
+    kind = getattr(args, "kind", None)
+    if kind in (None, "skill"):
+        for record in skill_records():
+            print(f"skill\t{record['id']}\t{record['status']}\t{record['name']}")
+    if kind in (None, "rule"):
+        for record in rule_records():
+            print(f"rule\t{record['id']}\t{record['status']}\t{record['name']}")
 
 
 def command_translation_status(args: argparse.Namespace) -> None:
@@ -1047,10 +1493,10 @@ def command_translation_status(args: argparse.Namespace) -> None:
             for problem in problems:
                 print(f"problem: {problem}")
             raise SystemExit(1)
-        print(f"ok: {args.locale} ({len(skill_records())} skills)")
+        print(f"ok: {args.locale} ({len(skill_records())} skills, {len(rule_records())} rules)")
         return
 
-    ids = [resolve_skill_ref(args.skill)]
+    ids = [resolve_asset_ref(args.skill, kind=getattr(args, "kind", None))[1]]
     problems: list[str] = []
     for skill_id in ids:
         skill_problems = translation_problems(skill_id, args.locale)
@@ -1065,7 +1511,7 @@ def command_translation_status(args: argparse.Namespace) -> None:
 
 
 def command_translation_stamp(args: argparse.Namespace) -> None:
-    skill_id = resolve_skill_ref(args.skill)
+    _, skill_id = resolve_asset_ref(args.skill, kind=getattr(args, "kind", None))
     problems = translation_content_problems(skill_id, args.locale)
     if problems:
         for problem in problems:
@@ -1079,7 +1525,7 @@ def command_translation_stamp(args: argparse.Namespace) -> None:
 
 def command_translation_audit(args: argparse.Namespace) -> None:
     require_translation_audit(args.locale)
-    print(f"ok: {args.locale} ({len(skill_records())} skills)")
+    print(f"ok: {args.locale} ({len(skill_records())} skills, {len(rule_records())} rules)")
 
 
 def command_audit(args: argparse.Namespace) -> None:
@@ -1087,8 +1533,12 @@ def command_audit(args: argparse.Namespace) -> None:
     data = load_project(args.project)
     project_root = Path(str(data["path"])).expanduser().resolve()
     ids = project_skill_ids(data)
+    rule_ids = project_rule_ids(data)
     seen_names: dict[str, str] = {}
     problems: list[str] = []
+
+    if rule_ids and not project_allows_rules(data):
+        problems.append("rules are enabled but this project has no global adapters")
 
     for skill_id in ids:
         spath = skill_path(skill_id)
@@ -1097,7 +1547,7 @@ def command_audit(args: argparse.Namespace) -> None:
             continue
         try:
             meta = validate_skill_dir(spath)
-        except SkillctlError as exc:
+        except RegistryError as exc:
             problems.append(str(exc))
             continue
         status = skill_status(skill_id)
@@ -1114,7 +1564,47 @@ def command_audit(args: argparse.Namespace) -> None:
                 dependency_name = validate_skill_dir(skill_path(dependency_id))["name"]
                 problems.append(f"missing dependency for {skill_id}: {dependency_name} -> {dependency_id}")
 
-    active_dir = project_root / ".agents" / "skills"
+    seen_rules: dict[str, str] = {}
+    for rule_id in rule_ids:
+        rpath = rule_path(rule_id)
+        if not (rpath / "RULE.mdc").is_file():
+            problems.append(f"missing rule: {rule_id} -> {rpath}")
+            continue
+        try:
+            meta = validate_rule_dir(rpath)
+        except RegistryError as exc:
+            problems.append(str(exc))
+            continue
+        status = rule_status(rule_id)
+        if status not in VALID_STATUSES:
+            problems.append(f"invalid status for {rule_id}: {status}")
+        if status != "approved" and not args.allow_candidate:
+            problems.append(f"rule is not approved: {rule_id} ({status})")
+        name = meta["name"]
+        if name in seen_rules:
+            problems.append(f"duplicate rule name '{name}': {seen_rules[name]} and {rule_id}")
+        seen_rules[name] = rule_id
+
+    adapters = project_adapters(data)
+    if adapters.get("codex_agents"):
+        override = expand_dest(adapters["codex_agents"]).with_name("AGENTS.override.md")
+        if override.exists():
+            print(f"warning: Codex override present, base AGENTS.md ignored: {override}", file=sys.stderr)
+        dest = expand_dest(adapters["codex_agents"])
+        source = (ROOT / global_by_id("codex-agents")["path"]).resolve()
+        if dest.is_symlink() and dest.exists() and dest.resolve() != source:
+            problems.append(f"codex_agents link does not point at registry file: {dest}")
+        elif dest.exists() and not dest.is_symlink() and dest.stat().st_size > 0 and not identical_or_empty_file(dest, source):
+            problems.append(f"unmanaged non-empty Codex AGENTS.md: {dest}")
+
+    audit_cursor_rule_links(data, rule_ids, problems)
+    audit_claude_block(data, rule_ids, problems)
+
+    active_dir = (
+        expand_dest(adapters["skills"])
+        if adapters.get("skills")
+        else project_root / ".agents" / "skills"
+    )
     if active_dir.exists():
         desired_names = {skill_path(skill_id).name for skill_id in ids}
         for entry in active_dir.iterdir():
@@ -1127,107 +1617,82 @@ def command_audit(args: argparse.Namespace) -> None:
         for problem in problems:
             print(f"problem: {problem}", file=sys.stderr)
         raise SystemExit(1)
-    print(f"ok: {args.project} ({len(ids)} skills)")
+    print(f"ok: {args.project} ({len(ids)} skills, {len(rule_ids)} rules)")
 
 
 def command_sync(args: argparse.Namespace) -> None:
     data = load_project(args.project)
-    project_root = Path(str(data["path"])).expanduser().resolve()
-    ids = project_skill_ids(data)
-    active_dir = project_root / ".agents" / "skills"
-
+    skill_ids = project_skill_ids(data)
+    rule_ids = project_rule_ids(data)
     command_audit(SimpleNamespace(project=args.project, allow_candidate=args.allow_candidate))
-
-    desired: dict[str, Path] = {}
-    for skill_id in ids:
-        spath = skill_path(skill_id)
-        desired[spath.name] = spath
-
-    if args.dry_run:
-        print(f"would ensure directory: {active_dir}")
-    else:
-        active_dir.mkdir(parents=True, exist_ok=True)
-
-    for name, target in desired.items():
-        link = active_dir / name
-        if link.exists() or link.is_symlink():
-            if link.is_symlink() and link.resolve() == target.resolve():
-                continue
-            if managed_link_target(link):
-                if args.dry_run:
-                    print(f"would replace managed link: {link}")
-                else:
-                    link.unlink()
-            else:
-                raise SkillctlError(f"refusing to replace unmanaged path: {link}")
-        if args.dry_run:
-            print(f"would link: {link} -> {target}")
-        else:
-            link.symlink_to(target, target_is_directory=True)
-            print(f"linked: {link} -> {target}")
-
-    if active_dir.exists():
-        for entry in active_dir.iterdir():
-            if managed_link_target(entry) and entry.name not in desired:
-                if args.dry_run:
-                    print(f"would remove stale link: {entry}")
-                else:
-                    entry.unlink()
-                    print(f"removed stale link: {entry}")
+    sync_skill_links(data, skill_ids, args.dry_run)
+    if rule_ids or project_allows_rules(data):
+        sync_cursor_rules(data, rule_ids, args.dry_run)
+        sync_codex_agents(data, args.dry_run)
+        sync_claude_agents(data, rule_ids, args.dry_run)
 
 
 def command_enable(args: argparse.Namespace) -> None:
-    manifest = project_manifest(args.project)
     data = load_project(args.project)
-    ids = project_skill_ids(data)
-    skill_id = resolve_skill_ref(args.skill, args.source)
-    enabled_ids: list[str] = []
-    for resolved_id in skill_with_dependencies(skill_id):
-        if resolved_id not in ids:
-            ids.append(resolved_id)
-            enabled_ids.append(resolved_id)
-    manifest.write_text(
-        dump_project_manifest(args.project, str(data["path"]), ids),
-        encoding="utf-8",
-    )
-    if enabled_ids:
-        for enabled_id in enabled_ids:
-            print(f"enabled in manifest: {enabled_id}")
-    else:
-        print(f"already enabled in manifest: {skill_id}")
-    skill_name = validate_skill_dir(skill_path(skill_id))["name"]
-    records = records_for_name(skill_name)
-    dependencies = dependency_names_for_records(records, known_skill_names())
-    print(f"dependencies: {','.join(dependencies) if dependencies else 'none'}")
-    if len(records) > 1:
-        print("alternatives:")
-        print_alternatives(skill_name)
+    skill_ids = project_skill_ids(data)
+    rule_ids = project_rule_ids(data)
+    kind, asset_id = resolve_asset_ref(args.asset, args.source, args.kind)
+    if kind == "skill":
+        enabled_ids: list[str] = []
+        for resolved_id in skill_with_dependencies(asset_id):
+            if resolved_id not in skill_ids:
+                skill_ids.append(resolved_id)
+                enabled_ids.append(resolved_id)
+        write_loaded_project(args.project, data, skill_ids, rule_ids)
+        if enabled_ids:
+            for enabled_id in enabled_ids:
+                print(f"enabled in manifest: {enabled_id}")
+        else:
+            print(f"already enabled in manifest: {asset_id}")
+        skill_name = validate_skill_dir(skill_path(asset_id))["name"]
+        records = records_for_name(skill_name)
+        dependencies = dependency_names_for_records(records, known_skill_names())
+        print(f"dependencies: {','.join(dependencies) if dependencies else 'none'}")
+        if len(records) > 1:
+            print("alternatives:")
+            print_alternatives(skill_name)
+        return
+
+    if not project_allows_rules(data):
+        raise RegistryError("rules can only be enabled on a project with global adapters")
+    if asset_id in rule_ids:
+        print(f"already enabled in manifest: {asset_id}")
+        return
+    rule_ids.append(asset_id)
+    write_loaded_project(args.project, data, skill_ids, rule_ids)
+    print(f"enabled in manifest: {asset_id}")
 
 
 def command_disable(args: argparse.Namespace) -> None:
-    manifest = project_manifest(args.project)
     data = load_project(args.project)
-    skill_id = resolve_skill_ref(args.skill, args.source)
-    ids = [existing_id for existing_id in project_skill_ids(data) if existing_id != skill_id]
-    manifest.write_text(
-        dump_project_manifest(args.project, str(data["path"]), ids),
-        encoding="utf-8",
-    )
-    print(f"disabled in manifest: {skill_id}")
+    skill_ids = project_skill_ids(data)
+    rule_ids = project_rule_ids(data)
+    kind, asset_id = resolve_asset_ref(args.asset, args.source, args.kind)
+    if kind == "skill":
+        skill_ids = [existing_id for existing_id in skill_ids if existing_id != asset_id]
+    else:
+        rule_ids = [existing_id for existing_id in rule_ids if existing_id != asset_id]
+    write_loaded_project(args.project, data, skill_ids, rule_ids)
+    print(f"disabled in manifest: {asset_id}")
 
 
 def command_import(args: argparse.Namespace) -> None:
     dest = skill_path(args.skill_id)
     if dest.exists() and not args.force:
-        raise SkillctlError(f"destination exists: {dest}")
-    with tempfile.TemporaryDirectory(prefix="skillctl-") as tmp:
+        raise RegistryError(f"destination exists: {dest}")
+    with tempfile.TemporaryDirectory(prefix="regctl-") as tmp:
         tmp_path = Path(tmp)
         clone_dir = tmp_path / "repo"
         run(["git", "clone", args.repo, str(clone_dir)])
         run(["git", "-C", str(clone_dir), "checkout", args.ref])
         upstream_skill = clone_dir / args.skill_path
         if not upstream_skill.exists():
-            raise SkillctlError(f"upstream skill path not found: {args.skill_path}")
+            raise RegistryError(f"upstream skill path not found: {args.skill_path}")
         validate_skill_dir(upstream_skill)
         if dest.exists():
             shutil.rmtree(dest)
@@ -1367,19 +1832,22 @@ def source_and_name(skill_id: str) -> tuple[str, str]:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="skillctl")
+    parser = argparse.ArgumentParser(prog="regctl")
     sub = parser.add_subparsers(dest="command", required=True)
 
-    list_p = sub.add_parser("list", help="List vendored skills")
+    list_p = sub.add_parser("list", help="List registered assets")
+    list_p.add_argument("--kind", choices=["skill", "rule"])
     list_p.set_defaults(func=command_list)
 
     translation_status_p = sub.add_parser("translation-status", help="Show translation mirror status")
     translation_status_p.add_argument("skill", nargs="?")
+    translation_status_p.add_argument("--kind", choices=["skill", "rule"])
     translation_status_p.add_argument("--locale", default=DEFAULT_LOCALE)
     translation_status_p.set_defaults(func=command_translation_status)
 
     translation_stamp_p = sub.add_parser("translation-stamp", help="Stamp a reviewed translation mirror")
     translation_stamp_p.add_argument("skill")
+    translation_stamp_p.add_argument("--kind", choices=["skill", "rule"])
     translation_stamp_p.add_argument("--locale", default=DEFAULT_LOCALE)
     translation_stamp_p.set_defaults(func=command_translation_stamp)
 
@@ -1392,22 +1860,24 @@ def build_parser() -> argparse.ArgumentParser:
     audit_p.add_argument("--allow-candidate", action="store_true")
     audit_p.set_defaults(func=command_audit)
 
-    sync_p = sub.add_parser("sync", help="Sync project symlinks")
+    sync_p = sub.add_parser("sync", help="Sync project links and global prompts")
     sync_p.add_argument("project")
     sync_p.add_argument("--dry-run", action="store_true")
     sync_p.add_argument("--allow-candidate", action="store_true")
     sync_p.set_defaults(func=command_sync)
 
-    enable_p = sub.add_parser("enable", help="Add a skill to a project manifest")
+    enable_p = sub.add_parser("enable", help="Add a skill or rule to a project manifest")
     enable_p.add_argument("project")
-    enable_p.add_argument("skill")
-    enable_p.add_argument("--source", help="Resolve a skill name from a specific source")
+    enable_p.add_argument("asset")
+    enable_p.add_argument("--kind", choices=["skill", "rule"])
+    enable_p.add_argument("--source", help="Resolve a name from a specific source")
     enable_p.set_defaults(func=command_enable)
 
-    disable_p = sub.add_parser("disable", help="Remove a skill from a project manifest")
+    disable_p = sub.add_parser("disable", help="Remove a skill or rule from a project manifest")
     disable_p.add_argument("project")
-    disable_p.add_argument("skill")
-    disable_p.add_argument("--source", help="Resolve a skill name from a specific source")
+    disable_p.add_argument("asset")
+    disable_p.add_argument("--kind", choices=["skill", "rule"])
+    disable_p.add_argument("--source", help="Resolve a name from a specific source")
     disable_p.set_defaults(func=command_disable)
 
     import_p = sub.add_parser("import", help="Import a skill from a pinned Git ref")
@@ -1438,7 +1908,7 @@ def main() -> None:
     args = parser.parse_args()
     try:
         args.func(args)
-    except SkillctlError as exc:
+    except RegistryError as exc:
         die(str(exc))
     except subprocess.CalledProcessError as exc:
         die(f"command failed with exit code {exc.returncode}: {' '.join(exc.cmd)}")

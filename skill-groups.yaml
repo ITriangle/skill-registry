@@ -389,6 +389,26 @@ groups:
     use_when: 当用户要在 TypeScript 仓库安装 dependency-cruiser，让每个包成为深模块（仅通过入口文件对外暴露）时使用。
     avoid_when: 当仓库不是 TypeScript、不需要包边界约束，或已有完整 dependency-cruiser 配置时不要用。
     note: 单一已注册变体。
+  - name: shuorenhua
+    default_id: vendor/tsoul/shuorenhua
+    variants: vendor/tsoul/shuorenhua
+    sources: tsoul
+    dependencies: none
+    difference: 单一已注册变体
+    recommendation: 单一来源；无需合并决策
+    use_when: 当用户需求匹配默认 skill 描述时使用：把文档和消息改得自然、直接，保留原意，去掉套话。用户说“说人话”“去 AI 味”“别像模板”“自然一点”或要求标出表达问题时使用。
+    avoid_when: 当需求不匹配上述描述、只是普通对话，或已有更具体的 skill 覆盖时不要用。
+    note: 单一已注册变体。
+  - name: slides
+    default_id: vendor/yugasun-slides-skills/slides
+    variants: vendor/yugasun-slides-skills/slides
+    sources: yugasun-slides-skills
+    dependencies: none
+    difference: 单一已注册变体
+    recommendation: 单一来源；无需合并决策
+    use_when: 当用户需求匹配默认 skill 描述时使用：Generate high-quality HTML slide presentations with beautiful templates. Make sure to use this skill whenever the user mentions slides, presentation, PPT, deck, keynote, 演示文稿, or 幻灯片 — even if they don't explicitly ask for HTML or templates. This skill handles both polished multi-template workflows and fast self-contained themes. Use it for any request involving creating, building, or generating a presentation regardless of how the request is phrased.
+    avoid_when: 当需求不匹配上述描述、只是普通对话，或已有更具体的 skill 覆盖时不要用。
+    note: 单一已注册变体。
   - name: tdd
     default_id: vendor/mattpocock/engineering-tdd
     variants: vendor/mattpocock/engineering-tdd,vendor/yugasun/tdd
@@ -518,6 +538,16 @@ groups:
     recommendation: 单一来源；无需合并决策
     use_when: 当用户要生成交互式 bash wizard，引导人工完成第三方设置、迁移或状态转换并记录配置时使用。
     avoid_when: 当流程可完全自动化、不是 shell 向导，或不需要人工逐步确认时不要用。
+    note: 单一已注册变体。
+  - name: word-stamp
+    default_id: vendor/tsoul/word-stamp
+    variants: vendor/tsoul/word-stamp
+    sources: tsoul
+    dependencies: none
+    difference: 单一已注册变体
+    recommendation: 单一来源；无需合并决策
+    use_when: 当用户要把公章或合同专用章照片做成 Word 可用的透明底 PNG 电子图章，或提到公章去底、印章透明、Word 盖章时使用。
+    avoid_when: 当用户要做法定 CA 电子签章，或处理蓝章、黑章、普通裁切压缩，或只要 WPS 印章插件格式时不要用。
     note: 单一已注册变体。
   - name: writing-beats
     default_id: vendor/mattpocock/in-progress-writing-beats

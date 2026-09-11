@@ -1,0 +1,4 @@
+interface:
+  display_name: "Word 电子图章"
+  short_description: "把白纸红章照片做成 Word 可用的透明底 PNG"
+  default_prompt: "请使用 $word-stamp 把这张公章图转成 Word 可用的电子图章。"

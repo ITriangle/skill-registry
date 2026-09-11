@@ -1,7 +1,20 @@
 source: tsoul
 repo: git@github.com:ITriangle/skill-registry.git
 ref: local-authored
-note: 个人原创 skill，参考 MIT 许可的 NousResearch/hermes-agent github-code-review 工作流；未直接 vendor 上游文件。
+note: 个人原创 skill 与 always-on rule，参考 MIT 许可的 NousResearch/hermes-agent github-code-review 工作流；未直接 vendor 上游文件。
+rules:
+  - id: vendor/tsoul/coding-lenses
+    upstream_path: rules/vendor/tsoul/coding-lenses
+    status: candidate
+    imported_at: 2026-09-11T02:51:00Z
+  - id: vendor/tsoul/plain-talk
+    upstream_path: rules/vendor/tsoul/plain-talk
+    status: candidate
+    imported_at: 2026-09-11T02:51:00Z
+  - id: vendor/tsoul/file-names
+    upstream_path: rules/vendor/tsoul/file-names
+    status: candidate
+    imported_at: 2026-09-11T02:51:00Z
 skills:
   - id: vendor/tsoul/github-code-review
     upstream_path: skills/vendor/tsoul/github-code-review
@@ -15,3 +28,11 @@ skills:
     upstream_path: skills/vendor/tsoul/doc-eval
     status: candidate
     imported_at: 2026-09-04T11:17:19Z
+  - id: vendor/tsoul/shuorenhua
+    upstream_path: skills/vendor/tsoul/shuorenhua
+    status: candidate
+    imported_at: 2026-09-09T06:38:43Z
+  - id: vendor/tsoul/word-stamp
+    upstream_path: skills/vendor/tsoul/word-stamp
+    status: candidate
+    imported_at: 2026-09-10T03:13:00Z

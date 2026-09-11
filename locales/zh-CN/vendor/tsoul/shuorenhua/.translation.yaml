@@ -1,0 +1,6 @@
+locale: zh-CN
+source_id: vendor/tsoul/shuorenhua
+files:
+  - path: SKILL.md
+    source_sha256: 9fac519ffe9fe8e58f87233ed6b6f3c575496d8825c5271fd3cf2cb53a80a6b6
+    translation_sha256: 9fac519ffe9fe8e58f87233ed6b6f3c575496d8825c5271fd3cf2cb53a80a6b6
