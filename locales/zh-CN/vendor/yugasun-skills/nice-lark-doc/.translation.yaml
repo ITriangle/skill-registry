@@ -1,0 +1,48 @@
+locale: zh-CN
+source_id: vendor/yugasun-skills/nice-lark-doc
+files:
+  - path: SKILL.md
+    source_sha256: 319597c600bab33dd8f78c4128bf7bc05d5be8ee8192c05276d7d1d746ae27d5
+    translation_sha256: 319597c600bab33dd8f78c4128bf7bc05d5be8ee8192c05276d7d1d746ae27d5
+  - path: references/blocks-mapping.md
+    source_sha256: 410a47a7ebebf63b306bda01482492c38711c029a8cde81bbdc4ea79ee5d8646
+    translation_sha256: 410a47a7ebebf63b306bda01482492c38711c029a8cde81bbdc4ea79ee5d8646
+  - path: references/color-palette.md
+    source_sha256: bad9c2529ab9f2f3136afe52739b463c21a6d71c3cc63057334aa62dd5996541
+    translation_sha256: bad9c2529ab9f2f3136afe52739b463c21a6d71c3cc63057334aa62dd5996541
+  - path: references/delivery-templates.md
+    source_sha256: 665f410bf76198e7d756852fd77a9ead9640221bfb1f7dd49f0fd589b8465a47
+    translation_sha256: 665f410bf76198e7d756852fd77a9ead9640221bfb1f7dd49f0fd589b8465a47
+  - path: references/flowchart-theme.md
+    source_sha256: b56d94ad0046fe1e9c03acf708fe0009bf35912232abda4ad430f43a178a67ad
+    translation_sha256: b56d94ad0046fe1e9c03acf708fe0009bf35912232abda4ad430f43a178a67ad
+  - path: references/quality-checklist.md
+    source_sha256: 60139f4d0dc7d15743a6959dfae9c9752def1ad99a5cd3a40e264c6c5526f60f
+    translation_sha256: 60139f4d0dc7d15743a6959dfae9c9752def1ad99a5cd3a40e264c6c5526f60f
+  - path: references/recipes/action-oriented.md
+    source_sha256: de2b51bc8cf56db79bf8eea1b01f4bbe8587508ee0966238aa1eb3da6e5a31e4
+    translation_sha256: de2b51bc8cf56db79bf8eea1b01f4bbe8587508ee0966238aa1eb3da6e5a31e4
+  - path: references/recipes/data-dense.md
+    source_sha256: 1a06d418ca19f6cbe571482c18c887c77351a690aa43477ae7b2bd2df0a59ab6
+    translation_sha256: 1a06d418ca19f6cbe571482c18c887c77351a690aa43477ae7b2bd2df0a59ab6
+  - path: references/recipes/editorial-clean.md
+    source_sha256: dd2032557f1f807613d71e37207fb0f8e066e869c8d5ec23357d29ed561531c1
+    translation_sha256: dd2032557f1f807613d71e37207fb0f8e066e869c8d5ec23357d29ed561531c1
+  - path: references/recipes/presentation.md
+    source_sha256: 78476b91edd9f51cdac6e1034b89304cfdc9b4f2766d0fc8287e21e0003a860b
+    translation_sha256: 78476b91edd9f51cdac6e1034b89304cfdc9b4f2766d0fc8287e21e0003a860b
+  - path: references/recipes/product-visual.md
+    source_sha256: 5f1e10a245607e13586816e38dbafe77775fbf2667a591f5fd571f491070e162
+    translation_sha256: 5f1e10a245607e13586816e38dbafe77775fbf2667a591f5fd571f491070e162
+  - path: references/recipes/tech-structured.md
+    source_sha256: 2392d146b1f3bdb1cfaa7d4e23febdf1b8180ea183019089ea5498d3eeb43443
+    translation_sha256: 2392d146b1f3bdb1cfaa7d4e23febdf1b8180ea183019089ea5498d3eeb43443
+  - path: references/reference-gallery.md
+    source_sha256: 82d909bbda8a89d43f1c68a376239fc1c55572f3f9e86aaf74495c619439467f
+    translation_sha256: 82d909bbda8a89d43f1c68a376239fc1c55572f3f9e86aaf74495c619439467f
+  - path: references/setup-guide.md
+    source_sha256: ef9bac9475d71fe04db06f8b1f54d7a9ed3803f8dd7aa6dd4a6a969261519cd5
+    translation_sha256: ef9bac9475d71fe04db06f8b1f54d7a9ed3803f8dd7aa6dd4a6a969261519cd5
+  - path: references/whiteboard-bridge.md
+    source_sha256: e6e5de676fe2cd9a32ed85e4857358e1015af84514e8d0bf7725331bafa0a8e6
+    translation_sha256: e6e5de676fe2cd9a32ed85e4857358e1015af84514e8d0bf7725331bafa0a8e6

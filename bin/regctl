@@ -282,6 +282,7 @@ EXPLICIT_DEPENDENCIES = {}
 
 # Per-skill overrides when upstream invokes dependencies by name without slash-command syntax.
 EXPLICIT_DEPENDENCIES_BY_ID = {
+    "vendor/yugasun-skills/nice-lark-doc": ("lark-doc", "lark-drive", "lark-shared", "lark-whiteboard"),
     "vendor/obra/brainstorming": ("writing-plans",),
 }
 

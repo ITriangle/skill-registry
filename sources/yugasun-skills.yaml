@@ -1,0 +1,9 @@
+source: yugasun-skills
+repo: https://github.com/yugasun/skills.git
+ref: 425964919f88b7bae0aec6a40c7a6b4a2c645c3b
+license: MIT
+skills:
+  - id: vendor/yugasun-skills/nice-lark-doc
+    upstream_path: skills/nice-lark-doc
+    status: candidate
+    imported_at: 2026-09-22T11:41:45Z
